@@ -162,23 +162,20 @@ Emacs, вам предстоит искать новые куски кода, н
 В общем виде программа инициализации выглядит так:
 
 #+begin_src emacs-lisp -r -n :tangle init.el :noweb no-export
-  <<essential-standard-libraries>>
+  <<essential-libraries>>
   <<essential-functions>>
-  <<custom-group>>
-  <<custom-variables>>
-  <<customize-customize-and-apply-customizations>>
-  <<when-this-reference-is-not-in-user-emacs-directory-try-to-download-it>>
+  <<customize-well-tuned-emacs-group>>
+  <<customize-well-tuned-emacs-variables>>
+  <<customize-customize-and-apply-standard-customizations>>
+  <<try-download-this-reference-when-it-is-missing>>
   (if
-      <<this-reference-is-in-user-emacs-dir-and-is-newer-than-user-init-file>>
-      (progn
-        <<tangle-this-reference-into-user-init-file-and-then-load-it-again>>
-        )
+      <<this-reference-is-in-its-place-and-is-newer-than-user-init-file>>
+      <<tangle-this-reference-into-user-init-file-and-then-load-it-again>>
     (progn ; otherwise just continue configuration
       <<initialize-package-system-and-install-user-selected-packages>>
-      <<apply-advanced-settings>>
+      <<load-packages-and-apply-advanced-non-standard-customizations>>
       ))
   <<bugfixes>>
-  <<provide-well-tuned-emacs>>
 #+end_src
 
 Перед написанием кода на эмакс лиспе, следует немного обновить сам
@@ -195,19 +192,19 @@ Emacs, вам предстоит искать новые куски кода, н
 лисп-программу
 [[http://www.gnu.org/software/emacs/manual/html_mono/cl.html][GNU Emacs Common Lisp Emulation]].
 
-#+name: essential-standard-libraries
+#+name: essential-libraries
 #+begin_src emacs-lisp -r -n :tangle no
   (require 'cl)
 #+end_src
 
-Файл инициализации [[file:init.el][init.el]] вторичен по отношению к этому руководству,
+ Файл инициализации [[file:init.el][init.el]] вторичен по отношению к этому руководству,
 это не более чем автоматически сгенерированная из него программа. Но
 что если руководства не окажется в директории с настройками эмакса, и
 мы не сможем обновить программу инициализации? В таком случае
 программа инициализации должна попытаться скачать руководство из
 гит-репозитория.
 
-#+name: when-this-reference-is-not-in-user-emacs-directory-try-to-download-it
+#+name: try-download-this-reference-when-it-is-missing
 #+begin_src emacs-lisp -r -n :tangle no
   (unless (file-exists-p well-tuned-emacs-reference-file)
     (condition-case nil
@@ -231,7 +228,7 @@ Emacs, вам предстоит искать новые куски кода, н
 одном-и-том-же месте одновременно с двух запущенных в разных средах
 экземпляров эмакса, к примеру, из Windows-эмакса и из Cygwin-эмакса.
 
-#+name: custom-variables
+#+name: customize-well-tuned-emacs-variables
 #+begin_src emacs-lisp -r -n :tangle no
   (defcustom well-tuned-emacs-reference-file
     (concat (file-name-as-directory user-emacs-directory)
@@ -260,7 +257,7 @@ Emacs, вам предстоит искать новые куски кода, н
 и сохранить их значения на будущее, не меняя ни фрагменты кода в этом
 руководстве, ни код в сгенерированной программе инициализации init.el.
 
-#+name: custom-group
+#+name: customize-well-tuned-emacs-group
 #+begin_src emacs-lisp -r -n :tangle no
   (defgroup well-tuned-emacs nil
     "Well Tuned Emacs initialization and customization settings."
@@ -311,7 +308,7 @@ Emacs, вам предстоит искать новые куски кода, н
 будем хранить настройки выполненные программой Customize в файле
 custom.el в директории ~/.emacs.d/custom.
 
-#+name: customize-customize-and-apply-customizations
+#+name: customize-customize-and-apply-standard-customizations
 #+begin_src emacs-lisp -r -n :tangle no
   (let ((custom-directory
          (file-name-as-directory (concat user-emacs-directory "custom"))))
@@ -327,7 +324,7 @@ custom.el в директории ~/.emacs.d/custom.
 будет переплетать сама себя прямо во время запуска эмакса, если
 руководство было изменено после изменения программы.
 
-#+name: this-reference-is-in-user-emacs-dir-and-is-newer-than-user-init-file
+#+name: this-reference-is-in-its-place-and-is-newer-than-user-init-file
 #+begin_src emacs-lisp  -r -n :tangle no
   (and (file-exists-p well-tuned-emacs-reference-file)
        (eq well-tuned-emacs-reference-file
@@ -336,14 +333,16 @@ custom.el в директории ~/.emacs.d/custom.
 
 #+name: tangle-this-reference-into-user-init-file-and-then-load-it-again
 #+begin_src emacs-lisp  -r -n :tangle no
-  (message "Tangling %s." well-tuned-emacs-reference-file)
-  (org-babel-tangle-file well-tuned-emacs-reference-file
-                         user-init-file "emacs-lisp")
-  (if well-tuned-emacs-compile-user-init-file
-      (progn (byte-compile-file user-init-file 'load)
-             (message "Tangled, compiled and loaded %s." user-init-file))
-    (progn (load user-init-file)
-           (message "Tangled and loaded %s." user-init-file)))
+  (progn
+    (require 'ob-tangle)
+    (message "Tangling %s." well-tuned-emacs-reference-file)
+    (org-babel-tangle-file well-tuned-emacs-reference-file
+                           user-init-file "emacs-lisp")
+    (if well-tuned-emacs-compile-user-init-file
+        (progn (byte-compile-file user-init-file 'load)
+               (message "Tangled, compiled and loaded %s." user-init-file))
+      (progn (load user-init-file)
+             (message "Tangled and loaded %s." user-init-file))))
 #+end_src
 
 Функция [[(file-newer-of)][file-newer-of]] узнает когда был изменен каждый из файлов, и
@@ -377,12 +376,154 @@ custom.el в директории ~/.emacs.d/custom.
                (file-attributes file))))
 #+end_src
 
-Сама процедура сплетения файла из документа с фрагментами кода
-выполянется лисп-программой [[http://orgmode.org/][Org]].
+Осталось внести последний штрих и общая программа инициализации эмакса
+будет готова. Система пакетов эмакса вошла в состав редактора
+несколько лет назад, но все еще активно развивается и в некоторых
+местах требует ручного вмешательства. Если мы ею воспользуемся,
+система пакетов будет автоматически добавлять код своей инициализации
+в программу инициализации. Чтобы этого избежать, достаточно добавить
+этот код самим, и сразу после этого установить свои любимые пакеты.
 
-#+name: essential-standard-libraries
-#+begin_src emacs-lisp  -r -n :tangle no
-  (require 'org)
+#+name: initialize-package-system-and-install-user-selected-packages
+#+begin_src emacs-lisp -r -n :tangle no
+  (package-initialize)
+  <<package-customization-variables-and-functions-backports>>
+  (package-install-selected-packages)
+#+end_src
+
+В GNU Emacs 25 [[http://endlessparentheses.com/new-in-package-el-in-emacs-25-1-user-selected-packages.html][список имен вручную установленных пакетов]] хранится в
+переменной-настройке [[elisp:(customize-apropos "package-selected-packages")][package-selected-packages]], ее можно
+кастомизировать и сохранить на будущее, чтобы потом автоматически
+устанавливать свои пакеты командой [[elisp:(package-install-selected-packages)][M-x
+package-install-selected-packages]]. В GNU Emacs 24 и более ранних
+версиях нет ни этой настройки, ни функции автоматической
+установки. Добавим их в программу инициализации для совместимости со
+старыми версиями.
+
+#+name: package-customization-variables-and-functions-backports
+#+begin_src emacs-lisp -r -n :tangle no
+  (when (version< emacs-version "25")
+    (defcustom package-selected-packages nil
+      "Store here packages installed explicitly by user.
+  This variable is fed automatically by Emacs when installing a new
+  package in Emacs 25 and higher. You can use it to (re)install
+  packages on other machines by running
+  `package-install-selected-packages'."
+      :type '(repeat symbol)
+      :group 'package)
+
+    (defun package-install-selected-packages ()
+      "Ensure packages in `package-selected-packages' are installed.
+  If some packages are not installed propose to install them."
+      (interactive)
+      (if (not package-selected-packages)
+          (message "‘package-selected-packages’ is empty, nothing to install")
+        (loop for package in package-selected-packages
+              unless (package-installed-p package)
+              collect package into packages-to-be-installed
+              finally
+              (if packages-to-be-installed
+                  (when (y-or-n-p
+                         (format "%s packages will be installed:\n%s, proceed?"
+                                 (length packages-to-be-installed)
+                                 (mapconcat #'symbol-name packages-to-be-installed ", ")))
+                    (loop for package in packages-to-be-installed do (package-install package)))
+                (message "All your packages are already installed"))))))
+#+end_src
+
+На этом описание основной части программы инициализации
+завершено. Дальнейший текст рассказывает о важных стандартных
+настройках, нестандартных сочетаниях клавиш и конфигурациях
+установленных пакетов.
+
+----------------------------------------------------------------------
+
+Идейный преемник проекта [[https://github.com/technomancy/emacs-starter-kit][Emacs Starter Kit]] --- проект [[https://github.com/technomancy/better-defaults][Better Defaults]],
+выполнен [[http://technomancy.us/][Филом Хагельбергом]] [[[http://sachachua.com/blog/2014/05/emacs-chat-phil-hagelberg/][интервью]]] в виде пакета с небольшой
+лисп-программой. Эта лисп-программа, каждая строка которой тщательно
+отобрана сообществом, устанавливает значения пары десятков стандартных
+параметров в обход стандартной системы управления этими
+параметрами. Трудно найти более противоречивый проект. В некотором
+смысле, это образцово-показательный забег по граблям. На мой взгляд,
+если современный Starter Kit стал гайдом, то логично было бы сделать
+гайдом и Better Defaults. Ниже я привожу ссылки на кастомизации
+некоторых ключевых параметров эмакса с пояснением причин по которым их
+стоит сделать. Списки сделанных настроек показывают лисп-программы [[elisp:customize-saved][M-x
+customize-saved]] и [[elisp:customize-unsaved][M-x customize-unsaved]]. Конечно, система кастомизации
+не всемогуща и для некоторых настроек (сочетания клавиш) придется
+написать несколько строк кода на лиспе. В общем виде весь последующий
+код выглядит так:
+
+#+name: load-packages-and-apply-advanced-non-standard-customizations
+#+begin_src elisp -r -n :tangle no
+<<functions>>
+<<keybindings>>
+#+end_src
+
+[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "menu-bar-mode")][Menu Bar Mode]] ← nil. 80% опций главном в меню
+эмакса никогда не используются, остальные 20% продублированы в меню
+моделайна; меню буферов вызывается по C-Left-Click в любом месте
+буфера, глобальное меню --- по C-Right-Click и F10. Разумнее всего
+отключить главное меню и включать его по необходимости сочетанием
+C-M-F10.
+
+#+name: keybindings
+#+begin_src elisp -r -n :tangle no
+(global-set-key (kbd "<C-M-f10>") 'toggle-menu-bar-mode-from-frame)
+#+end_src
+
+[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "tool-bar-mode")][Tool Bar Mode]] ← nil. Тулбар в эмаксе
+абсолютно бесполезен.
+
+[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "scroll-bar-mode")][Scroll Bar Mode]] ← left. Многие отключают
+полосу прокрутки по трем причинам: она не является частью стандартного
+интерфейса эмакса, она плохо реализована и эстетически убога. Но в то
+же время, нельзя отрицать ее очевидную пользу в графических средах
+даже в таком убогом виде.
+
+[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-group "window-divider" 'other-window)][Window Divider]]⊲[[elisp:(customize-apropos "window-divider-mode")][Window Divider Mode]] ←
+nil. Визуальное разделение окон полосой позволяет менять размеры окон
+мышкой. Полезная опция при включенных полосах прокрутки. Выглядит
+старомодно, но в группе есть настройки стиля.
+
+[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "fringe-face")][Fringe face]] ← (t nil). Во всех текстовых
+редакторах (начиная с блокнота) принято иметь небольшие поля по краям
+области редактирования текста. Поля обязательно должны быть цвета фона
+чтобы не вызывать эстатической неприязни при включенной полосе
+прокрутки.
+
+[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "indicate-empty-lines")][Indicate Empty Lines]] ← nil. Штриховка на
+полях изящно показывает пустую область за гранью буфера, но иногда
+отвлекает.
+
+[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "i18n" 'other-window)][I18n]]⊲[[elisp:(customize-group "mule" 'other-window)][MULE Internationalization]]⊲[[elisp:(customize-apropos "default-input-method")][Default Input Method]] ←
+russian-computer. Эмакс использует независимое от операционной системы
+переключение языков и методов ввода для обеспечения своей работы в
+очень разных средах. Переключение на русский язык по C-\ без
+предварительного указания метода ввода требует кастомизации.
+
+----------------------------------------------------------------------
+
+Сочетание клавиш C-w --- де-факто стандарт для удаления слова слева от
+курсора.
+
+#+name: functions
+#+begin_src elisp -r -n :tangle no
+  (defun backward-kill-word-or-kill-region (arg)
+    (interactive "p")
+    (if (region-active-p)
+        (kill-region (region-beginning) 
+                     (region-end))
+      (backward-kill-word arg)))
+#+end_src
+
+#+name: keybindings
+#+begin_src elisp -r -n :tangle no
+  (global-set-key (kbd "C-w") 'backward-kill-word-or-kill-region)
+  (define-key minibuffer-local-map (kbd "C-w") 'backward-kill-word-or-kill-region)
+  (add-hook 'ido-setup-hook 
+            (lambda ()
+              (define-key ido-completion-map (kbd "C-w") 'ido-delete-backward-word-updir)))
 #+end_src
 
 ----------------------------------------------------------------------
