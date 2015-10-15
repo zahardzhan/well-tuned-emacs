@@ -12,16 +12,14 @@
 
 Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/, далее ---
 «эмакс»] был создан давным давно в Лаборатории Искуственного Интллекта
-Массачусетского Технологического института
-[[[https://en.wikipedia.org/wiki/MIT_Computer_Science_and_Artificial_Intelligence_Laboratory][MIT AI Lab]]]
-и несет в себе черты очень своеобразной культуры лисп-хакеров былых
-времен. Эмакс это текстовый редактор поведение и возможности которого
-можно изменить на ходу просто написав в нем текст на языке
-программирования на котором написан сам эмакс. Более того, тем же
-самым способом прямо во время работы эмакса можно расширить
-возможности языка программирования на котором он написан, что делает
-эмакс самой гибкой и универсальной программой для работы с текстом в
-сравнении с любой другой.
+Массачусетского Технологического института [[[https://en.wikipedia.org/wiki/MIT_Computer_Science_and_Artificial_Intelligence_Laboratory][MIT AI Lab]]] и несет в себе
+черты очень своеобразной культуры лисп-хакеров былых времен. Эмакс это
+текстовый редактор поведение и возможности которого можно изменить на
+ходу просто написав в нем текст на языке программирования на котором
+написан сам эмакс. Более того, тем же самым способом прямо во время
+работы эмакса можно расширить возможности языка программирования на
+котором он написан, что делает эмакс самой гибкой и универсальной
+программой для работы с текстом в сравнении с любой другой.
 
 За несколько десятилетий своего развития эмакс несколько раз
 переписывался, постоянно улучшался и дополнялся многими тысячами новых
@@ -197,7 +195,7 @@ Emacs, вам предстоит искать новые куски кода, н
   (require 'cl)
 #+end_src
 
- Файл инициализации [[file:init.el][init.el]] вторичен по отношению к этому руководству,
+Файл инициализации [[file:init.el][init.el]] вторичен по отношению к этому руководству,
 это не более чем автоматически сгенерированная из него программа. Но
 что если руководства не окажется в директории с настройками эмакса, и
 мы не сможем обновить программу инициализации? В таком случае
@@ -237,15 +235,15 @@ Emacs, вам предстоит искать новые куски кода, н
     :type 'file
     :group 'well-tuned-emacs)
 
-  (defcustom well-tuned-emacs-compile-user-init-file nil
-    "Compile user init file after tangling from Well Tuned Emacs Reference."
-    :type 'boolean
-    :group 'well-tuned-emacs)
-
   (defcustom well-tuned-emacs-reference-url
     "https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/well-tuned-emacs.org"
     "The Well Tuned Emacs Reference File on the internet."
     :type 'string
+    :group 'well-tuned-emacs)
+
+  (defcustom well-tuned-emacs-compile-user-init-file nil
+    "Compile user init file after tangling from Well Tuned Emacs Reference."
+    :type 'boolean
     :group 'well-tuned-emacs)
 #+end_src
 
@@ -261,9 +259,8 @@ Emacs, вам предстоит искать новые куски кода, н
 #+begin_src emacs-lisp -r -n :tangle no
   (defgroup well-tuned-emacs nil
     "Well Tuned Emacs initialization and customization settings."
-    ;:link '(emacs-commentary-link "init.el")
-    ;:link '(file-link ...)
-    ;:link '(url-link ...)
+    :link '(variable-link well-tuned-emacs-reference-file)
+    :link '(url-link "https://gitlab.com/zahardzhan/well-tuned-emacs")
     :version "25.0.50.1"
     :group 'initialization)
 #+end_src
@@ -387,7 +384,7 @@ custom.el в директории ~/.emacs.d/custom.
 #+name: initialize-package-system-and-install-user-selected-packages
 #+begin_src emacs-lisp -r -n :tangle no
   (package-initialize)
-  <<package-customization-variables-and-functions-backports>>
+  <<package-system-backports>>
   (package-install-selected-packages)
 #+end_src
 
@@ -400,9 +397,9 @@ package-install-selected-packages]]. В GNU Emacs 24 и более ранних
 установки. Добавим их в программу инициализации для совместимости со
 старыми версиями.
 
-#+name: package-customization-variables-and-functions-backports
+#+name: package-system-backports
 #+begin_src emacs-lisp -r -n :tangle no
-  (when (version< emacs-version "25")
+  (when (< emacs-major-version 25)
     (defcustom package-selected-packages nil
       "Store here packages installed explicitly by user.
   This variable is fed automatically by Emacs when installing a new
@@ -418,17 +415,20 @@ package-install-selected-packages]]. В GNU Emacs 24 и более ранних
       (interactive)
       (if (not package-selected-packages)
           (message "‘package-selected-packages’ is empty, nothing to install")
-        (loop for package in package-selected-packages
-              unless (package-installed-p package)
-              collect package into packages-to-be-installed
-              finally
-              (if packages-to-be-installed
-                  (when (y-or-n-p
-                         (format "%s packages will be installed:\n%s, proceed?"
-                                 (length packages-to-be-installed)
-                                 (mapconcat #'symbol-name packages-to-be-installed ", ")))
-                    (loop for package in packages-to-be-installed do (package-install package)))
-                (message "All your packages are already installed"))))))
+        (progn
+          (unless package-archive-contents
+            (package-refresh-contents))
+          (loop for package in package-selected-packages
+                unless (package-installed-p package)
+                collect package into packages-to-be-installed
+                finally
+                (if packages-to-be-installed
+                    (when (y-or-n-p
+                           (format "%s packages will be installed:\n%s, proceed?"
+                                   (length packages-to-be-installed)
+                                   (mapconcat #'symbol-name packages-to-be-installed ", ")))
+                      (loop for package in packages-to-be-installed do (package-install package)))
+                  (message "All your packages are already installed")))))))
 #+end_src
 
 На этом описание основной части программы инициализации
@@ -457,52 +457,178 @@ customize-saved]] и [[elisp:customize-unsaved][M-x customize-unsaved]]. Кон�
 #+name: load-packages-and-apply-advanced-non-standard-customizations
 #+begin_src elisp -r -n :tangle no
 <<functions>>
+<<customizations>>
 <<keybindings>>
 #+end_src
 
-[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "menu-bar-mode")][Menu Bar Mode]] ← nil. 80% опций главном в меню
+Начнем кастомизацию эмакса сверху и продолжим последовательно
+углубляться во всё более тонкие аспекты его работы.
+
+[[elisp:(describe-variable 'frame-title-format)][Frame Title Format]] ← имя буфера или полное имя файла/директории
+предваренное именем пользователя и машины при удаленном
+подключении. Как ни странно, заголовок фрейма (окна в оконном
+менеджере операционной системы) не кастомизируется стандартными
+средствами. Если открыто несколько фреймов, заголовок по-умолчанию
+совершенно бесполезен, поэтому используем наипростейший формат,
+позволяющий отличить один фрейм от другого.
+
+#+name: customizations
+#+begin_src elisp -r -n :tangle no
+  (setq-default frame-title-format
+   '(:eval (concat (when (file-remote-p default-directory)
+                     (let ((user (file-remote-p default-directory 'user))
+                           (host (file-remote-p default-directory 'host)))
+                       (format "%s@%s:" user host)))
+                   (or buffer-file-truename dired-directory (buffer-name)))))
+#+end_src
+
+# TODO · after buffer name when unsaved changes
+
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'frames)][Frames]]⊲[[elisp:(customize-variable-other-window 'menu-bar-mode)][Menu Bar Mode]] ← nil. 80% опций главном в меню
 эмакса никогда не используются, остальные 20% продублированы в меню
 моделайна; меню буферов вызывается по C-Left-Click в любом месте
-буфера, глобальное меню --- по C-Right-Click и F10. Разумнее всего
-отключить главное меню и включать его по необходимости сочетанием
-C-M-F10.
+буфера, меню буфера --- по C-Right-Click, само главное меню ---
+клавишей F10. Разумнее всего отключить главное меню и включать его при
+необходимости сочетанием C-M-F10.
 
 #+name: keybindings
 #+begin_src elisp -r -n :tangle no
 (global-set-key (kbd "<C-M-f10>") 'toggle-menu-bar-mode-from-frame)
 #+end_src
 
-[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "tool-bar-mode")][Tool Bar Mode]] ← nil. Тулбар в эмаксе
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'frames)][Frames]]⊲[[elisp:(customize-variable-other-window 'tool-bar-mode)][Tool Bar Mode]]  ← nil. Тулбар в эмаксе
 абсолютно бесполезен.
 
-[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "scroll-bar-mode")][Scroll Bar Mode]] ← left. Многие отключают
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'frames)][Frames]]⊲[[elisp:(customize-variable-other-window 'scroll-bar-mode)][Scroll Bar Mode]] ← right. Многие отключают
 полосу прокрутки по трем причинам: она не является частью стандартного
 интерфейса эмакса, она плохо реализована и эстетически убога. Но в то
 же время, нельзя отрицать ее очевидную пользу в графических средах
-даже в таком убогом виде.
+даже в таком неполноценном виде.
 
-[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-group "window-divider" 'other-window)][Window Divider]]⊲[[elisp:(customize-apropos "window-divider-mode")][Window Divider Mode]] ←
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'frames)][Frames]]⊲[[elisp:(customize-group-other-window 'window-divider)][Window Divider]]⊲[[elisp:(customize-variable-other-window 'window-divider-mode)][Window Divider Mode]] ←
 nil. Визуальное разделение окон полосой позволяет менять размеры окон
 мышкой. Полезная опция при включенных полосах прокрутки. Выглядит
 старомодно, но в группе есть настройки стиля.
 
-[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "fringe-face")][Fringe face]] ← (t nil). Во всех текстовых
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'frames)][Frames]]⊲[[elisp:(customize-face-other-window 'fringe)][Fringe face]] ← (t nil). Во всех текстовых
 редакторах (начиная с блокнота) принято иметь небольшие поля по краям
 области редактирования текста. Поля обязательно должны быть цвета фона
-чтобы не вызывать эстатической неприязни при включенной полосе
-прокрутки.
+чтобы не акцентировать внимание на артефактах рендеринга при
+включенной полосе прокрутки.
 
-[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "environment" 'other-window)][Environment]]⊲[[elisp:(customize-group "frames" 'other-window)][Frames]]⊲[[elisp:(customize-apropos "indicate-empty-lines")][Indicate Empty Lines]] ← nil. Штриховка на
-полях изящно показывает пустую область за гранью буфера, но иногда
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'frames)][Frames]]⊲[[elisp:(customize-variable-other-window 'indicate-empty-lines)][Indicate Empty Lines]] ← nil. Штриховка на
+полях изящно выделяет пустую область за гранью буфера, но иногда
 отвлекает.
 
-[[elisp:(customize-group "emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "i18n" 'other-window)][I18n]]⊲[[elisp:(customize-group "mule" 'other-window)][MULE Internationalization]]⊲[[elisp:(customize-apropos "default-input-method")][Default Input Method]] ←
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'initialization)][Initialization]]⊲[[elisp:(customize-variable-other-window 'initial-buffer-choice)][Initial Buffer Choice]] ←
+remember-notes. Вместо напыщенного стартового экрана эмакс открывает
+заметки, буфер =*​scratch​*=, файл, директорию или все что угодно, на
+выбор.
+
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'data)][Data]]⊲[[elisp:(customize-group-other-window 'remember)][Remember]]⊲[[elisp:(customize-variable-other-window 'remember-notes-initial-major-mode)][Remember Notes Initial Major Mode]] ←
+initial-major-mode. Режим редактирования заметок. По-умолчанию
+предполагается, что это заметки с лисп-кодом для эмакса, но можно 
+[[elisp:(describe-function
+ 'customize-save-variable)][заменить на варианты]] вроде [[elisp:(customize-save-variable%20'remember-notes-initial-major-mode%20'text-mode)][text-mode]], [[elisp:(customize-save-variable%20'remember-notes-initial-major-mode%20'fundamental-mode)][fundamental-mode]], [[elisp:(customize-save-variable%20'remember-notes-initial-major-mode%20'org-mode)][org-mode]], или
+что-угодно еще. В группе кастомизации [[elisp:(customize-group 'remember 'other-window)][Remember]] можно указать 
+[[elisp:(customize-variable-other-window 'remember-data-file)][расположение файла с заметками]], например ~/Dropbox/Заметки, и много
+других вещей.
+
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'initialization)][Initialization]]⊲[[elisp:(customize-variable-other-window%20'initial-scratch-message)][Initial Scratch Message]] ←
+bla-bla-bla. Эмакс [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Startup-Summary.html][всегда]] открывает =*scratch*=-буфер после запуска.
+От него невозможно избавиться, но можно сделать [[http://ergoemacs.org/emacs/modernization_scratch_buffer.html][более полезным]], если
+добавить в него несколько [[elisp:(describe-function 'fancy-splash-insert)][напыщенных]] ссылок на домашнюю директорию,
+зашифрованный эмаксом файл с личными паролями, активные проекты, сайты
+и прочее.
+
+#+name: customizations
+#+begin_src elisp -r -n :tangle no
+  (add-hook 'emacs-startup-hook
+            '(lambda ()
+               (with-current-buffer "*scratch*"
+                 (save-excursion
+                   (goto-char (1- (point-max)))
+                   (let ((initial-scratch-message-end-point (point)))
+                     (fancy-splash-insert
+                      "To start: "
+                      :link `("open file"
+                              ,(lambda (_button) (call-interactively 'find-file))
+                              "Specify a new file's name, to edit the file")
+                      ", "
+                      :link `("open home directory"
+                              ,(lambda (_button) (dired "~"))
+                              "Open your home directory, to operate on its files")
+                      " or "
+                      :link `("open password vault"
+                              ,(lambda (_button) (ignore-errors (find-file "~/Dropbox/Passwords.org.gpg")))
+                              "Open your encrypted file with passwords.")
+                      ".")
+                     (comment-region initial-scratch-message-end-point (point)))
+                   (when (buffer-modified-p)
+                     (set-buffer-modified-p nil))))))
+#+end_src
+
+установка рабочей директории
+
+
+--------------------------------------------------------------------------------
+
+отключение звоночка
+
+
+
+(customize-face-other-window 'default) ← руками не трогать.
+
+Кастомизация шрифтов в эмаксе чрезвычайно специфична и
+системно-зависима. Это одно из немногих исключений из правил, когда
+проще написать свой велосипед, чем использовать стандартные средства.
+
+[[https://en.wikipedia.org/wiki/Cambria_(typeface)][Cambria]]-11 очень хороша в Windows 10. Как писал создатель языка C++:
+«В коде программ [на C++] в этой книге [«Язык программирования C++»]
+используется пропорциональный шрифт [полужирный италик с
+засечками]. На первый взгляд такое написание кажется неестественным
+для программистов, привыкших видеть шрифт с буквами одинаковой
+ширины. Однако пропорциональный шрифт легче и лучше воспринимается,
+чем моноширинный. Использование пропорционального шрифта также
+позволяет избежать многих неестественных разрывов строк в коде. Более
+того, мои эксперименты показали. что большинство людей через некоторое
+время считают новый стиль более читабельным».
+
+[[https://en.wikipedia.org/wiki/Consolas][Consolas]]-10 --- моноширинный шрифт по-умолчанию в Windows 10.
+
+[[https://en.wikipedia.org/wiki/Courier_(typeface)#Courier_New][Courier New]]-9 --- классика жанра.
+
+[[https://en.wikipedia.org/wiki/Monaco_(typeface)][Monaco]]-?? ---моноширинный шрифт по-умолчанию в ранних версиях Mac OS X.
+
+[[https://en.wikipedia.org/wiki/Menlo_(typeface)][Menlo]]-?? --- моноширинный шрифт по-умолчанию в современных версиях Mac OS X.
+
+[[http://www.marksimonson.com/fonts/view/anonymous-pro][Anonymous Pro]]-11, [[https://damieng.com/blog/2008/05/26/envy-code-r-preview-7-coding-font-released][Envy Code R]]-10 и другие --- модные моноширинные
+шрифты для программирования.
+
+Indent Tabs Mode
+
+--------------------------------------------------------------------------------
+
+[[elisp:(customize-group-other-window Режим"emacs" 'other-windows)][Emacs]]⊲[[elisp:(customize-group "i18n" 'other-window)][I18n]]⊲[[elisp:(customize-group "mule" 'other-window)][MULE Internationalization]]⊲[[elisp:(customize-variable-other-window 'default-input-method)][Default Input Method]] ←
 russian-computer. Эмакс использует независимое от операционной системы
 переключение языков и методов ввода для обеспечения своей работы в
 очень разных средах. Переключение на русский язык по C-\ без
 предварительного указания метода ввода требует кастомизации.
 
 ----------------------------------------------------------------------
+
+Сочетания клавиш в эмаксе имеют три ярко выраженных особенности: их
+/очень/ много; их трудно запомнить; и они вызывают повреждения рук при
+злоупотреблении. Для снижения нагрузки на левую руку при вводе команд
+эмакса многие люди [[http://www.emacswiki.org/emacs/MovingTheCtrlKey][советуют поменять местами клавиши Caps Lock и
+Control]]. Раньше я так и делал, но опыт показал, что этого
+недостаточно. На современных стандартных клавиатурах кнопку Caps Lock
+нажимать удобнее, чем Control, но это не избавляет от нагрузки на
+левую руку, а всего лишь незначительно снижает ее. До сих пор, лучшее
+решение к которому я пришел --- полностью отказаться от клавиш Control
+и Caps Lock и использовать в качестве модификатора «C-» зажатую
+клавишу «пробел». Решение не идеальное, но для здоровья рук оно
+полезнее, чем caps ⇆ ctrl.
 
 Сочетание клавиш C-w --- де-факто стандарт для удаления слова слева от
 курсора.
@@ -528,6 +654,20 @@ russian-computer. Эмакс использует независимое от о
 
 ----------------------------------------------------------------------
 
+Следует быть осторожным при указании относительных путей: [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html][в Windows
+Vista/7/8/10]] эмакс считает своей домашней директорией ~ значение
+переменной окружения (getenv "AppData")→C:\Users\User\AppData\Roaming,
+в то время как в UNIX-совместимых ОС подразумевается директория
+(getenv "UserProfile")→C:\Users\User. Чтобы избежать неоднозначности
+нужно установить значение переменной окружения HOME в Windows.
+
+#+begin_src emacs-lisp -r -n :tangle no
+  (when (eq system-type 'windows-nt)
+    (setenv "Home" (getenv "UserProfile")))
+ #+end_src
+
+----------------------------------------------------------------------
+
 Исправления некоторых багов GNU Emacs:
 
 - [[http://wenshanren.org/?p=781][Emacs 25 testing: org-html-export returns org-html-fontify-code: Wrong number of arguments…]]
@@ -542,7 +682,7 @@ russian-computer. Эмакс использует независимое от о
 
 Copyright © 2010-2015 Роман Захаров [[mailto:zahardzhan@gmail.com][zahardzhan@gmail.com]].
 
-[[https://gitlab.com/zahardzhan/well-tuned-emacs][Проект на гитлабе]] начат 1 ноября 2015.
+[[https://gitlab.com/zahardzhan/well-tuned-emacs][Проект на Gitlab]] начат 1 ноября 2015.
 
 Эта программа не является частью GNU Emacs.
 
