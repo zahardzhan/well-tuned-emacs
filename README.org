@@ -145,7 +145,10 @@ org-babel-tangle]].  В результате из фрагментов лисп-
 эмакса]][[[info:Emacs#Init%0A%20File][инфо]]|[[http://www.emacswiki.org/emacs/InitFile][вики]]] которую эмакс будет автоматически выполнять при
 каждом запуске.  В общем виде программа инициализации выглядит так:
 
-#+begin_src elisp -r -n :noweb no-export :tangle (identity user-init-file)
+#+header: :noweb no-export
+#+header: :shebang ;;; -*- lexical-binding: t -*-
+#+begin_src elisp :tangle (identity user-init-file) 
+  <<header>>
   <<requirements>>
   <<customize-this-reference>>
   <<customize-customize-and-apply-customizations>>
@@ -158,6 +161,7 @@ org-babel-tangle]].  В результате из фрагментов лисп-
       <<load-packages-and-apply-advanced-customizations>>
       <<fix-some-bugs>>
       ))
+  <<footer>>
 #+end_src
 
 Перед написанием кода на эмакс лиспе, следует немного обновить сам
@@ -176,69 +180,84 @@ org-babel-tangle]].  В результате из фрагментов лисп-
 например, Столлман выступает [[http://lists.gnu.org/archive/html/emacs-devel/2012-06/msg00056.html][против]] ее использования в эмаксе.
 
 #+name: requirements
-#+begin_src elisp -r -n
+#+begin_src elisp
   (require 'cl-lib)
 #+end_src
 
-Во время запуска эмакс выполняет [[https://github.com/emacs-mirror/emacs/blob/master/lisp/startup.el#L1158][одну из девяти возможных программ
-инициализации]][[[elisp:(describe-function 'command-line)][исходник]]] (на самом деле их больше, но другие варианты
-не кроссплатформенны), и нам нужно определить какую именно исходную
-лисп-программу инициализации мы возьмем за основу, в порядке
-приоритета: ~/.emacs, ~/.emacs.el, ~/.emacs.d/init.el.
+[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html#Using-Lexical-Binding][Лексическая область видимости локальных переменных и функций]] в
+лисп-программе инициализации делает её более быстрой (после
+компиляции), современной и надежной.
+Лексическая область видимости.
+Локальные переменные.
+http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html#Specifying-File-Variables
 
-| user-init-file while init | user-init-file after init                 | actual-user-init-file              |
-|---------------------------+-------------------------------------------+------------------------------------|
-| nil                       | nil                                       | ~/.emacs.d/init.el or ~/.emacs !!! |
-| ~/_emacs                  | ~/_emacs                                  | ~/_emacs                       !   |
-| ~/_emacs.el               | ~/_emacs.el                               | ~/_emacs.el                    !   |
-| ~/_emacs.elc              | ~/_emacs.el or ~/_emacs or ~/_emacs.elc   | ~/_emacs.el or ~/_emacs        !   |
-| ~/.emacs                  | ~/.emacs                                  | ~/.emacs                           |
-| ~/.emacs.el               | ~/.emacs.el                               | ~/.emacs.el                        |
-| ~/.emacs.elc              | ~/.emacs.el or ~/.emacs or ~/.emacs.elc   | ~/.emacs.el or ~/.emacs            |
-| ~/.emacs.d/init.el        | ~/.emacs.d/init.el                        | ~/.emacs.d/init.el                 |
-| ~/.emacs.d/init.elc       | ~/.emacs.d/init.el or ~/.emacs.d/init.elc | ~/.emacs.d/init.el                 |
+Во время запуска эмакс выполняет [[elisp:(describe-function 'command-line)][одну из девяти возможных программ
+инициализации]][см. [[https://github.com/emacs-mirror/emacs/blob/master/lisp/startup.el#L1158][исходник на github]]] (на самом деле их больше, но
+другие варианты не кроссплатформенны), и нам нужно определить какую
+именно исходную лисп-программу инициализации мы возьмем за основу, в
+порядке приоритета: =~/_emacs= (/устаревший --- для MS-DOS/),
+=~/.emacs=, =~/.emacs.el=, =~/.emacs.d/init.el=.
+
+| user-init-file while init        | user-init-file after init                     | actual-user-init-file              |
+|----------------------------------+-----------------------------------------------+------------------------------------|
+| =nil=                            | =nil=                                         | =~/.emacs.d/init.el= or some other |
+| by default — relative =~/.emacs= | relative =~/.emacs=                           | =~/.emacs=                         |
+| =~/_emacs=                       | =~/_emacs=                                    | =~/_emacs=                         |
+| =~/_emacs.el=                    | =~/_emacs.el=                                 | =~/_emacs.el=                      |
+| =~/_emacs.elc=                   | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs=        |
+| =~/.emacs=                       | =~/.emacs=                                    | =~/.emacs=                         |
+| =~/.emacs.el=                    | =~/.emacs.el=                                 | =~/.emacs.el=                      |
+| =~/.emacs.elc=                   | =~/.emacs.el= or =~/.emacs= or =~/.emacs.elc= | =~/.emacs.el= or =~/.emacs=        |
+| =~/.emacs.d/init.el=             | =~/.emacs.d/init.el=                          | =~/.emacs.d/init.el=               |
+| =~/.emacs.d/init.elc=            | =~/.emacs.d/init.el= or =~/.emacs.d/init.elc= | =~/.emacs.d/init.el=               |
 
 #+name: user-init-file-names
 #+begin_src elisp -r -n
-  (_emacs (file-truename "~/_emacs"))
-  (_emacs.el (file-truename "~/_emacs.el"))
-  (_emacs.elc (file-truename "~/_emacs.elc"))
-  (.emacs (file-truename "~/.emacs"))
-  (.emacs.el (file-truename "~/.emacs.el"))
-  (.emacs.elc (file-truename "~/.emacs.elc"))
-  (init.el (file-truename "~/.emacs.d/init.el"))
-  (init.elc (file-truename "~/.emacs.d/init.elc"))
+  (default "~/.emacs")
+  (~/_emacs (file-truename "~/_emacs"))
+  (~/_emacs.el (file-truename "~/_emacs.el"))
+  (~/_emacs.elc (file-truename "~/_emacs.elc"))
+  (~/.emacs (file-truename "~/.emacs"))
+  (~/.emacs.el (file-truename "~/.emacs.el"))
+  (~/.emacs.elc (file-truename "~/.emacs.elc"))
+  (~/.emacs.d/init.el (file-truename "~/.emacs.d/init.el"))
+  (~/.emacs.d/init.elc (file-truename "~/.emacs.d/init.elc"))
 #+end_src
 
 #+name: customize-this-reference
 #+begin_src elisp -r -n
-  (defvar actual-user-init-file
-    (let (
-          <<user-init-file-names>>
-          )
-      (or (when (equal user-init-file nil)
-            (or (when (file-exists-p init.el)
-                  init.el)
-                .emacs))
-          (when (file-equal-p user-init-file _emacs)
-            _emacs)
-          (when (file-equal-p user-init-file _emacs.el)
-            _emacs.el)
-          (when (file-equal-p user-init-file _emacs.elc)
-            (or (when (file-exists-p _emacs.el)
-                  _emacs.el)
-                _emacs))
-          (when (file-equal-p user-init-file .emacs)
-            .emacs)
-          (when (file-equal-p user-init-file .emacs.el)
-            .emacs.el)
-          (when (file-equal-p user-init-file .emacs.elc)
-            (or (when (file-exists-p .emacs.el)
-                  .emacs.el)
-                .emacs))
-          (when (or (file-equal-p user-init-file init.el)
-                    (file-equal-p user-init-file init.elc))
-            init.el))))
+    (defvar actual-user-init-file
+      (let (
+            <<user-init-file-names>>
+            )
+        (or (when (equal user-init-file nil)
+              (or (cl-find-if #'file-exists-p (list ~/.emacs.d/init.el
+                                                    ~/_emacs
+                                                    ~/_emacs.el
+                                                    ~/.emacs
+                                                    ~/.emacs.el))
+                  ~/.emacs.d/init.el))
+            (when (equal user-init-file default)
+              ~/.emacs)
+            (when (file-equal-p user-init-file ~/_emacs)
+              ~/_emacs)
+            (when (file-equal-p user-init-file ~/_emacs.el)
+              ~/_emacs.el)
+            (when (file-equal-p user-init-file ~/_emacs.elc)
+              (or (when (file-exists-p ~/_emacs.el)
+                   ~/_emacs.el)
+                  ~/_emacs))
+            (when (file-equal-p user-init-file ~/.emacs)
+              ~/.emacs)
+            (when (file-equal-p user-init-file ~/.emacs.el)
+              ~/.emacs.el)
+            (when (file-equal-p user-init-file ~/.emacs.elc)
+              (or (when (file-exists-p ~/.emacs.el)
+                   ~/.emacs.el)
+                  ~/.emacs))
+            (when (or (file-equal-p user-init-file ~/.emacs.d/init.el)
+                      (file-equal-p user-init-file ~/.emacs.d/init.elc))
+              ~/.emacs.d/init.el))))
 #+end_src
 
 Исходный код лисп-программы инициализации в файле
@@ -289,19 +308,22 @@ actual-user-init-file вторичен по отношению к этому р�
 
 Добавим в эту группу две пользовательские настройки.
 
-[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'initialization)][Initialization]]⊲[[elisp:(customize-group-other-window 'well-tuned-emacs)][Well Tuned Emacs]]⊲[[elisp:(customize-variable-other-window%20'well-tuned-emacs-reference-file)][Well Tuned Emacs
-Reference File]] ← файл "README.org" в директории с актуальной
-лисп-программой инициализации эмакса. Расположение файла этого
-руководства. Для обеспечения переносимости путей файлов между разными
-средами исполнения эмакс-лисп кода их следует указывать в формате
-[[https://en.wikipedia.org/wiki/Path_(computing)][POSIX]], это позволит использовать один-и-тот-же файл одновременно с
-двух запущенных в разных средах экземпляров эмакса (например
-Windows/Cygwin).
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲
+[[elisp:(customize-group-other-window 'environment)][Environment]]⊲
+[[elisp:(customize-group-other-window 'initialization)][Initialization]]⊲
+[[elisp:(customize-group-other-window 'well-tuned-emacs)][Well Tuned Emacs]]⊲
+[[elisp:(customize-variable-other-window%20'well-tuned-emacs-reference-file)][Well Tuned Emacs Reference File]] ← файл "README.org" в директории с
+актуальной лисп-программой инициализации эмакса. Расположение файла
+этого руководства. Для обеспечения переносимости путей файлов между
+разными средами исполнения эмакс-лисп кода их следует указывать в
+формате [[https://en.wikipedia.org/wiki/Path_(computing)][POSIX]], это позволит использовать один-и-тот-же файл
+одновременно с двух запущенных в разных средах экземпляров эмакса
+(например Windows/Cygwin).
 
-| actual-user-init-file                              | well-tuned-emacs-reference-file              |
-|----------------------------------------------------+----------------------------------------------|
-| ~/.emacs or ~/.emacs.el or ~/_emacs or ~/_emacs.el | ~/README.org or ~/.emacs.d/README.org        |
-| ~/.emacs.d/init.el                                 | prefer ~/.emacs.d/README.org to ~/README.org |
+| actual-user-init-file                                      | well-tuned-emacs-reference-file                  |
+|------------------------------------------------------------+--------------------------------------------------|
+| =~/.emacs= or =~/.emacs.el= or =~/_emacs= or =~/_emacs.el= | =~/README.org= or =~/.emacs.d/README.org=        |
+| =~/.emacs.d/init.el=                                       | prefer =~/.emacs.d/README.org= to =~/README.org= |
 
 #+name: customize-this-reference
 #+begin_src elisp -r -n
@@ -311,14 +333,15 @@ Windows/Cygwin).
            (wter-file-name "README.org")
            (wter-file-at-home (file-truename (concat (file-name-as-directory "~") wter-file-name)))
            (wter-file-at-emacs-dir (file-truename (concat user-emacs-directory wter-file-name))))
-      (or (when (or (file-equal-p actual-user-init-file .emacs)
-                    (file-equal-p actual-user-init-file .emacs.el)
-                    (file-equal-p actual-user-init-file _emacs)
-                    (file-equal-p actual-user-init-file _emacs.el))
+      (ignore default ~/_emacs.elc  ~/.emacs.elc ~/.emacs.d/init.elc)
+      (or (when (or (equal actual-user-init-file ~/.emacs)
+                    (equal actual-user-init-file ~/.emacs.el)
+                    (equal actual-user-init-file ~/_emacs)
+                    (equal actual-user-init-file ~/_emacs.el))
             (or (when (file-exists-p wter-file-at-home)
                   wter-file-at-home)
                 wter-file-at-emacs-dir))
-          (when (file-equal-p actual-user-init-file init.el)
+          (when (equal actual-user-init-file ~/.emacs.d/init.el)
             (or (when (file-exists-p wter-file-at-emacs-dir)
                   wter-file-at-emacs-dir)
                 (when (file-exists-p wter-file-at-home)
@@ -368,9 +391,9 @@ https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org.
 [[http://www.emacswiki.org/emacs/DotEmacsBankruptcy][конфигурационному апокалипсису]].  Поэтому здесь и далее, и везде где
 только можно, я буду использовать систему Customize.
 
-[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window%20'help)][Help]]⊲[[elisp:(customize-group-other-window%20'customize)][Customize]]⊲[[elisp:(customize-variable-other-window 'custom-file)][Custom File]] ← [[elisp:(concat (file-name-as-directory (concat user-emacs-directory "custom")) "custom.el")][
-~/.emacs.d/custom/custom.el]]. По-умолчанию Customize хранит свои данные
-в лисп-программе инициализации эмакса; если мы переплетем этот
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window%20'help)][Help]]⊲[[elisp:(customize-group-other-window%20'customize)][Customize]]⊲[[elisp:(customize-variable-other-window 'custom-file)][Custom File]] ← 
+[[elisp:(concat (file-name-as-directory (concat user-emacs-directory "custom")) "custom.el")][ ~/.emacs.d/custom/custom.el]]. По-умолчанию Customize хранит свои
+данные в лисп-программе инициализации эмакса; если мы переплетем этот
 файл --- все наши настройки пропадут.  В Customize можно выполнить
 настройку самой Customize, но фактически эта программа не может
 изменить место хранения своих данных, при том что такой параметр в ней
@@ -396,8 +419,9 @@ https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org.
 
 #+name: this-reference-is-in-its-place-and-is-newer-than-user-init-file
 #+begin_src elisp -r -n
-  (and (file-exists-p well-tuned-emacs-reference-file)
-       (file-newer-than-file-p well-tuned-emacs-reference-file actual-user-init-file))
+  (when (file-exists-p well-tuned-emacs-reference-file)
+    (or (not (file-exists-p actual-user-init-file))
+        (file-newer-than-file-p well-tuned-emacs-reference-file actual-user-init-file)))
 #+end_src
 
 По всей видимости нет никакого тривиального способа заставить
@@ -414,28 +438,28 @@ https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org.
     (message "Tangling %s → %s." well-tuned-emacs-reference-file actual-user-init-file)
     (let ((user-init-file actual-user-init-file)) ;; XXX dont use user-init-file in hooks
       (org-babel-with-temp-filebuffer well-tuned-emacs-reference-file
-        (org-babel-tangle)))
-    (if well-tuned-emacs-compile-user-init-file
-        (progn (byte-compile-file actual-user-init-file 'load)
-               (message "Tangled, compiled and loaded %s." actual-user-init-file))
-      (progn (load-file actual-user-init-file)
-             (message "Tangled and loaded %s." actual-user-init-file))))
+        (org-babel-tangle))
+      (load-file user-init-file)
+      (message "Tangled and loaded %s." user-init-file)))
 #+end_src
 
-Как вариант, перед загрузкой лисп-программы инициализации мы можем ее
-скомпилировать. Для этого нам понадобится лисп-программа
+Как вариант, во время загрузки лисп-программы инициализации мы можем
+ее скомпилировать. Для этого нам понадобится лисп-программа
+байт-компиляции лисп-программ bytecomp. Следующий код это своего рода
+шутка --- он загружает лисп-программу байт-компиляции лисп-программ во
+время байт-компиляции этой лисп-программы лисп-программой
 байт-компиляции лисп-программ.
 
 #+name: requirements
 #+begin_src elisp -r -n
-  (require 'bytecomp)
+  (cl-eval-when (compile) (require 'bytecomp))
 #+end_src
 
 При интерпретации лисп-программы инициализации эмакса программа для
 сплетения этого руководства ob-tangle загружается по необходимости
 непосредственно перед её использованием, и это не создает никаких
 проблем. Однако программа компиляции по возможности должна знать обо
-всех сторонних программах, которые могут быть загружены во время
+всех сторонних лисп-программах, которые могут быть загружены во время
 выполнения скомпилированной программы инициализации эмакса.
 
 #+name: requirements
@@ -447,13 +471,16 @@ https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org.
 well-tuned-emacs-compile-user-init-file как опцию в группе настроек
 этого руководства.
 
-[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲[[elisp:(customize-group-other-window 'environment)][Environment]]⊲[[elisp:(customize-group-other-window 'initialization)][Initialization]]⊲[[elisp:(customize-group-other-window 'well-tuned-emacs)][Well Tuned Emacs]]⊲[[elisp:(customize-variable-other-window%20'well-tuned-emacs-reference-file)][Well Tuned Emacs
-Compile User Init File]] ← nil. Указание компилировать лисп-программу
-инициализации эмакса. При автоматической установке сохраненного
-значения этой опции системой Customize, а также при ручном
-включении/отключении этой опции в интерфейсе Customize, эмакс должен
-соответственно скомпилировать, или удалить скомпилированную программу
-инициализации. Для этого нам нужно написать функцию которая
+[[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲
+[[elisp:(customize-group-other-window 'environment)][Environment]]⊲
+[[elisp:(customize-group-other-window 'initialization)][Initialization]]⊲
+[[elisp:(customize-group-other-window 'well-tuned-emacs)][Well Tuned Emacs]]⊲
+[[elisp:(customize-variable-other-window%20'well-tuned-emacs-reference-file)][Well Tuned Emacs Compile User Init File]] ← nil. Указание компилировать
+лисп-программу инициализации эмакса. При автоматической установке
+сохраненного значения этой опции системой Customize, а также при
+ручном включении/отключении этой опции в интерфейсе Customize, эмакс
+должен соответственно скомпилировать, или удалить скомпилированную
+программу инициализации. Для этого нам нужно написать функцию которая
 позаботится обо всем при установке значения этой опции.
 
 #+name: customize-this-reference
@@ -462,72 +489,73 @@ Compile User Init File]] ← nil. Указание компилировать л
     "Compile user init file after tangling from Well Tuned Emacs Reference."
     :type 'boolean
     :set
-    <<set-custom-option-well-tuned-emacs-compile-user-init-file>>
+    <<set-well-tuned-emacs-compile-user-init-file-custom-option>>
     :version "25.0.50.1"
     :group 'well-tuned-emacs)
 #+end_src
 
 Загрузка эмакса становится довольно запутанной если добавить в нее
 возможность компиляции файла инициализации. С учетом описания того как
-происходит [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Byte-Compilation.html#Byte-Compilation][компиляция лисп-программ эмакса]], [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Startup-Summary.html][запуск эмакса]],
-[[http://www.gnu.org/software/emacs/manual/html_node/elisp/How-Programs-Do-Loading.html#How-Programs-Do-Loading][загрузка
+происходит [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Byte-Compilation.html#Byte-Compilation][компиляция лисп-программ эмакса]], [[http://www.gnu.org/software/emacs/manual/html_node/elisp/Startup-Summary.html][запуск эмакса]], [[http://www.gnu.org/software/emacs/manual/html_node/elisp/How-Programs-Do-Loading.html#How-Programs-Do-Loading][загрузка
 лисп-программ эмакса]], и того что происходит в нашей программе
 инициализации, мы должны учесть шесть возможных последовательностей
 выполнения лисп-программ при запуске эмакса:
 
-1. el→emacs
-2. el→tangle→el→emacs
-3. el→tangle→compile→elc→emacs
-4. elc→emacs
-5. elc→tangle→el→emacs
-6. elc→tangle→compile→elc→emacs
+1. el→emacs [safe]
+2. el→tangle→el→emacs [safe]
+3. el→tangle→compile→elc→emacs [safe]
+4. elc→emacs [safe]
+5. elc→tangle→el↛emacs [unsafe (package-initialize)⇝user-init-file⇎load-file-name]
+6. elc→tangle→compile↛elc→emacs [unsafe (byte-compile elc)⇝cannot rename elc↦elc]
 
 Компилировать или удалять программу инициализации прямо во время ее
 выполнения рискованно, поэтому шесть возможных вариантов развития
 событий в итоге сводятся к четырем.
 
-|              | compile                                     | delete            |
-|--------------+---------------------------------------------+-------------------|
-| *while init* | compile after init                          | delete after init |
-| *after init* | compile el when no elc or elc older than el | delete elc        |
+|              | compile                                              | delete                    |
+|--------------+------------------------------------------------------+---------------------------|
+| *while init* | compile after init                                   | delete after init         |
+| *after init* | compile el when there is no elc or elc older than el | delete elc if there is el |
 
-#+name: set-custom-option-well-tuned-emacs-compile-user-init-file
+Таким образом, когда мы устанавливаем значение этой опции во время
+инициализации эмакса, выполнение соответствующих действий
+откладывается на потом.
+
+#+name: set-well-tuned-emacs-compile-user-init-file-custom-option
 #+begin_src elisp -r -n
-  (progn
-    <<define-compile/delete-actual-user-init-file-functions>>
-    (lambda (symbol value)
-      (set symbol value)
-      (let ((while-init-time (not after-init-time))
-            (compile value)
-            (delete (not value)))
-        (cond ((and while-init-time compile)
-               (add-hook 'after-init-hook 'byte-compile-actual-user-init-file-if-necessary 'append))
-              ((and while-init-time delete)
-               (add-hook 'after-init-hook 'delete-byte-compiled-actual-user-init-file 'append))
-              ((and after-init-time compile)
-               (byte-compile-actual-user-init-file-if-necessary))
-              ((and after-init-time delete)
-               (delete-byte-compiled-actual-user-init-file))))))
+  (lambda (symbol value)
+    (unless (fboundp 'set-well-tuned-emacs-compile-user-init-file-custom-option)
+      (defun set-well-tuned-emacs-compile-user-init-file-custom-option (&optional symbol value)
+        (when symbol (set symbol value))
+        (let ((while-init-time (not after-init-time)))
+          (cond (while-init-time
+                 (add-hook 'after-init-hook 'set-well-tuned-emacs-compile-user-init-file-custom-option))
+                (after-init-time
+                 (require 'bytecomp)
+                 (if well-tuned-emacs-compile-user-init-file
+                     <<compile-el-when-there-is-no-elc-or-elc-older-than-el>>
+                   <<delete-elc-if-there-is-el>>
+                   ))))))
+    (set-well-tuned-emacs-compile-user-init-file-custom-option symbol value))
 #+end_src
 
-Функция byte-compile-actual-user-init-file-if-necessary компилирует
-лисп-программу инициализации только если скомпилированная программа
-старее, или её вовсе нет.
+Компилируем лисп-программу инициализации только если скомпилированная
+программа старее, или её вовсе нет.
 
-#+name: define-compile/delete-actual-user-init-file-functions
+#+name: compile-el-when-there-is-no-elc-or-elc-older-than-el
 #+begin_src elisp  -r -n
-  (defun byte-compile-actual-user-init-file-if-necessary ()
+  (when (file-exists-p actual-user-init-file)
     (byte-recompile-file actual-user-init-file nil 0))
 #+end_src
 
-Функция delete-byte-compiled-actual-user-init-file просто удаляет
-скомпилированную программу инициализации.
+Просто удаляем скомпилированную программу инициализации, если у нас
+есть исходная программа инициализации.
 
-#+name: define-compile/delete-actual-user-init-file-functions
+#+name: delete-elc-if-there-is-el
 #+begin_src elisp  -r -n
-  (defun delete-byte-compiled-actual-user-init-file ()
-    (when (file-exists-p (byte-compile-dest-file actual-user-init-file))
-      (delete-file (byte-compile-dest-file actual-user-init-file))))
+  (when (and (file-exists-p actual-user-init-file)
+             (file-exists-p (byte-compile-dest-file actual-user-init-file)))
+    (delete-file (byte-compile-dest-file actual-user-init-file)))
 #+end_src
 
 Осталось нанести последний штрих и общая программа инициализации
@@ -695,11 +723,15 @@ nil. Визуальное разделение окон полосой позв�
 соответствовал цвету фона. Для этого используем средство
 [[https://en.wikipedia.org/wiki/Aspect-oriented_programming][аспектно-ориентированного программирования]] [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html#Advising-Functions][Advice]], которое позволит
 изменить поведение функций сторонних лисп-программ без изменения их
-оригинальной реализации.
+оригинальной реализации. Функции-аспекты должны иметь как минимум
+такой же список аргументов, что и оригинальные функции, но
+байт-компилятор будет ругаться, если эти аргументы не будут
+использоваться, поэтому [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html][имена неиспользуемых аргументов должны
+начинаться с подчеркивания]].
 
 #+name: definitions
 #+begin_src elisp -r -n
-  (defun set-transparent-fringe-background (theme &optional no-confirm no-enable)
+  (defun set-transparent-fringe-background (_theme &optional _no-confirm _no-enable)
     (set-face-background 'fringe (face-attribute 'default :background)))
 #+end_src
 
@@ -782,7 +814,7 @@ bla-bla-bla. Эмакс [[http://www.gnu.org/software/emacs/manual/html_node/eli
 
 [[https://en.wikipedia.org/wiki/Consolas][Consolas]]-10 --- моноширинный шрифт по-умолчанию в Windows 10.
 
-[[https://en.wikipedia.org/wiki/Courier_(typeface)#Courier_New][Courier New]]-9 --- классика жанра.
+[[https://en.wikipedia.org/wiki/Courier_(typeface)#Courier_New][Courier New]] -9 --- классика жанра.
 
 [[https://en.wikipedia.org/wiki/Monaco_(typeface)][Monaco]]-?? ---моноширинный шрифт по-умолчанию в ранних версиях Mac OS X.
 
@@ -821,6 +853,8 @@ bla-bla-bla. Эмакс [[http://www.gnu.org/software/emacs/manual/html_node/eli
 #                         `([,(cdr char-regexp) 0 font-shape-gstring]))))
 
 Indent Tabs Mode
+
+show paren mode - on
 
 --------------------------------------------------------------------------------
 
@@ -890,7 +924,7 @@ Vista/7/8/10]] эмакс считает своей домашней дирек�
 [[http://wenshanren.org/?p=781][Emacs 25 testing: org-html-export returns org-html-fontify-code: Wrong number of arguments…]]
 
 #+name: fix-some-bugs
-#+begin_src elisp -r -n
+#+begin_src elisp
   (when (= emacs-major-version 25)
     (defun org-font-lock-ensure ()
       (font-lock-ensure)))
@@ -898,9 +932,24 @@ Vista/7/8/10]] эмакс считает своей домашней дирек�
 
 ----------------------------------------------------------------------
 
-Copyright © 2010-2015.10.01 Роман Захаров [[mailto:zahardzhan@gmail.com][zahardzhan@gmail.com]].
+Роман Захаров [[mailto:zahardzhan@gmail.com][zahardzhan@gmail.com]] 1 октября 2015.
 
-This material may be distributed only subject to the terms and
-conditions set forth in [[http://www.gnu.org/licenses/gpl-3.0.txt][GNU General Public License v3]] or later; or, at
-your option, distributed under the terms of GNU Free Documentation
-License version 1.2 or later (GNU FDL).
+#+name: header
+#+begin_src elisp
+  ;; Copyright © 2015.10.01 Roman Zaharov <zahardzhan@gmail.com>
+
+  ;; This file is not part of GNU Emacs.
+
+  ;; This program is free software; you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation; either version 3, or (at your option)
+  ;; any later version. 
+
+  ;;; Code:
+
+#+end_src
+
+#+name: footer
+#+begin_src elisp
+(provide 'well-tuned-emacs)
+#+end_src
