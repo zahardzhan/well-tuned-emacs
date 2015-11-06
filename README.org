@@ -4,9 +4,9 @@
 
 #+Options: HTML-Postamble:nil # HTML-страница без футера
 #+Options: ToC:nil # Оглавление
-#+Options: Org-Display-Internal-Link-With-Indirect-Buffer:t # Внутренние ссылки из этого документа открываются в другом буфере
+#+Options: Org-Display-Internal-Link-With-Indirect-Buffer:t # Внутренние ссылки открываются в другом буфере
 #+Options: ^:t # TeX-like syntax for sub/superscripts ^:{} and a_{b}
-# +Style: <link rel="stylesheet" type="text/css" href="well-tuned-emacs.css"/>
+# +Style: <link rel="stylesheet" type="text/css" href="README.css"/>
 
 Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/, далее ---
 «эмакс»] был создан давным давно в Лаборатории Искуственного
@@ -184,12 +184,17 @@ org-babel-tangle]].  В результате из фрагментов лисп-
   (require 'cl-lib)
 #+end_src
 
-[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html#Using-Lexical-Binding][Лексическая область видимости локальных переменных и функций]] в
-лисп-программе инициализации делает её более быстрой (после
-компиляции), современной и надежной.
-Лексическая область видимости.
-Локальные переменные.
-http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html#Specifying-File-Variables
+В 24-й версии эмакса в эмакс-лиспе появилась поддержка [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html#Using-Lexical-Binding][лексической
+области видимости и замыканий]] (как в Scheme образца 1975
+года). Лексическая область видимости делает программу инициализации
+более быстрой, современной и надежной. Первая строка в файле
+инициализации устанавливает [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html#Specifying-File-Variables][локальную переменную буфера]] и активирует
+соответствующую семантику языка при интерпретации и компиляции
+лисп-программы инициализации.
+
+#+begin_src elisp :tangle no
+  ;;; -*- lexical-binding: t -*-
+#+end_src
 
 Во время запуска эмакс выполняет [[elisp:(describe-function 'command-line)][одну из девяти возможных программ
 инициализации]][см. [[https://github.com/emacs-mirror/emacs/blob/master/lisp/startup.el#L1158][исходник на github]]] (на самом деле их больше, но
@@ -198,18 +203,18 @@ http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variabl
 порядке приоритета: =~/_emacs= (/устаревший --- для MS-DOS/),
 =~/.emacs=, =~/.emacs.el=, =~/.emacs.d/init.el=.
 
-| user-init-file while init        | user-init-file after init                     | actual-user-init-file              |
-|----------------------------------+-----------------------------------------------+------------------------------------|
-| =nil=                            | =nil=                                         | =~/.emacs.d/init.el= or some other |
-| by default — relative =~/.emacs= | relative =~/.emacs=                           | =~/.emacs=                         |
-| =~/_emacs=                       | =~/_emacs=                                    | =~/_emacs=                         |
-| =~/_emacs.el=                    | =~/_emacs.el=                                 | =~/_emacs.el=                      |
-| =~/_emacs.elc=                   | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs=        |
-| =~/.emacs=                       | =~/.emacs=                                    | =~/.emacs=                         |
-| =~/.emacs.el=                    | =~/.emacs.el=                                 | =~/.emacs.el=                      |
-| =~/.emacs.elc=                   | =~/.emacs.el= or =~/.emacs= or =~/.emacs.elc= | =~/.emacs.el= or =~/.emacs=        |
-| =~/.emacs.d/init.el=             | =~/.emacs.d/init.el=                          | =~/.emacs.d/init.el=               |
-| =~/.emacs.d/init.elc=            | =~/.emacs.d/init.el= or =~/.emacs.d/init.elc= | =~/.emacs.d/init.el=               |
+| user-init-file while init      | user-init-file after init                     | actual-user-init-file              |
+|--------------------------------+-----------------------------------------------+------------------------------------|
+| =nil=                          | =nil=                                         | =~/.emacs.d/init.el= or some other |
+| relative =~/.emacs= by default | relative =~/.emacs=                           | =~/.emacs=                         |
+| =~/_emacs=                     | =~/_emacs=                                    | =~/_emacs=                         |
+| =~/_emacs.el=                  | =~/_emacs.el=                                 | =~/_emacs.el=                      |
+| =~/_emacs.elc=                 | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs=        |
+| =~/.emacs=                     | =~/.emacs=                                    | =~/.emacs=                         |
+| =~/.emacs.el=                  | =~/.emacs.el=                                 | =~/.emacs.el=                      |
+| =~/.emacs.elc=                 | =~/.emacs.el= or =~/.emacs= or =~/.emacs.elc= | =~/.emacs.el= or =~/.emacs=        |
+| =~/.emacs.d/init.el=           | =~/.emacs.d/init.el=                          | =~/.emacs.d/init.el=               |
+| =~/.emacs.d/init.elc=          | =~/.emacs.d/init.el= or =~/.emacs.d/init.elc= | =~/.emacs.d/init.el=               |
 
 #+name: user-init-file-names
 #+begin_src elisp -r -n
@@ -445,10 +450,10 @@ https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org.
 
 Как вариант, во время загрузки лисп-программы инициализации мы можем
 ее скомпилировать. Для этого нам понадобится лисп-программа
-байт-компиляции лисп-программ bytecomp. Следующий код это своего рода
-шутка --- он загружает лисп-программу байт-компиляции лисп-программ во
-время байт-компиляции этой лисп-программы лисп-программой
-байт-компиляции лисп-программ.
+байт-компиляции лисп-программ bytecomp. Следующая строка кода это
+своего рода шутка --- он загружает лисп-программу байт-компиляции
+лисп-программ во время байт-компиляции этой лисп-программы
+лисп-программой байт-компиляции лисп-программ.
 
 #+name: requirements
 #+begin_src elisp -r -n
@@ -523,20 +528,20 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 
 #+name: set-well-tuned-emacs-compile-user-init-file-custom-option
 #+begin_src elisp -r -n
-  (lambda (symbol value)
-    (unless (fboundp 'set-well-tuned-emacs-compile-user-init-file-custom-option)
-      (defun set-well-tuned-emacs-compile-user-init-file-custom-option (&optional symbol value)
-        (when symbol (set symbol value))
-        (let ((while-init-time (not after-init-time)))
-          (cond (while-init-time
-                 (add-hook 'after-init-hook 'set-well-tuned-emacs-compile-user-init-file-custom-option))
-                (after-init-time
-                 (require 'bytecomp)
-                 (if well-tuned-emacs-compile-user-init-file
-                     <<compile-el-when-there-is-no-elc-or-elc-older-than-el>>
-                   <<delete-elc-if-there-is-el>>
-                   ))))))
-    (set-well-tuned-emacs-compile-user-init-file-custom-option symbol value))
+  (progn
+    (defun set-well-tuned-emacs-compile-user-init-file (&optional symbol value)
+      (when symbol (set symbol value))
+      (let ((while-init-time (not after-init-time)))
+        (cond (while-init-time
+               (add-hook 'after-init-hook 'set-well-tuned-emacs-compile-user-init-file))
+              (after-init-time
+               (require 'bytecomp)
+               (if well-tuned-emacs-compile-user-init-file
+                   <<compile-el-when-there-is-no-elc-or-elc-older-than-el>>
+                 <<delete-elc-if-there-is-el>>
+                 )))))
+    (lambda (symbol value)
+      (set-well-tuned-emacs-compile-user-init-file symbol value)))
 #+end_src
 
 Компилируем лисп-программу инициализации только если скомпилированная
@@ -936,7 +941,7 @@ Vista/7/8/10]] эмакс считает своей домашней дирек�
 
 #+name: header
 #+begin_src elisp
-  ;; Copyright © 2015.10.01 Roman Zaharov <zahardzhan@gmail.com>
+  ;; Copyright © 2015 Roman Zaharov <zahardzhan@gmail.com>
 
   ;; This file is not part of GNU Emacs.
 
