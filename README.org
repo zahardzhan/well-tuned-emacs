@@ -234,18 +234,18 @@ Starter Kit пришелся именно на эти годы, то есть п
 (/устаревший --- для MS-DOS/), =~/.emacs=, =~/.emacs.el=,
 =~/.emacs.d/init.el=.
 
-| user-init-file while init       | user-init-file after init                     | actual-user-init-file              |
-|---------------------------------+-----------------------------------------------+------------------------------------|
-| =nil= when -q or -​-no-init-file | =nil=                                         | =~/.emacs.d/init.el= or some other |
-| =~/.emacs= relative by default  | =~/.emacs= relative by default                | =~/.emacs=                         |
-| =~/_emacs=                      | =~/_emacs=                                    | =~/_emacs=                         |
-| =~/_emacs.el=                   | =~/_emacs.el=                                 | =~/_emacs.el=                      |
-| =~/_emacs.elc=                  | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs=        |
-| =~/.emacs=                      | =~/.emacs=                                    | =~/.emacs=                         |
-| =~/.emacs.el=                   | =~/.emacs.el=                                 | =~/.emacs.el=                      |
-| =~/.emacs.elc=                  | =~/.emacs.el= or =~/.emacs= or =~/.emacs.elc= | =~/.emacs.el= or =~/.emacs=        |
-| =~/.emacs.d/init.el=            | =~/.emacs.d/init.el=                          | =~/.emacs.d/init.el=               |
-| =~/.emacs.d/init.elc=           | =~/.emacs.d/init.el= or =~/.emacs.d/init.elc= | =~/.emacs.d/init.el=               |
+| user-init-file while init      | user-init-file after init                     | actual-user-init-file              |
+|--------------------------------+-----------------------------------------------+------------------------------------|
+| =nil= emacs -q/-​-no-init-file  | =nil=                                         | =~/.emacs.d/init.el= or some other |
+| =~/.emacs= relative by default | =~/.emacs= relative by default                | =~/.emacs=                         |
+| =~/_emacs=                     | =~/_emacs=                                    | =~/_emacs=                         |
+| =~/_emacs.el=                  | =~/_emacs.el=                                 | =~/_emacs.el=                      |
+| =~/_emacs.elc=                 | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs=        |
+| =~/.emacs=                     | =~/.emacs=                                    | =~/.emacs=                         |
+| =~/.emacs.el=                  | =~/.emacs.el=                                 | =~/.emacs.el=                      |
+| =~/.emacs.elc=                 | =~/.emacs.el= or =~/.emacs= or =~/.emacs.elc= | =~/.emacs.el= or =~/.emacs=        |
+| =~/.emacs.d/init.el=           | =~/.emacs.d/init.el=                          | =~/.emacs.d/init.el=               |
+| =~/.emacs.d/init.elc=          | =~/.emacs.d/init.el= or =~/.emacs.d/init.elc= | =~/.emacs.d/init.el=               |
 
 #+name: user-init-file-names
 #+begin_src elisp -r -n
@@ -774,7 +774,7 @@ F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
 
 #+name: keybindings
 #+begin_src elisp -r -n
-  (global-set-key (kbd "C-x <f10>") 'toggle-menu-bar-mode-from-frame)
+  (global-set-key (kbd "C-x <f10>") #'toggle-menu-bar-mode-from-frame)
 #+end_src
 
 [[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲
@@ -830,7 +830,7 @@ F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
 
 #+name: customizations
 #+begin_src elisp -r -n
-  (advice-add 'load-theme :after 'set-transparent-fringe-background)
+  (advice-add 'load-theme :after #'set-transparent-fringe-background)
 #+end_src
 
 [[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲
@@ -887,7 +887,7 @@ F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
                      (fancy-splash-insert
                       "To start: "
                       :link `("open file"
-                              ,(lambda (_button) (call-interactively 'find-file))
+                              ,(lambda (_button) (call-interactively #'find-file))
                               "Specify a new file's name, to edit the file")
                       ", "
                       :link `("open home directory"
@@ -1018,7 +1018,8 @@ Control, но это не избавляет от нагрузки на леву
   (define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word-or-kill-region)
   (add-hook 'ido-setup-hook
             (lambda ()
-              (when (boundp 'ido-completion-map)
+              (when (and (boundp 'ido-completion-map)
+                         (fboundp #'ido-delete-backward-word-updir))
                 (define-key ido-completion-map (kbd "C-w") #'ido-delete-backward-word-updir))))
 #+end_src
 
