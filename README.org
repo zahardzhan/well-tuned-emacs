@@ -215,7 +215,7 @@ Starter Kit пришелся именно на эти годы, то есть п
 В 24-й версии эмакса в эмакс-лиспе появилась поддержка
 [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html#Using-Lexical-Binding][лексической области видимости и замыканий]]
 (как в Scheme образца 1975 года). Лексическая область видимости делает
-программу инициализации более современной, быстрой и надежной. Первая
+программу инициализации более изящной, быстрой и надежной. Первая
 строка в файле инициализации устанавливает
 [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html#Specifying-File-Variables][локальную переменную буфера]]
 и активирует соответствующую семантику языка
@@ -234,18 +234,18 @@ Starter Kit пришелся именно на эти годы, то есть п
 (/устаревший --- для MS-DOS/), =~/.emacs=, =~/.emacs.el=,
 =~/.emacs.d/init.el=.
 
-| user-init-file while init     | user-init-file after init                     | actual-user-init-file              |
-|-------------------------------+-----------------------------------------------+------------------------------------|
-| =nil= — --inhibit-init-file   | =nil=                                         | =~/.emacs.d/init.el= or some other |
-| relative =~/.emacs= — default | relative =~/.emacs=                           | =~/.emacs=                         |
-| =~/_emacs=                    | =~/_emacs=                                    | =~/_emacs=                         |
-| =~/_emacs.el=                 | =~/_emacs.el=                                 | =~/_emacs.el=                      |
-| =~/_emacs.elc=                | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs=        |
-| =~/.emacs=                    | =~/.emacs=                                    | =~/.emacs=                         |
-| =~/.emacs.el=                 | =~/.emacs.el=                                 | =~/.emacs.el=                      |
-| =~/.emacs.elc=                | =~/.emacs.el= or =~/.emacs= or =~/.emacs.elc= | =~/.emacs.el= or =~/.emacs=        |
-| =~/.emacs.d/init.el=          | =~/.emacs.d/init.el=                          | =~/.emacs.d/init.el=               |
-| =~/.emacs.d/init.elc=         | =~/.emacs.d/init.el= or =~/.emacs.d/init.elc= | =~/.emacs.d/init.el=               |
+| user-init-file while init       | user-init-file after init                     | actual-user-init-file              |
+|---------------------------------+-----------------------------------------------+------------------------------------|
+| =nil= when -q or -​-no-init-file | =nil=                                         | =~/.emacs.d/init.el= or some other |
+| =~/.emacs= relative by default  | =~/.emacs= relative by default                | =~/.emacs=                         |
+| =~/_emacs=                      | =~/_emacs=                                    | =~/_emacs=                         |
+| =~/_emacs.el=                   | =~/_emacs.el=                                 | =~/_emacs.el=                      |
+| =~/_emacs.elc=                  | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs=        |
+| =~/.emacs=                      | =~/.emacs=                                    | =~/.emacs=                         |
+| =~/.emacs.el=                   | =~/.emacs.el=                                 | =~/.emacs.el=                      |
+| =~/.emacs.elc=                  | =~/.emacs.el= or =~/.emacs= or =~/.emacs.elc= | =~/.emacs.el= or =~/.emacs=        |
+| =~/.emacs.d/init.el=            | =~/.emacs.d/init.el=                          | =~/.emacs.d/init.el=               |
+| =~/.emacs.d/init.elc=           | =~/.emacs.d/init.el= or =~/.emacs.d/init.elc= | =~/.emacs.d/init.el=               |
 
 #+name: user-init-file-names
 #+begin_src elisp -r -n
