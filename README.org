@@ -37,9 +37,9 @@ Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/,
 мере. Чтобы стать грамотным пользователем эмакса, вам придется понять
 его концепцию и внутреннее устройство, а это значит --- приобщиться к
 культуре хакеров 70-х годов прошлого века. Новичков такое положение
-дел пугает, но все не так плохо: эмакс сложен только для сложных
-задач, а для простых задач он прост, все зависит только от ваших
-потребностей. Начать знакомство с ним лучше всего с общего обзора
+дел пугает, но все не так плохо: эмакс сложен для сложных задач и
+прост для простых, все зависит только от ваших потребностей. Начать
+знакомство с ним лучше с общего обзора
 “[[http://www.gnu.org/software/emacs/tour/][A Guided Tour of Emacs]]”
 на сайте [[http://www.gnu.org/philosophy/free-sw.ru.html][свободной]]
 [[http://www.gnu.org][операционной системы GNU]].
@@ -56,18 +56,17 @@ Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/,
 написанном в 1981 году --- и за прошедшие годы эта суть ничуть не
 изменилась.
                                         
-Расширяемость эмакса это одновременно его благословение и
-проклятье. Конечно, в стандартной поставке эмакс хорош, но не так
-хорош как мог бы быть. Вы не ограничены решениями разработчиков, и
-если вам нужна функциональность которой в эмаксе нет, вы можете
-добавить ее сами: достаточно просто открыть эмакс и подробно её
-описать. В конце концов все возможности эмакса по редактированию
-текста это всего лишь текст описывающий что делать с текстом, и вы
-можете изменить этот текст в любое время точно так же как и любой
-другой, тем самым изменив возможности эмакса. Потенциально его
-возможности безграничны, но чтобы ими воспользоваться придется взяться
-за настройку, а это подразумевает умение программировать и плотное
-общение с сообществом.
+Расширяемость эмакса это его благословение и проклятье. Конечно, в
+стандартной поставке эмакс хорош, но не так хорош как мог бы быть. Вы
+не ограничены решениями разработчиков, и если вам нужна
+функциональность которой в эмаксе нет, вы можете добавить ее сами:
+достаточно просто открыть эмакс и подробно её описать. В конце концов
+все возможности эмакса по редактированию текста это всего лишь текст
+описывающий что делать с текстом, и вы можете изменить этот текст в
+любое время точно так же как и любой другой, тем самым изменив
+возможности эмакса. Потенциально его возможности безграничны, но чтобы
+ими воспользоваться придется взяться за настройку, а это подразумевает
+умение программировать и плотное общение с сообществом.
 
 Настройка эмакса это своего рода декоративно-прикладное искусство; для
 каждого конкретного пользователя она заключается в составлении
@@ -166,8 +165,9 @@ Starter Kit пришелся именно на эти годы, то есть п
 изменении и скачивало новые версии себя из удаленных
 источников. Почему бы и нет. Это же руководство для эмакса.
 
-[[elisp:org-babel-tangle][Превратить это руководство в лисп-программу]]
-(/сплести/ программу --- /tangle/) очень просто, достаточно
+[[elisp:org-babel-tangle][Превратить это руководство в лисп-программу инициализации эмакса]]
+[[file:~/.emacs][.emacs]] или [[file:~/.emacs.d/init.el][init.el]] (/сплести/ программу --- /tangle/)
+очень просто, достаточно
 [[https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org][скачать свежую версию этого руководства]],
 открыть ее в эмаксе и выполнить команду [[elisp:org-babel-tangle][M-x org-babel-tangle]].
 В результате из фрагментов лисп-кода в этом руководстве будет создана
@@ -453,7 +453,7 @@ Windows/Cygwin/VMware).
 [[elisp:(customize-group-other-window 'help)][Help]]⊲
 [[elisp:(customize-group-other-window 'customize)][Customize]]⊲
 [[elisp:(customize-variable-other-window 'custom-file)][Custom File]]
-← [[elisp:(find-file (concat user-emacs-directory "custom.el"))][~/.emacs.d/custom.el]].
+← [[file:~/.emacs.d/custom.el][~/.emacs.d/custom.el]].
 По-умолчанию Customize хранит свои данные в файле с исходным кодом
 лисп-программы инициализации эмакса; если мы переплетем этот файл ---
 все наши настройки пропадут. В Customize можно выполнить настройку
@@ -477,7 +477,8 @@ Windows/Cygwin/VMware).
 #+end_src
 
 Ниже код вида (add-hook 'after-init-hook (defun ... () ... )) появится
-еще несколько раз, поэтому имеет смысл генерировать его с помощью макроса.
+еще несколько раз, поэтому имеет смысл генерировать его с помощью
+макроса.
 
 #+name: customize-customize-and-apply-customizations
 #+begin_src elisp
@@ -485,6 +486,15 @@ Windows/Cygwin/VMware).
     `(add-hook 'after-init-hook
        (defun ,(make-symbol (concat "customize-save-variable-" (symbol-name var))) ()
          (customize-save-variable ',var ,var))))
+#+end_src
+
+Многие пакеты слабо взаимодействуют с собственными сохраненными
+настройками, часто придется загружать их вручную.
+
+#+name: customize-customize-and-apply-customizations
+#+begin_src elisp
+  (defun saved-value (var)
+    (cl-first (get var 'saved-value)))
 #+end_src
 
 Чтобы не /переплетать/ программу инициализации эмакса вручную после
@@ -796,9 +806,8 @@ package-selected-packages. Сама эта настройка
 настроек показывают лисп-программы
 [[elisp:customize-saved][M-x customize-saved]] и
 [[elisp:customize-unsaved][M-x customize-unsaved]]. Конечно, система
-
 кастомизации не всемогуща и для некоторых настроек (например,
-нестандартные сочетания клавиш и ) придется написать несколько строк на
+нестандартные сочетания клавиш) придется написать несколько строк на
 лиспе. В общем виде весь последующий код выглядит так:
 
 #+name: load-packages-and-apply-advanced-customizations
@@ -1068,8 +1077,8 @@ Emacs получили свои копии этого пакета уже без
 русский язык по C-\ без предварительного указания метода ввода требует
 кастомизации. Кроме национальных методов ввода текста есть
 технические, например TeX (шутка в духе [[https://en.wikipedia.org/wiki/Donald_Knuth][профессора]]),
-в них введенные спецслова превращаются в спецсимволы, например 
-\​'e → é, \​th → þ, \​Mu\​epsilon\​nu → Μεν,
+в этих режимах введенные спецслова превращаются в спецсимволы,
+например \​'e → é, \​th → þ, \​Mu\​epsilon\​nu → Μεν,
 \existsa\forallb(b\ina) → ∃a∀b(b∈a).
 
 C-\ не самое удобное сочетание клавиш, как вариант можно использовать
@@ -1079,6 +1088,132 @@ C-\ не самое удобное сочетание клавиш, как ва�
 #+begin_src elisp
   (global-set-key (kbd "S-SPC") #'toggle-input-method)
 #+end_src
+
+--------------------------------------------------------------------------------
+
+Для эмакса написано много лисп-программ делающих работу со скобками
+более удобной и наглядной. Режимы
+[[elisp:(customize-variable-other-window 'electric-pair-mode)][Electric Pair Mode]] и
+[[elisp:(customize-variable-other-window 'show-paren-mode)][Show Paren Mode]] ---
+это встроенные лисп-программы, они достаточно хороши, но есть и
+получше, например [[https://github.com/Fuco1/smartparens][Smartparens]] и Paredit.
+Однако все эти программы /устарели/, поэтому не стоит заморачиваться с
+их настройкой. Современные экспериментальные программы вроде
+[[http://shaunlebron.github.io/parinfer/][Parinfer]]
+определяют структуру программы по отступам в коде и расставляют скобки
+автоматически.
+
+#+name: customizations
+#+begin_src elisp
+  (use-package smartparens-config :ensure smartparens
+    :diminish smartparens-mode
+    :config
+      (progn
+        <<bind-paredit-like-keys-for-smartparens-mode>>
+        <<turn-on-smartparens-strict-mode-for-some-modes>>
+        (smartparens-global-mode (saved-value 'smartparens-global-mode))
+        (show-smartparens-global-mode (saved-value 'show-smartparens-global-mode))))
+#+end_src
+
+[[elisp:(customize-variable-other-window 'smartparens-global-mode)][Smartparens Global Mode]]
+← [[elisp:(customize-save-variable 'smartparens-global-mode nil)][скобки вводятся по-отдельности]] или [[elisp:(customize-save-variable 'smartparens-global-mode t)][парами во всех режимах]].
+Необязательно включать этот режим везде, по-настоящему он полезен
+только при редактировании структурированного кода.
+
+#+name: turn-on-smartparens-strict-mode-for-some-modes
+#+begin_src elisp
+(add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
+#+end_src
+
+[[elisp:(customize-variable-other-window 'show-smartparens-global-mode)][Show Smartparens Global Mode]]
+← [[elisp:(customize-save-variable 'show-smartparens-global-mode t)][парные скобки подсвечиваются]].
+
+См. [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][анимированное руководство по сочетаниям клавиш в лисп-программе Paredit]].
+
+#+name: bind-paredit-like-keys-for-smartparens-mode
+#+begin_src elisp
+  (bind-keys :map smartparens-mode-map
+    ("C-M-a" . sp-beginning-of-sexp)
+    ("C-M-e" . sp-end-of-sexp)
+    ("C-M-f" . sp-forward-sexp)
+    ("C-M-b" . sp-backward-sexp)
+    ("C-M-n" . sp-next-sexp)
+    ("C-M-p" . sp-previous-sexp)
+    ("C-<up>" . sp-backward-up-sexp)
+    ("M-<up>" . sp-backward-down-sexp)
+    ("C-<down>" . sp-down-sexp)
+    ("M-<down>" . sp-up-sexp)
+    ("C-<left>" . sp-backward-slurp-sexp)
+    ("M-<left>" . sp-forward-barf-sexp)
+    ("C-<right>" . sp-forward-slurp-sexp)
+    ("M-<right>" . sp-backward-barf-sexp)
+    ("M-[" . sp-backward-unwrap-sexp)
+    ("M-]" . sp-unwrap-sexp)
+    ("C-M-t" . sp-transpose-sexp)
+    ("C-M-k" . sp-kill-sexp)
+    ("C-k" . sp-kill-hybrid-sexp)
+    ("M-k" . sp-backward-kill-sexp)
+    ("C-M-d" . delete-sexp))
+#+end_src
+
+[[elisp:(customize-variable-other-window 'indent-tabs-mode)][Indent Tabs Mode]]
+← [[elisp:(customize-save-variable 'indent-tabs-mode nil)][отступы пробелами]].
+
+[[elisp:(customize-variable-other-window 'tab-always-indent))][Tab Always Indent]]
+← [[elisp:(customize-save-variable 'tab-always-indent 'complete)][после автоматической установки отступов Tab выполняет автодополнение]].
+
+[[elisp:(customize-variable-other-window 'subword-mode)][Subword Mode]]
+← [[elisp:(customize-save-variable 'subword-mode t)][составные части слова записанного CamelCase'ом считаются отдельными словами]].
+[[http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html][Подробнее у Xah Lee]].
+
+[[elisp:(customize-variable-other-window 'superword-mode)][Superword Mode]]
+← [[elisp:(customize-save-variable 'superword-mode t)][составные слова набранные в любом стиле считаются единым словом]].
+Режимы Subword и Superword взаимно исключают друг
+друга. Одновременно может быть активен только один из режимов.
+
+[[elisp:(customize-variable-other-window 'delete-selection-mode)][Delete Selection Mode]]
+← [[elisp:(customize-save-variable 'delete-selection-mode t)][выделенный текст полностью удаляется или заменяется при удалении, вставке или вводе]].
+Стандартное поведение современных текстовых редакторов.
+
+[[elisp:(customize-variable-other-window 'mouse-yank-at-point)][Mouse Yank At Point]]
+← [[elisp:(customize-save-variable 'mouse-yank-at-point t)][мышь вставляет текст на позиции текстового курсора]],
+а не на позиции курсора мыши. В традиции
+[[https://en.wikipedia.org/wiki/X_Window_System][X Window System]]
+текст вставляется по щелчку средней кнопки мыши.
+
+X Window System и Emacs (в любой ОС) поддерживают два буфера обмена:
+/primary/ и /clipboard/. Мышь работает с primary-буфером, клавиатурные
+команды --- с clipboard-буфером.
+
+[[elisp:(customize-variable-other-window 'x-select-enable-clipboard t)][X Select Enable Clipboard]]
+← [[elisp:(customize-save-variable 'x-select-enable-clipboard t)][клавиатурные команды копирования и вставки используют системный буфер обмена]]
+(по-умолчанию).
+
+[[elisp:(customize-variable-other-window 'x-select-enable-primary)][X Select Enable Primary]]
+← [[elisp:(customize-save-variable 'x-select-enable-primary t)][клавиатурные команды копирования и вставки используют мышиный буфер обмена]]
+(в дополнение к системному).
+
+[[elisp:(customize-variable-other-window 'save-interprogram-paste-before-kill)][Save Interprogram Paste Before Kill]]
+← [[elisp:(customize-save-variable 'save-interprogram-paste-before-kill t)][фрагменты текста скопированные в буфер обмена во внешних программах сохраняются в эмаксе]]
+в буфере скопированных/удаленных фрагментов текста /kill ring/.
+
+[[elisp:(customize-variable-other-window 'org-support-shift-select)][Org Support Shift Select]]
+← [[elisp:(customize-save-variable 'org-support-shift-select t)][выделение шифтом и стрелками в режиме Org]].
+
+[[elisp:(describe-function #'yes-or-no-p)][Yes or No Predicate]]
+← подтверждение одной клавишей: Y или Пробел --- да, N или Delete ---
+нет.
+
+#+name: customizations
+#+begin_src elisp
+(defalias (function yes-or-no-p) (function y-or-n-p))
+#+end_src
+
+[[elisp:(customize-variable-other-window 'apropos-do-all)][Apropos Do All]]
+← [[elisp:(customize-save-variable 'apropos-do-all t)][расширенный поиск командами apropos]].
+
+# [[elisp:(customize-variable-other-window ')][]]
+# ← [[elisp:(customize-save-variable ')][]]
 
 --------------------------------------------------------------------------------
 
@@ -1129,12 +1264,15 @@ C-\ не самое удобное сочетание клавиш, как ва�
 #+end_src
 
 _available-font_ → полное имя шрифта, если шрифт с указанным кратким
-именем доступен в текущем системном окружении.
+именем доступен в текущем системном окружении. _Осторожно_: применение
+функции find-font в консольном Emacs 24.5.1 под Debian Stretch 64
+приведет к ошибке сегментации и краху программы.
 
 #+name: customize-well-tuned-emacs
 #+begin_src elisp
   (defun available-font (font)
-    (when (stringp font) (find-font (font-spec :name font))))
+    (when (stringp font) 
+      (when window-system (find-font (font-spec :name font)))))
 #+end_src
 
 _available-well-tuned-emacs-fonts_ → список предпочитаемых шрифтов
@@ -1377,140 +1515,9 @@ _flip_ → результат применения функции при пер�
 
 --------------------------------------------------------------------------------
 
-_Альтернативный вариант_: [[elisp:(customize-variable-other-window 'electric-pair-mode)][Electric Pair Mode]]
-← [[elisp:(customize-save-variable 'electric-pair-mode t)][скобки вводятся парами]].
-Открывающая скобка автоматически дополняется закрывающей.
-
-_Альтернативный вариант_: [[elisp:(customize-variable-other-window 'show-paren-mode)][Show Paren Mode]]
-← [[elisp:(customize-save-variable 'show-paren-mode t)][парные скобки подсвечиваются]].
-
-Для эмакса написано много лисп-программ делающих работу со скобками
-более удобной и наглядной. Режимы Electric Pair и Show Paren --- это
-встроенные лисп-программы, они достаточно хороши, но есть и получше,
-например [[https://github.com/Fuco1/smartparens][Smartparens]] и Paredit.
-Однако все эти программы /устарели/, поэтому не стоит заморачиваться с
-их настройкой. Современные экспериментальные программы вроде
-[[http://shaunlebron.github.io/parinfer/][Parinfer]]
-определяют структуру программы по отступам в коде и расставляют скобки
-автоматически.
-
-#+name: customizations
-#+begin_src elisp
-  (use-package smartparens-config :ensure smartparens
-    :diminish smartparens-mode
-    :config
-      (progn
-        <<bind-paredit-like-keys-for-smartparens-mode>>
-        <<turn-on-smartparens-strict-mode-for-some-modes>>
-        (smartparens-global-mode (cl-first (get 'smartparens-global-mode 'saved-value)))
-        (show-smartparens-global-mode (cl-first (get 'show-smartparens-global-mode 'saved-value)))))
-#+end_src
-
-[[elisp:(customize-variable-other-window 'smartparens-global-mode)][Smartparens Global Mode]]
-← [[elisp:(customize-save-variable 'smartparens-global-mode nil)][скобки вводятся по-отдельности]] или [[elisp:(customize-save-variable 'smartparens-global-mode t)][парами во всех режимах]].
-Необязательно включать этот режим везде, по-настоящему он полезен
-только при редактировании структурированного кода.
-
-#+name: turn-on-smartparens-strict-mode-for-some-modes
-#+begin_src elisp
-(add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
-#+end_src
-
-[[elisp:(customize-variable-other-window 'show-smartparens-global-mode)][Show Smartparens Global Mode]]
-← [[elisp:(customize-save-variable 'show-smartparens-global-mode t)][парные скобки подсвечиваются]].
-
-См. [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][анимированное руководство по сочетаниям клавиш в лисп-программе Paredit]].
-
-#+name: bind-paredit-like-keys-for-smartparens-mode
-#+begin_src elisp
-  (bind-keys :map smartparens-mode-map
-    ("C-M-a" . sp-beginning-of-sexp)
-    ("C-M-e" . sp-end-of-sexp)
-    ("C-M-f" . sp-forward-sexp)
-    ("C-M-b" . sp-backward-sexp)
-    ("C-M-n" . sp-next-sexp)
-    ("C-M-p" . sp-previous-sexp)
-    ("C-<up>" . sp-up-sexp)
-    ("M-<up>" . sp-backward-up-sexp)
-    ("C-<down>" . sp-down-sexp)
-    ("M-<down>" . sp-backward-down-sexp)
-    ("C-<left>" . sp-backward-slurp-sexp)
-    ("M-<left>" . sp-forward-barf-sexp)
-    ("C-<right>" . sp-forward-slurp-sexp)
-    ("M-<right>" . sp-backward-barf-sexp)
-    ("M-[" . sp-backward-unwrap-sexp)
-    ("M-]" . sp-unwrap-sexp)
-    ("C-M-t" . sp-transpose-sexp)
-    ("C-M-k" . sp-kill-sexp)
-    ("C-k" . sp-kill-hybrid-sexp)
-    ("M-k" . sp-backward-kill-sexp)
-    ("C-M-d" . delete-sexp))
-#+end_src
-
-[[elisp:(customize-variable-other-window 'indent-tabs-mode)][Indent Tabs Mode]]
-← [[elisp:(customize-save-variable 'indent-tabs-mode nil)][отступы пробелами]].
-
-[[elisp:(customize-variable-other-window 'tab-always-indent))][Tab Always Indent]]
-← [[elisp:(customize-save-variable 'tab-always-indent 'complete)][после автоматической установки отступов Tab выполняет автодополнение]].
-
-[[elisp:(customize-variable-other-window 'subword-mode)][Subword Mode]]
-← [[elisp:(customize-save-variable 'subword-mode t)][составные части слова записанного CamelCase'ом считаются отдельными словами]].
-[[http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html][Подробнее у Xah Lee]].
-
-[[elisp:(customize-variable-other-window 'superword-mode)][Superword Mode]]
-← [[elisp:(customize-save-variable 'superword-mode t)][составные слова набранные в любом стиле считаются единым словом]].
-Режимы Subword и Superword взаимно исключают друг
-друга. Одновременно может быть активен только один из режимов.
-
-[[elisp:(describe-function #'yes-or-no-p)][Yes or No Predicate]]
-← подтверждение одной клавишей: Y или Пробел --- да, N или Delete ---
-нет.
-
-#+name: customizations
-#+begin_src elisp
-(defalias (function yes-or-no-p) (function y-or-n-p))
-#+end_src
-
-[[elisp:(customize-variable-other-window 'org-support-shift-select)][Org Support Shift Select]]
-← [[elisp:(customize-save-variable 'org-support-shift-select t)][выделение шифтом и стрелками в режиме Org]].
-
-[[elisp:(customize-variable-other-window 'delete-selection-mode)][Delete Selection Mode]]
-← [[elisp:(customize-save-variable 'delete-selection-mode t)][выделенный текст полностью удаляется или заменяется при удалении, вставке или вводе]].
-Стандартное поведение современных текстовых редакторов.
-
-[[elisp:(customize-variable-other-window 'mouse-yank-at-point)][Mouse Yank At Point]]
-← [[elisp:(customize-save-variable 'mouse-yank-at-point t)][мышь вставляет текст на позиции текстового курсора]],
-а не на позиции курсора мыши. В традиции X Window System текст
-вставляется по щелчку средней кнопки мыши.
-
-[[https://en.wikipedia.org/wiki/X_Window_System][X Window System]] и
-Emacs (в любой ОС) поддерживают два буфера обмена: /primary/ и
-/clipboard/. Мышь работает с primary-буфером, клавиатурные команды ---
-с clipboard-буфером.
-
-[[elisp:(customize-variable-other-window 'x-select-enable-clipboard t)][X Select Enable Clipboard]]
-← [[elisp:(customize-save-variable 'x-select-enable-clipboard t)][клавиатурные команды копирования и вставки используют системный буфер обмена]]
-(по-умолчанию).
-
-[[elisp:(customize-variable-other-window 'x-select-enable-primary)][X Select Enable Primary]]
-← [[elisp:(customize-save-variable 'x-select-enable-primary t)][клавиатурные команды копирования и вставки используют мышиный буфер обмена]]
-(в дополнение к системному).
-
-[[elisp:(customize-variable-other-window 'save-interprogram-paste-before-kill)][Save Interprogram Paste Before Kill]]
-← [[elisp:(customize-save-variable 'save-interprogram-paste-before-kill t)][фрагменты текста скопированные в буфер обмена во внешних программах сохраняются в эмаксе]]
-в буфере скопированных/удаленных фрагментов текста /kill ring/.
-
-[[elisp:(customize-variable-other-window 'apropos-do-all)][Apropos Do All]]
-← [[elisp:(customize-save-variable 'apropos-do-all t)][расширенный поиск командами apropos]].
-
-[[elisp:(customize-variable-other-window ')][]]
-← [[elisp:(customize-save-variable ')][]]
-
---------------------------------------------------------------------------------
-
-Сочетания каксе имеют три ярко выраженных особенности: их
+Сочетания клавиш в эмаксе имеют три ярко выраженные особенности: их
 /очень/ много; их трудно запомнить; и они вызывают повреждения рук при
-злоупотреблении. С запоминанием помогут 
+злоупотреблении. С запоминанием помогут
 [[https://www.gnu.org/software/emacs/refcards/index.html][быстрые подсказки в формате PDF]]:
 «[[https://www.gnu.org/software/emacs/refcards/pdf/ru-refcard.pdf][Справочник команд GNU Emacs]]»,
 «[[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org-Mode Reference Card]]»,
@@ -1521,13 +1528,12 @@ Emacs (в любой ОС) поддерживают два буфера обме
 #+begin_src elisp
   (use-package guide-key
     :diminish guide-key-mode
-    :init (guide-key-mode (cl-first (get 'guide-key-mode 'saved-value))))
+    :init (guide-key-mode (saved-value 'guide-key-mode)))
 #+end_src
 
 [[elisp:(customize-variable-other-window 'guide-key-mode)][Guide Key Mode]]
 ← [[elisp:(customize-save-variable 'guide-key-mode t)][автоматически показывать доступные сочетания клавиш]]
-для [[elisp:(customize-variable-other-window 'guide-key/guide-key-sequence)][некоторых префиксов]],
-например:
+для [[elisp:(customize-variable-other-window 'guide-key/guide-key-sequence)][некоторых префиксов]]:
 C-x [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-x" guide-key/guide-key-sequence :test #'equal))][добавить]]],
 C-c [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-c" guide-key/guide-key-sequence :test #'equal))][добавить]]],
 C-x 4 [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-x 4" guide-key/guide-key-sequence :test #'equal))][добавить]]],
@@ -1611,7 +1617,7 @@ Control, но это не избавляет от нагрузки на леву
   (global-set-key (kbd "C-x C-b") #'ibuffer)
 #+end_src
 
-Проще убить текущий буфер не отпуская клавишу Control.
+Не отпуская клавишу Control можно легко убить много буферов подряд.
 
 #+name: keybindings
 #+begin_src elisp
