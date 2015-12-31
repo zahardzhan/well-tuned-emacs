@@ -1,16 +1,16 @@
-#+Title: Well Tuned Emacs
+#+Title: Хорошо настроенный Emacs
 #+Author: Роман Захаров
 #+Email: zahardzhan@gmail.com
 
-#+Options: HTML-Postamble:nil # HTML-страница без футера
-#+Options: ToC:nil # Оглавление
-#+Options: org-display-internal-link-with-indirect-buffer:t # Внутренние ссылки открываются в другом буфере
-#+Options: ^:t # TeX subsuperscripts ^:{} & a_{b}
-# +Style: <link rel="stylesheet" type="text/css" href="README.css"/>
+#+Options: HTML-Postamble:nil # HTML-страница без футера.
+#+Options: ToC:nil # Оглавления нет.
+#+Options: org-display-internal-link-with-indirect-buffer:t # Внутренние ссылки открываются в другом буфере.
+#+Options: ^:t # Индексы TeX ^:{} и a_{b}.
 
 Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/, далее ---
-«эмакс»] был создан давным давно в Лаборатории Искуственного
-Интеллекта [[https://en.wikipedia.org/wiki/MIT_Computer_Science_and_Artificial_Intelligence_Laboratory][MIT AI Lab]].
+«эмакс»] был создан давным давно в Лаборатории искусственного
+интеллекта Массачусетского технологического института
+[[https://en.wikipedia.org/wiki/MIT_Computer_Science_and_Artificial_Intelligence_Laboratory][MIT AI Lab]].
 Эмакс это текстовый редактор поведение и возможности которого
 изменяются прямо во время написания в нем текста на языке
 программирования на котором написан сам эмакс. Более того, прямо во
@@ -37,9 +37,9 @@ Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/,
 мере. Чтобы стать грамотным пользователем эмакса, вам придется понять
 его концепцию и внутреннее устройство, а это значит --- приобщиться к
 культуре хакеров 70-х годов прошлого века. Новичков такое положение
-дел пугает, но все не так плохо: эмакс сложен для сложных задач и
-прост для простых, все зависит только от ваших потребностей. Начать
-знакомство с ним лучше с общего обзора
+дел пугает, но все не так плохо: эмакс сложен только для сложных
+задач, а для простых задач он прост, все зависит от ваших
+потребностей. Начать знакомство с ним лучше с общего обзора
 “[[http://www.gnu.org/software/emacs/tour/][A Guided Tour of Emacs]]”
 на сайте [[http://www.gnu.org/philosophy/free-sw.ru.html][свободной]]
 [[http://www.gnu.org][операционной системы GNU]].
@@ -49,8 +49,8 @@ Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/,
 эта история тесно связана с не менее интересной
 [[http://www.gnu.org/gnu/thegnuproject.ru.html][историей проекта GNU]]
 из которой можно узнать, что
-[[https://www.gnu.org/software/emacs/][GNU Emacs]] был первым проектом
-проекта GNU. Суть того что из себя представляет эмакс подробно
+[[https://www.gnu.org/software/emacs/][GNU Emacs]] был первым проектом в
+проекте GNU. Суть того что из себя представляет эмакс подробно
 изложена в документе
 “[[https://www.gnu.org/software/emacs/emacs-paper.html][EMACS: The Extensible, Customizable Display Editor]]”
 написанном в 1981 году --- и за прошедшие годы эта суть ничуть не
@@ -78,7 +78,7 @@ Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/,
 [[https://en.wikipedia.org/wiki/Lisp_(programming_language)][Лисп]]
 это древнейший из используемых языков программирования очень высокого
 уровня, а также простейший из известных человечеству способов
-организации вычислений из /слов/, /структур данных/ и /функций/
+организации вычислений из /символов/, /структур данных/ и /функций/
 (открытых математиками в 1936 году).
 
 В изучении программирования поможет книга
@@ -163,11 +163,11 @@ Starter Kit пришелся именно на эти годы, то есть п
 руководство само превращало себя в лисп-программу и выполняло
 конфигурацию эмакса при запуске. А также пересобирало само себя при
 изменении и скачивало новые версии себя из удаленных
-источников. Почему бы и нет. Это же руководство для эмакса.
+источников. Почему бы и нет. Это же руководство для настройки эмакса
+мышью в лучших традициях Стэнфорда и ЭмАйТи.
 
 [[elisp:org-babel-tangle][Превратить это руководство в лисп-программу инициализации эмакса]]
-[[file:~/.emacs][.emacs]] или [[file:~/.emacs.d/init.el][init.el]] (/сплести/ программу --- /tangle/)
-очень просто, достаточно
+.emacs или init.el (/сплести/ программу --- /tangle/) очень просто, достаточно
 [[https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org][скачать свежую версию этого руководства]],
 открыть ее в эмаксе и выполнить команду [[elisp:org-babel-tangle][M-x org-babel-tangle]].
 В результате из фрагментов лисп-кода в этом руководстве будет создана
@@ -381,20 +381,19 @@ Windows/Cygwin/VMware).
   (defcustom well-tuned-emacs-reference-file
     (let* (
            <<user-init-file-names>>
-           (wter-file-name "README.org")
-           (wter-file-at-home (file-truename (concat (file-name-as-directory "~") wter-file-name)))
-           (wter-file-at-emacs-dir (file-truename (concat user-emacs-directory wter-file-name))))
+           (~/readme (file-truename (concat (file-name-as-directory "~") "README.org")))
+           (~/.emacs.d/readme (file-truename (concat user-emacs-directory "README.org"))))
       (ignore default ~/_emacs.elc  ~/.emacs.elc ~/.emacs.d/init.elc)
       (or (when (cl-find actual-user-init-file (list ~/.emacs ~/.emacs.el ~/_emacs ~/_emacs.el) :test #'equal)
-            (or (when (file-exists-p wter-file-at-home)
-                  wter-file-at-home)
-                wter-file-at-emacs-dir))
+            (or (when (file-exists-p ~/readme)
+                 ~/readme)
+                ~/.emacs.d/readme))
           (when (equal actual-user-init-file ~/.emacs.d/init.el)
-            (or (when (file-exists-p wter-file-at-emacs-dir)
-                  wter-file-at-emacs-dir)
-                (when (file-exists-p wter-file-at-home)
-                  wter-file-at-home)
-                wter-file-at-emacs-dir))))
+            (or (when (file-exists-p ~/.emacs.d/readme)
+                 ~/.emacs.d/readme)
+                (when (file-exists-p ~/readme)
+                 ~/readme)
+                ~/.emacs.d/readme))))
     "The Well Tuned Emacs Reference file."
     :type 'file
     :version "25.0.50.1"
@@ -441,7 +440,7 @@ Windows/Cygwin/VMware).
 и непривычном псевдографическом интерфейсе. Эти настроки сохраняются
 между сессиями эмакса, и многие из них выполнены в виде специфических
 лисп-программ. Подключение дополнительных модулей и пакетов расширений
-эмакса может запросто увеличить количество таких настроек до десяти
+эмакса может запросто увеличить количество таких настроек до пяти
 тысяч. К чему приведет попытка изменения нескольких тысяч параметров
 управляемых лисп-кодом, меняющимся от версии-к-версии, написанием
 своего лисп-кода? Она практически неизбежно приведет к
@@ -470,7 +469,7 @@ Windows/Cygwin/VMware).
     (setq custom-file ~/.emacs.d/custom.el)
     (when (file-exists-p custom-file)
       (load custom-file))
-    (unless (equal ~/.emacs.d/custom.el (cl-first (get 'custom-file 'saved-value)))
+    (unless (equal ~/.emacs.d/custom.el (car (get 'custom-file 'saved-value)))
       (add-hook 'after-init-hook
         (defun save-custom-file-location-in-custom-file ()
           (customize-save-variable 'custom-file ~/.emacs.d/custom.el)))))
@@ -483,18 +482,21 @@ Windows/Cygwin/VMware).
 #+name: customize-customize-and-apply-customizations
 #+begin_src elisp
   (defmacro customize-save-variable-after-init (var)
-    `(add-hook 'after-init-hook
-       (defun ,(make-symbol (concat "customize-save-variable-" (symbol-name var))) ()
-         (customize-save-variable ',var ,var))))
+   `(add-hook 'after-init-hook
+      (defun ,(make-symbol (concat "customize-save-variable-" (symbol-name var))) ()
+        (customize-save-variable ',var ,var))))
 #+end_src
 
-Многие пакеты слабо взаимодействуют с собственными сохраненными
-настройками, часто придется загружать их вручную.
+Многие режимы не активируются сами по себе при запуске эмакса, даже
+при том что в сохраненных настройках явно указано, что они должны быть
+активны. Поэтому после загрузки режимов приходится напоминать им об
+актививации.
 
 #+name: customize-customize-and-apply-customizations
 #+begin_src elisp
-  (defun saved-value (var)
-    (cl-first (get var 'saved-value)))
+  (defun reinstate-mode (mode)
+    (when (car (get mode 'saved-value))
+      (funcall mode 1)))
 #+end_src
 
 Чтобы не /переплетать/ программу инициализации эмакса вручную после
@@ -570,7 +572,7 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 ручном включении/отключении этой опции в через интерфейс Customize,
 эмакс должен соответственно скомпилировать, или удалить
 скомпилированную программу инициализации. Для этого нам нужно написать
-функцию которая позаботится обо всем при изменении значения опции.
+функцию которая позаботится обо всем при изменении значения этой опции.
 
 #+name: customize-well-tuned-emacs
 #+begin_src elisp
@@ -710,9 +712,9 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 
 #+name: make-sure-melpa-is-used-as-one-of-community-package-archives
 #+begin_src elisp
-  (let ((melpa (cons "melpa" "http://melpa.milkbox.net/packages/")))
-    (when (cl-loop for (_archive . location) in package-archives never (equal location (cdr melpa)))
-      (cl-pushnew melpa package-archives :test #'equal)
+  (let ((melpa-location "http://melpa.milkbox.net/packages/"))
+    (when (cl-loop for (_archive . location) in package-archives never (equal location melpa-location))
+      (cl-pushnew  (cons "melpa" melpa-location) package-archives :test #'equal)
       (customize-save-variable-after-init package-archives)))
 #+end_src
 
@@ -751,9 +753,10 @@ package-selected-packages. Сама эта настройка
       (interactive)
       (let ((packages-to-be-installed (cl-remove-if #'package-installed-p package-selected-packages)))
         (when packages-to-be-installed
-          (when (y-or-n-p (format "%s packages will be installed:\n%s, proceed?"
-                            (length packages-to-be-installed)
-                            (mapconcat #'symbol-name packages-to-be-installed ", ")))
+          (when (or noninteractive
+                   (y-or-n-p (format "%s packages will be installed:\n%s, proceed?"
+                               (length packages-to-be-installed)
+                               (mapconcat #'symbol-name packages-to-be-installed ", "))))
             (mapc #'package-install packages-to-be-installed))))))
 #+end_src
 
@@ -798,7 +801,7 @@ package-selected-packages. Сама эта настройка
 строка которой тщательно отобрана сообществом, устанавливает значения
 пары десятков стандартных параметров в обход стандартной системы
 управления этими параметрами. Трудно найти более противоречивый
-проект. В некотором смысле, это образцово-показательный забег по
+проект. В некотором смысле это образцово-показательный забег по
 граблям. На мой взгляд, если современный Starter Kit стал гайдом, то
 логично было бы сделать гайдом и Better Defaults. Ниже я привожу
 ссылки на настройки некоторых ключевых параметров эмакса с
@@ -821,7 +824,9 @@ package-selected-packages. Сама эта настройка
 углубляться во всё более тонкие аспекты его работы. Но прежде --- для
 удобства и быстроты настройки --- лучше
 [[elisp:(customize-variable-other-window 'org-confirm-elisp-link-function)][Org Confirm Elisp Link Function]]
-← [[elisp:(customize-save-variable 'org-confirm-elisp-link-function nil)][не подтверждать выполнение лисп-кода при переходе по ссылкам в этом руководстве]].
+← [[elisp:(customize-save-variable 'org-confirm-elisp-link-function nil)][не подтверждать выполнение лисп-кода при переходе по ссылкам в этом руководстве]] и
+[[elisp:(customize-variable-other-window 'org-return-follows-link)][Org Return Follows Link]]
+← [[elisp:(customize-save-variable 'org-return-follows-link t)][переходить по ссылкам нажатием на Enter]].
 
 [[elisp:(describe-variable 'frame-title-format)][Frame Title Format]]
 ← имя буфера или полное имя файла/директории предваренное именем
@@ -879,28 +884,29 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
 
 [[elisp:(customize-face-other-window 'fringe)][Fringe face]]
 ← [[elisp:(let ((bg `(:background ,(face-attribute 'default :background))))(face-spec-set 'fringe `((t ,bg)))(put 'fringe 'theme-face `((user ,bg)))(put 'fringe 'saved-face `((t ,bg)))(custom-save-all))][прозрачные поля]].
-Во всех текстовых редакторах (начиная с блокнота)
-принято иметь небольшие поля по краям области редактирования
-текста. Поля обязательно должны быть цвета фона чтобы не акцентировать
-внимание на артефактах рендеринга полосы
-прокрутки. [[elisp:(customize-themes)][Цветовые темы]] эмакса меняют
-цвета фона и полей, поэтому каждый раз при изменении темы нам нужно
-чтобы цвет полей соответствовал цвету фона. Для этого используем
-средство
+Во всех текстовых редакторах начиная с Блокнота принято иметь
+небольшие поля по краям области редактирования текста. Поля
+обязательно должны быть цвета фона чтобы не акцентировать внимание на
+артефактах рендеринга полосы прокрутки.
+[[elisp:(customize-themes)][Цветовые темы]] эмакса меняют цвета фона и
+полей, поэтому каждый раз при изменении темы нам нужно чтобы цвет
+полей соответствовал цвету фона. Для этого используем средство
 [[https://en.wikipedia.org/wiki/Aspect-oriented_programming][аспектно-ориентированного программирования]]
 [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html#Advising-Functions][Advice]],
-которое позволит изменить поведение функций сторонних лисп-программ
-без изменения их оригинальной реализации. Функции-аспекты должны иметь
-как минимум такой же список аргументов, что и оригинальные функции, но
+которое изменяет поведение функций сторонних лисп-программ без
+изменения их оригинальной реализации. Функции-аспекты должны иметь как
+минимум такой же список аргументов, что и оригинальные функции, но
 байт-компилятор будет ругаться, если эти аргументы не будут
-использоваться, поэтому имена неиспользуемых аргументов 
-[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html][должны начинаться с подчеркивания]].
+использоваться, поэтому
+[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html][имена неиспользуемых аргументов должны начинаться с подчеркивания]].
 
 #+name: customizations
 #+begin_src elisp
-  (advice-add #'load-theme :after
-    (defun load-theme--set-transparent-fringe-background (_theme &optional _no-confirm _no-enable)
-      (set-face-background 'fringe (face-attribute 'default :background))))
+  (let ((set-transparent-fringe
+         (lambda (&rest _)
+          (set-face-background 'fringe (face-attribute 'default :background)))))
+    (advice-add #'load-theme :after set-transparent-fringe)
+    (advice-add #'disable-theme :after set-transparent-fringe))
 #+end_src
 
 [[elisp:(customize-variable-other-window 'indicate-empty-lines)][Indicate Empty Lines]]
@@ -921,7 +927,7 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
 ← [[elisp:(customize-save-variable 'line-number-mode t)][в моделайне отображается номер строки]] на которой находится курсор.
 
 [[elisp:(customize-variable-other-window 'column-number-mode)][Column Number Mode]]
-← [[elisp:(customize-save-variable 'column-number-mode t)][в моделайне отображается номер столбца]] в котором находится курсор.
+← [[elisp:(customize-save-variable 'column-number-mode t)][в моделайне отображается номер столбца]] на котором находится курсор.
 
 [[elisp:(customize-variable-other-window 'initial-buffer-choice)][Initial Buffer Choice]]
 ← [[elisp:(customize-save-variable 'initial-buffer-choice 'remember-notes)][после запуска эмакс открывает файл с заметками]]
@@ -929,17 +935,15 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
 [[elisp:(customize-save-variable 'initial-buffer-choice t)][после запуска эмакс открывает =*scratch*=-буфер]].
 По желанию эмакс может открыть любой файл, директорию, сайт, программу
 для чтения почты, новостей, чат, командную оболочку операционной
-системы или вообще все что угодно.
+системы, музыкальный проигрыватель или новый закон природы.
 
 [[elisp:(customize-variable-other-window 'remember-notes-initial-major-mode)][Remember Notes Initial Major Mode]]
-← [[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'nil)][эмакс открывает файл с заметками в режиме по-умолчанию]].
-[[elisp:(customize-variable-other-window 'initial-major-mode)][Режим по-умолчанию]] ---
+← [[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'nil)][эмакс открывает файл с заметками в режиме по-умолчанию]],
+[[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'text-mode)][в режиме text-mode]]
+или [[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'org-mode)][в режиме org-mode]].
+По умолчанию [[elisp:(customize-variable-other-window 'initial-major-mode)][режим по-умолчанию]] ---
 lisp-interaction-mode; поэтому предполагается, что это будут заметки с
-лисп-кодом для эмакса, но можно заменить на варианты вроде
-[[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'text-mode)][text-mode]],
-[[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'fundamental-mode)][fundamental-mode]],
-[[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'org-mode)][org-mode]],
-или любой другой из поддерживаемых эмаксом режимов. В группе кастомизации
+лисп-кодом для эмакса. В группе кастомизации
 [[elisp:(customize-group 'remember 'other-window)][Remember]] можно указать
 [[elisp:(customize-variable-other-window 'remember-data-file)][расположение файла с заметками]]
 и много других вещей.
@@ -967,13 +971,13 @@ lisp-interaction-mode; поэтому предполагается, что эт�
                        "Specify a new file's name, to edit the file")
            " "
            :link (list "Home" (lambda (_button) (dired "~"))
-                       "Open home directory, to operate on its files"))
-          (let ((password-vault "~/Dropbox/Passwords.org.gpg"))
-            (when (file-exists-p password-vault)
-              (fancy-splash-insert
-               " "
-               :link (list "Passwords" (lambda (_button) (find-file password-vault))
-                           "Open encrypted password vault"))))
+                       "Open home directory, to operate on its files")
+           " "
+           :link (list "Passwords" (lambda (_button)
+                                     (let ((passwords "~/Dropbox/Passwords.org.gpg"))
+                                       (when (file-exists-p passwords)
+                                         (find-file passwords))))
+                       "Open encrypted password vault"))
           (comment-region scratch-buf-last-char (point))
           (newline)
           (goto-char (point-max))
@@ -983,16 +987,46 @@ lisp-interaction-mode; поэтому предполагается, что эт�
 --------------------------------------------------------------------------------
 
 [[elisp:(customize-variable-other-window 'cursor-type)][Cursor Type]]
-← [[elisp:(customize-save-variable 'cursor-type t)][классический прямоугольный сплошной курсор]].
-С точки зрения юзабилити
-[[http://raskin-interface.narod.ru/interface/chapter5.htm#s5.5][классический курсор предпочтительнее]], чем
+← классический [[elisp:(customize-save-variable 'cursor-type t)][прямоугольный сплошной курсор]] или
 современная [[elisp:(customize-save-variable 'cursor-type 'bar)][вертикальная черта между букв]].
-Однако классический курсор не идеален и было бы неплохо делать его
-[[elisp:(customize-save-variable 'cursor-type
- 'hollow)][прозрачным]] во время выделения текста (TBD).
+[[Http://raskin-interface.narod.ru/interface/chapter5.htm#s5.5][Классический курсор предпочтительнее]]:
+он заметнее на больших экранах. Однако, при выделении текста такой
+курсор полностью перекрывает выделенную область под собой и из-за
+этого нельзя понять, выделен ли символ под курсором --- до тех пор
+пока курсор не пропадет. Если курсор не мигает, эта задача и вовсе
+неразрешима. В качестве решения этой проблемы непрозрачный сплошной
+курсор можно сделать прозрачным после активации
+[[http://www.gnu.org/software/emacs/manual/html_node/emacs/Mark.html][метки]]
+(inactive→active), а после деактивации метки (active→inactive) сделать
+его обратно сплошным:
+
+| i | → | a | a | → | i |
+|---+---+---+---+---+---|
+| ■ | → | □ | □ | → | ■ |
+| ■ | → | □ | ␣ |   | ␣ |
+| ␣ |   | ␣ | □ |   | □ |
+| ␣ |   | ␣ | ␣ |   | ␣ |
+
+Решение интересное, но не обязательное.
+
+#+begin_src elisp
+  (let (inactive-mark-cursor-type)
+    (add-hook 'activate-mark-hook
+      (defun alter-cursor-type-after-activate-mark ()
+        (pcase (setq inactive-mark-cursor-type cursor-type)
+          ('box (unless blink-cursor-mode (setq cursor-type 'hollow))))))
+    (add-hook 'deactivate-mark-hook
+      (defun alter-cursor-type-after-deactivate-mark ()
+        (pcase inactive-mark-cursor-type
+          ('box (pcase cursor-type
+                  ('hollow (setq cursor-type 'box))))))))
+#+end_src
 
 [[elisp:(customize-variable-other-window 'blink-cursor-mode)][Blink Cursor Mode]]
-← [[elisp:(customize-save-variable 'blink-cursor-mode t)][курсор мерцает]]. Так он более заметен.
+← [[elisp:(customize-save-variable 'blink-cursor-mode t)][курсор мигает]].
+
+[[elisp:(customize-variable-other-window 'make-pointer-invisible)][Make Pointer Invisible]]
+← [[elisp:(customize-save-variable 'make-pointer-invisible t)][курсор мыши прячется при вводе текста]].
 
 [[elisp:(customize-variable-other-window 'global-hl-line-mode)][Global Hl Line Mode]]
 ← [[elisp:(customize-save-variable 'global-hl-line-mode nil)][текущая строка не подсвечивается]]
@@ -1005,7 +1039,7 @@ lisp-interaction-mode; поэтому предполагается, что эт�
 раздражительный громкий звон.
 
 [[elisp:(customize-variable-other-window 'save-place-mode)][Save Place Mode]]
-← [[elisp:(customize-save-variable 'save-place-mode t)][текущая позиция курсора в буфере сохраняется между сессиями]].
+← [[elisp:(customize-save-variable 'save-place-mode t)][позиция курсора в буфере сохраняется между сессиями]].
 После открытия файла редактирование продолжается с того места где было
 закончено.
 
@@ -1049,8 +1083,8 @@ Emacs получили свои копии этого пакета уже без
 
 #+name: customizations
 #+begin_src elisp
-  (use-package ido-ubiquitous 
-    :init (ido-ubiquitous-mode ido-ubiquitous-mode))
+  (use-package ido-ubiquitous
+    :config (reinstate-mode 'ido-ubiquitous-mode))
 #+end_src
 
 [[elisp:(customize-group 'smex 'other-window)][Smex]] ---
@@ -1087,6 +1121,7 @@ C-\ не самое удобное сочетание клавиш, как ва�
 #+name: keybindings
 #+begin_src elisp
   (global-set-key (kbd "S-SPC") #'toggle-input-method)
+  (define-key isearch-mode-map (kbd "S-SPC") #'isearch-toggle-input-method)
 #+end_src
 
 --------------------------------------------------------------------------------
@@ -1096,8 +1131,9 @@ C-\ не самое удобное сочетание клавиш, как ва�
 [[elisp:(customize-variable-other-window 'electric-pair-mode)][Electric Pair Mode]] и
 [[elisp:(customize-variable-other-window 'show-paren-mode)][Show Paren Mode]] ---
 это встроенные лисп-программы, они достаточно хороши, но есть и
-получше, например [[https://github.com/Fuco1/smartparens][Smartparens]] и Paredit.
-Однако все эти программы /устарели/, поэтому не стоит заморачиваться с
+получше, например [[https://github.com/Fuco1/smartparens][Smartparens]] и
+[[http://emacswiki.org/emacs/ParEdit][Paredit]].
+Однако все эти программы устарели, поэтому не стоит заморачиваться с
 их настройкой. Современные экспериментальные программы вроде
 [[http://shaunlebron.github.io/parinfer/][Parinfer]]
 определяют структуру программы по отступам в коде и расставляют скобки
@@ -1109,10 +1145,10 @@ C-\ не самое удобное сочетание клавиш, как ва�
     :diminish smartparens-mode
     :config
       (progn
-        <<bind-paredit-like-keys-for-smartparens-mode>>
-        <<turn-on-smartparens-strict-mode-for-some-modes>>
-        (smartparens-global-mode (saved-value 'smartparens-global-mode))
-        (show-smartparens-global-mode (saved-value 'show-smartparens-global-mode))))
+        <<bind-some-keys-for-smartparens-mode>>
+        <<turn-on-smartparens-mode-for-some-modes>>
+        (reinstate-mode 'smartparens-global-mode)
+        (reinstate-mode 'show-smartparens-global-mode)))
 #+end_src
 
 [[elisp:(customize-variable-other-window 'smartparens-global-mode)][Smartparens Global Mode]]
@@ -1120,41 +1156,104 @@ C-\ не самое удобное сочетание клавиш, как ва�
 Необязательно включать этот режим везде, по-настоящему он полезен
 только при редактировании структурированного кода.
 
-#+name: turn-on-smartparens-strict-mode-for-some-modes
+#+name: turn-on-smartparens-mode-for-some-modes
 #+begin_src elisp
-(add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
+  (add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
 #+end_src
 
 [[elisp:(customize-variable-other-window 'show-smartparens-global-mode)][Show Smartparens Global Mode]]
 ← [[elisp:(customize-save-variable 'show-smartparens-global-mode t)][парные скобки подсвечиваются]].
 
-См. [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][анимированное руководство по сочетаниям клавиш в лисп-программе Paredit]].
+Smartparens включает в себя несколько альтернативных наборов сочетаний
+клавиш для манипуляции
+[[https://en.wikipedia.org/wiki/S-expression][символьными выражениями]]
+(см. [[http://danmidwood.com/content/2014/11/21/animated-paredit.html][анимированное руководство]]).
+У каждого из этих наборов есть некоторые недостатки, поэтому я
+использую традиционный набор, свободный от этих недостатков насколько
+это позволяют незанятые клавиши эмакса и здравый смысл.
 
-#+name: bind-paredit-like-keys-for-smartparens-mode
+#+name: bind-some-keys-for-smartparens-mode
 #+begin_src elisp
   (bind-keys :map smartparens-mode-map
-    ("C-M-a" . sp-beginning-of-sexp)
-    ("C-M-e" . sp-end-of-sexp)
-    ("C-M-f" . sp-forward-sexp)
-    ("C-M-b" . sp-backward-sexp)
-    ("C-M-n" . sp-next-sexp)
-    ("C-M-p" . sp-previous-sexp)
-    ("C-<up>" . sp-backward-up-sexp)
-    ("M-<up>" . sp-backward-down-sexp)
-    ("C-<down>" . sp-down-sexp)
-    ("M-<down>" . sp-up-sexp)
-    ("C-<left>" . sp-backward-slurp-sexp)
-    ("M-<left>" . sp-forward-barf-sexp)
-    ("C-<right>" . sp-forward-slurp-sexp)
-    ("M-<right>" . sp-backward-barf-sexp)
-    ("M-[" . sp-backward-unwrap-sexp)
-    ("M-]" . sp-unwrap-sexp)
-    ("C-M-t" . sp-transpose-sexp)
-    ("C-M-k" . sp-kill-sexp)
-    ("C-k" . sp-kill-hybrid-sexp)
-    ("M-k" . sp-backward-kill-sexp)
-    ("C-M-d" . delete-sexp))
+    <<classic-TI-Explorer-Zmacs-keys>>
+    <<arrow-naviagion>>
+    <<slurp/barf>>
+    <<splice/unwrap>>
+    ("C-k" . sp-kill-hybrid-sexp))
 #+end_src
+
+Текстовый редактор
+[[https://en.wikipedia.org/wiki/Zmacs][Zmacs]] в 80-х использовался как IDE для Common Lisp и
+[[https://en.wikipedia.org/wiki/Lisp_Machine_Lisp][ZetaLisp]] на
+[[https://en.wikipedia.org/wiki/Lisp_machine][лисп-машинах]] 
+[[https://en.wikipedia.org/wiki/TI_Explorer][Texas Instruments Explorer]]
+и имел богатый репертуар команд для работы с символьными выражениями:
+
+#+name: classic-TI-Explorer-Zmacs-keys
+#+begin_src elisp
+  ("C-M-f" . sp-forward-sexp)
+  ("C-M-b" . sp-backward-sexp)
+  ("C-M-n" . sp-next-sexp)
+  ("C-M-p" . sp-previous-sexp)
+  ("C-M-u" . sp-backward-up-sexp)
+  ("C-M-d" . sp-down-sexp)
+  ("C-M-(" . sp-beginning-of-sexp)
+  ("C-M-)" . sp-end-of-sexp)
+  ("C-M-t" . sp-transpose-sexp)
+  ("C-M-<backspace>" . sp-backward-kill-sexp)
+  ("C-M-k" . sp-kill-sexp)
+  ("C-M-w" . sp-copy-sexp)
+#+end_src
+
+Консистентная навигация по S-выражениям стрелками.
+
+#+name: arrow-naviagion
+#+begin_src elisp
+  ("C-M-<up>" . sp-backward-up-sexp)
+  ("C-M-<down>" . sp-down-sexp)
+  ("C-M-<left>" . sp-backward-sexp)
+  ("C-M-<right>" . sp-forward-sexp)
+#+end_src
+
+Команды сдвига скобок в соответствующих направлениях продублированы на
+случай если в терминале не работают стрелки.
+
+#+name: slurp/barf
+#+begin_src elisp
+  ("C-<left>" . sp-backward-slurp-sexp)
+  ("C-<right>" . sp-forward-slurp-sexp)
+  ("M-<left>" . sp-forward-barf-sexp)
+  ("M-<right>" . sp-backward-barf-sexp)
+  ("C-," . sp-backward-slurp-sexp)
+  ("C-." . sp-forward-slurp-sexp)
+  ("C-M-," . sp-forward-barf-sexp)
+  ("C-M-." . sp-backward-barf-sexp)
+#+end_src
+
+Сплайсы и удаления скобок поднимают S-выражение на уровень выше в
+дереве S-выражений, или делают его структуру более плоской.
+
+#+name: splice/unwrap
+#+begin_src elisp
+  ("C-<up>" . sp-splice-sexp-killing-around)
+  ("C-<down>" . sp-splice-sexp)
+  ("M-[" . sp-backward-unwrap-sexp)
+  ("M-]" . sp-unwrap-sexp)
+#+end_src
+
+Пусть удаление слова назад (см. [[backward-kill-word-or-kill-region][C-w --- backward-kill-word-or-kill-region]])
+сохраняет структуру S-выражений.
+
+#+name: customizations
+#+begin_src elisp
+  (advice-add #'backward-kill-word-or-kill-region :around
+    (defun backward-kill-word-preserve-s-expression-structure (fn &rest args)
+      (if (when smartparens-mode (not (region-active-p)))
+          (sp-backward-kill-word (cl-first args))
+        (apply fn args))))
+#+end_src
+
+--------------------------------------------------------------------------------
 
 [[elisp:(customize-variable-other-window 'indent-tabs-mode)][Indent Tabs Mode]]
 ← [[elisp:(customize-save-variable 'indent-tabs-mode nil)][отступы пробелами]].
@@ -1167,7 +1266,7 @@ C-\ не самое удобное сочетание клавиш, как ва�
 [[http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html][Подробнее у Xah Lee]].
 
 [[elisp:(customize-variable-other-window 'superword-mode)][Superword Mode]]
-← [[elisp:(customize-save-variable 'superword-mode t)][составные слова набранные в любом стиле считаются единым словом]].
+← [[elisp:(customize-save-variable 'superword-mode t)][составные слова набранные в любом стиле считаются одним словом]].
 Режимы Subword и Superword взаимно исключают друг
 друга. Одновременно может быть активен только один из режимов.
 
@@ -1195,10 +1294,8 @@ X Window System и Emacs (в любой ОС) поддерживают два б
 
 [[elisp:(customize-variable-other-window 'save-interprogram-paste-before-kill)][Save Interprogram Paste Before Kill]]
 ← [[elisp:(customize-save-variable 'save-interprogram-paste-before-kill t)][фрагменты текста скопированные в буфер обмена во внешних программах сохраняются в эмаксе]]
-в буфере скопированных/удаленных фрагментов текста /kill ring/.
-
-[[elisp:(customize-variable-other-window 'org-support-shift-select)][Org Support Shift Select]]
-← [[elisp:(customize-save-variable 'org-support-shift-select t)][выделение шифтом и стрелками в режиме Org]].
+в буфере скопированных и удаленных фрагментов текста
+[[http://www.gnu.org/software/emacs/manual/html_node/emacs/Yanking.html][kill ring]].
 
 [[elisp:(describe-function #'yes-or-no-p)][Yes or No Predicate]]
 ← подтверждение одной клавишей: Y или Пробел --- да, N или Delete ---
@@ -1206,14 +1303,32 @@ X Window System и Emacs (в любой ОС) поддерживают два б
 
 #+name: customizations
 #+begin_src elisp
-(defalias (function yes-or-no-p) (function y-or-n-p))
+  (defalias (function yes-or-no-p) (function y-or-n-p))
 #+end_src
 
 [[elisp:(customize-variable-other-window 'apropos-do-all)][Apropos Do All]]
-← [[elisp:(customize-save-variable 'apropos-do-all t)][расширенный поиск командами apropos]].
+← [[elisp:(customize-save-variable 'apropos-do-all t)][расширенный поиск команд, функций, переменных и документации командами apropos]].
 
 # [[elisp:(customize-variable-other-window ')][]]
 # ← [[elisp:(customize-save-variable ')][]]
+
+--------------------------------------------------------------------------------
+
+О настройке режима Org можно написать целую книгу, но есть несколько
+простых опций, которые полезны для работы с этим руководством.
+
+[[elisp:(customize-variable-other-window 'org-support-shift-select)][Org Support Shift Select]]
+← [[elisp:(customize-save-variable 'org-support-shift-select t)][выделение шифтом и стрелками в режиме Org]].
+
+[[elisp:(customize-variable-other-window 'org-src-fontify-natively)][Org Src Fontify Natively]]
+← [[elisp:(customize-save-variable 'org-src-fontify-natively t)][код в блоках подсвечивается как обычный текст]].
+
+[[elisp:(customize-variable-other-window 'org-src-window-setup)][Org Src Window Setup]]
+← по C-c ' [[elisp:(customize-save-variable 'org-src-window-setup 'current-window)][редактор кода открывается в окне документа]] или
+[[elisp:(customize-save-variable 'org-src-window-setup 'reorganize-frame)][в отдельном окне]] (по-умолчанию).
+
+[[elisp:(customize-variable-other-window 'org-confirm-babel-evaluate)][Org Confirm Babel Evaluate]]
+← [[elisp:(customize-save-variable 'org-confirm-babel-evaluate nil)][код в блоках выполняется без предварительного подтверждения]].
 
 --------------------------------------------------------------------------------
 
@@ -1234,9 +1349,12 @@ X Window System и Emacs (в любой ОС) поддерживают два б
   (defcustom well-tuned-emacs-fonts
     (quote
      (((gnu/linux gnu/kfreebsd darwin windows-nt cygwin)
-       "Consolas-10" "Courier New-9" "Monaco-9" "DejaVu Sans Mono-10"
-       "Cambria-11" "Segoe UI Symbol-12" "Lucida Sans Unicode-10" 
-       "Menlo-10" "Anonymous Pro-11" "Envy Code R-10")))
+       "Consolas-10" "Courier New-9" "Monaco-9" "Anonymous Pro-11"
+       "Cambria-11" "Times New Roman-11" "Georgia-10" "DejaVu Serif Condensed-10"
+       "Arial-10" "Droid Sans-10" "Segoe UI Symbol-10" "Lucida Sans Unicode-10" "Corbel-11"
+       "Droid Sans Mono-10" "Envy Code R-10" "Menlo-10")
+      ((gnu/linux gnu/kfreebsd)
+       "Inconsolata-10" "DejaVu Sans Mono-10" "Ubuntu Mono-10")))
     "Preferred fonts for operating system environments."
     :type '(alist
             :key-type
@@ -1260,7 +1378,9 @@ X Window System и Emacs (в любой ОС) поддерживают два б
 #+name: customize-well-tuned-emacs
 #+begin_src elisp
   (defun well-tuned-emacs-fonts ()
-    (cl-rest (cl-assoc system-type well-tuned-emacs-fonts :test #'member)))
+    (cl-loop for (systems . fonts) in well-tuned-emacs-fonts
+             when (member system-type systems) append fonts into system-fonts
+             finally return (cl-remove-duplicates system-fonts :test #'equal :from-end t)))
 #+end_src
 
 _available-font_ → полное имя шрифта, если шрифт с указанным кратким
@@ -1477,11 +1597,11 @@ _compose_ → [[https://en.wikipedia.org/wiki/Function_composition][композ
 основа кода этой функции взята из книги
 “[[https://7chan.org/pr/src/ANSI_Common_Lisp_-_Paul_Graham.pdf][ANSI Common Lisp]]” (1995), 
 автор --- [[http://www.paulgraham.com/][Paul Graham]] (см. [[http://www.paulgraham.com/acl.html][о книге на сайте автора]]);
-подробнее на странице 110. Можно считать это просто рекомендацией
+страница 110. Можно считать это просто рекомендацией
 хорошей книги основателя [[http://news.ycombinator.com][news.ycombinator.com]].
 Занятно: 20 лет назад, всего через 8 месяцев после выхода Windows 95
 вышла книга в которой автор рассказывает о практическом применении
-языковых средств которые впоследствии станут мейнстримом только через
+выразительных средств которые впоследствии станут мейнстримом только через
 15-20 лет. Еще более занятно то, что все эти средства уже тогда можно
 было использовать в древнем даже по тем временам текстовом редакторе
 двадцатилетней давности.
@@ -1516,7 +1636,7 @@ _flip_ → результат применения функции при пер�
 --------------------------------------------------------------------------------
 
 Сочетания клавиш в эмаксе имеют три ярко выраженные особенности: их
-/очень/ много; их трудно запомнить; и они вызывают повреждения рук при
+очень много; их трудно запомнить; и они вызывают повреждения рук при
 злоупотреблении. С запоминанием помогут
 [[https://www.gnu.org/software/emacs/refcards/index.html][быстрые подсказки в формате PDF]]:
 «[[https://www.gnu.org/software/emacs/refcards/pdf/ru-refcard.pdf][Справочник команд GNU Emacs]]»,
@@ -1528,21 +1648,24 @@ _flip_ → результат применения функции при пер�
 #+begin_src elisp
   (use-package guide-key
     :diminish guide-key-mode
-    :init (guide-key-mode (saved-value 'guide-key-mode)))
+    :config (reinstate-mode 'guide-key-mode))
 #+end_src
 
-[[elisp:(customize-variable-other-window 'guide-key-mode)][Guide Key Mode]]
-← [[elisp:(customize-save-variable 'guide-key-mode t)][автоматически показывать доступные сочетания клавиш]]
-для [[elisp:(customize-variable-other-window 'guide-key/guide-key-sequence)][некоторых префиксов]]:
-C-x [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-x" guide-key/guide-key-sequence :test #'equal))][добавить]]],
+[[elisp:(customize-variable-other-window 'guide-key-mode)][Guide Key Mode]] &
+[[elisp:(customize-variable-other-window 'guide-key/guide-key-sequence)][Guide Key Sequence]]
+← [[elisp:(customize-save-variable 'guide-key-mode t)][автоматически показывать доступные сочетания клавиш]] 
+для префиксов
+C-x [[[elisp:(progn (dolist (k '("C-x" "C-x RET" "C-x ." "C-x @" "C-x a" "C-x a i" "C-x M-k" "C-x C-k" "C-x n" "C-x r" "C-x v" "C-x 4" "C-x 5" "C-x 6" "C-x 8" "C-x 8 a" "C-x 8 \"" "C-x 8 '" "C-x 8 *" "C-x 8 ," "C-x 8 /" "C-x 8 1" "C-x 8 2" "C-x 8 3" "C-x 8 N" "C-x 8 ^" "C-x 8 _" "C-x 8 `" "C-x 8 ~")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))][добавить]]],
 C-c [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-c" guide-key/guide-key-sequence :test #'equal))][добавить]]],
-C-x 4 [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-x 4" guide-key/guide-key-sequence :test #'equal))][добавить]]],
-C-x 5 [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-x 5" guide-key/guide-key-sequence :test #'equal))][добавить]]],
-C-x 8 [[[elisp:(progn (dolist (k '("C-x 8" "C-x 8 a")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))][добавить]]].
+C-h [[[elisp:(progn (dolist (k '("C-h" "C-h 4")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))][добавить]]],
+M-s [[[elisp:(progn (dolist (k '("M-s" "M-s h")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))][добавить]]],
+M-g [[[elisp:(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "M-g" guide-key/guide-key-sequence :test #'equal))][добавить]]],
+F** [[[elisp:(progn (dolist (k (list (string ?< ?f ?1 ?>) (string ?< ?f ?1 ?> ?  ?4) (string ?< ?f ?2 ?>))) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))][добавить]]],
+ESC [[[elisp:(progn (dolist (k '("ESC" "M-ESC")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))][добавить]]].
 
 [[elisp:(customize-variable-other-window 'guide-key/popup-windows-position)][Guide Key Popup Window Position]]
 ← [[elisp:(customize-save-variable 'guide-key/popup-windows-position 'bottom)][окно с подсказками сочетаний клавиш появляется снизу]]
-или [[elisp:(customize-save-variable 'guide-key/popup-windows-position 'right)][справа]].
+или [[elisp:(customize-save-variable 'guide-key/popup-windows-position 'right)][справа]] (по-умолчанию).
 
 Для снижения нагрузки на левую руку при вводе команд
 эмакса многие люди советуют
@@ -1555,6 +1678,7 @@ Control, но это не избавляет от нагрузки на леву
 клавишу «пробел». Решение не идеальное, но для здоровья рук оно
 полезнее, чем Caps ⇆ Ctrl.
 
+<<backward-kill-word-or-kill-region>>
 Сочетание клавиш C-w --- де-факто стандарт для удаления слова слева от
 курсора.
 
@@ -1570,6 +1694,7 @@ Control, но это не избавляет от нагрузки на леву
 #+name: keybindings
 #+begin_src elisp
   (global-set-key (kbd "C-w") #'backward-kill-word-or-kill-region)
+  (define-key isearch-mode-map (kbd "C-w") #'backward-kill-word-or-kill-region)
   (define-key minibuffer-local-map (kbd "C-w") #'backward-kill-word-or-kill-region)
   (add-hook 'ido-setup-hook
     (defun well-tuned-emacs-bind-ido-mode-delete-backward-word-updir ()
@@ -1610,24 +1735,29 @@ Control, но это не избавляет от нагрузки на леву
   (global-set-key (kbd "M-z") #'zap-up-to-char)
 #+end_src
 
-Лисп-программа ibuffer это улучшенная версия программы list-buffers.
+Лисп-программа [[elisp:ibuffer][ibuffer]] это улучшенная версия программы управления
+буферами [[elisp:list-buffers][list-buffers]].
 
 #+name: keybindings
 #+begin_src elisp
   (global-set-key (kbd "C-x C-b") #'ibuffer)
 #+end_src
 
-Не отпуская клавишу Control можно легко убить много буферов подряд.
+Для быстрого убийства буфера хорошо подходит сочетание C-x
+C-k. По-умолчанию на него назначен очень редко используемый набор
+сочетаний клавиш для отладки макросов, который логично смотрится на
+месте свободного сочетания C-x M-k [«keyboard macro»-команды].
 
 #+name: keybindings
 #+begin_src elisp
-  (global-set-key (kbd "C-x C-k")
-    (defun kill-current-buffer ()
-      (interactive)
-      (kill-buffer (current-buffer))))
+  (global-set-key (kbd "C-x C-k") #'kill-this-buffer)
+  (global-set-key (kbd "C-x M-k") #'kmacro-keymap)
 #+end_src
 
-Автодополнение текста выполняется командой hippie-expand вместо dabbrev-expand.
+Автодополнение текста выполняется программой hippie-expand, которая
+включает в себя стандартную программу автодополнения dabbrev-expand и
+несколько других программ, выдающих дополнения определенного вида в
+желаемом порядке.
 
 #+name: keybindings
 #+begin_src elisp
@@ -1635,13 +1765,29 @@ Control, но это не избавляет от нагрузки на леву
 #+end_src
 
 [[elisp:(customize-variable-other-window 'hippie-expand-try-functions-list)][Hippie Expand Try Functions List]]
-← [[elisp:(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))][мощная, но умеренная последовательность вариантов автодополнений]].
+← [[elisp:(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-all-abbrevs try-complete-file-name-partially try-complete-file-name try-expand-dabbrev try-expand-dabbrev-from-kill try-expand-dabbrev-all-buffers try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))][мощная, но умеренная последовательность вариантов автодополнений Саши]] или
+[[elisp:(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))][просто умеренная последовательность автодополнений Божидара]].
 Оригинальная последовательность автодополнений иногда выдает варианты
 с небывалым размахом.
 
+Команда [[elisp:unfill-paragraph][unfill-paragraph]], назначенная на свободное сочетание C-x M-q,
+делает ровно противоположное команде [[elisp:fill-paragraph][fill-paragraph]] (M-q) --- она
+превращает абзац разбитый на несколько коротких строк в одну большую
+строку.
+
+#+name: keybindings
+#+begin_src elisp
+  (global-set-key (kbd "C-x M-q")
+    (defun unfill-paragraph (&optional region)
+      "Takes a multi-line paragraph and makes it into a single line of text."
+      (interactive (progn (barf-if-buffer-read-only) (list t)))
+      (let ((fill-column (point-max)))
+        (fill-paragraph nil region))))
+#+end_src
+
 ----------------------------------------------------------------------
 
-В [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html][Windows Vista/7/8/10]]
+В [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html][Windows 7/8/10]]
 эмакс по-умолчанию считает своей домашней директорией значение
 переменной окружения
 
@@ -1666,7 +1812,8 @@ Control, но это не избавляет от нагрузки на леву
       (shell-command (format "setx \"%s\" \"%s\"" 'Home (getenv "UserProfile")))))
 #+end_src
 
-Установка рабочей директории (cd "~") --- в свойствах ярлыка.
+Установка домашней рабочей директории (cd "~") --- в свойствах ярлыка
+«Рабочая папка».
 
 ----------------------------------------------------------------------
 
@@ -1677,9 +1824,9 @@ Control, но это не избавляет от нагрузки на леву
 #+name: fix-some-bugs
 #+begin_src elisp
   (when (= emacs-major-version 25)
-    (declare-function font-lock-ensure "font-lock" ())
+    (declare-function font-lock-fontify-buffer "font-lock" ())
     (defun org-font-lock-ensure ()
-      (font-lock-ensure)))
+      (font-lock-fontify-buffer)))
 #+end_src
 
 ----------------------------------------------------------------------
