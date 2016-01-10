@@ -1,9 +1,0 @@
-# Compiled
-*.elc
-
-# Packaging
-.cask
-
-# Auto save
-*~
-auto-save-list
