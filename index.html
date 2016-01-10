@@ -1,0 +1,2403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Хорошо настроенный Emacs</title>
+<!-- 2016-01-10 Вс 12:34 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Роман Захаров" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Хорошо настроенный Emacs</h1>
+<p>
+<a href="org-babel-tangle">Превратить это руководство в лисп-программу инициализации эмакса</a>
+.emacs или init.el (<i>сплести</i> программу &#x2014; <i>tangle</i>) очень просто, достаточно
+<a href="https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org">скачать свежую версию этого руководства</a>,
+открыть ее в эмаксе и выполнить команду <a href="org-babel-tangle">M-x org-babel-tangle</a>.
+В результате из фрагментов лисп-кода в этом руководстве будет создана
+<a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html">лисп-программа инициализации эмакса</a>
+[<a href="Emacs#Init File">инфо</a>, <a href="http://www.emacswiki.org/emacs/InitFile">вики</a>]
+которую эмакс будет автоматически выполнять при каждом запуске.  В
+общем виде программа инициализации выглядит так:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">&lt;&lt;header&gt;&gt;
+&lt;&lt;requirements&gt;&gt;
+&lt;&lt;customize-well-tuned-emacs&gt;&gt;
+&lt;&lt;customize-customize-and-apply-customizations&gt;&gt;
+&lt;&lt;try-to-download-this-reference-when-it-is-missing&gt;&gt;
+(<span style="color: #a020f0;">if</span>
+    &lt;&lt;this-reference-is-in-its-place-and-is-newer-than-user-init-file&gt;&gt;
+    &lt;&lt;tangle-this-reference-into-user-init-file-and-then-load-it-again&gt;&gt;
+  (<span style="color: #a020f0;">progn</span>
+    &lt;&lt;initialize-package-system-and-install-user-selected-packages&gt;&gt;
+    &lt;&lt;load-packages-and-apply-advanced-customizations&gt;&gt;
+    &lt;&lt;fix-some-bugs&gt;&gt;
+    ))
+&lt;&lt;footer&gt;&gt;
+</pre>
+</div>
+
+<p>
+Перед написанием кода на эмакс лиспе, следует немного обновить сам
+язык программирования. Эмакс лисп это древнейший из современных
+лиспов, созданный в темный период между возникновением
+<a href="http://www-formal.stanford.edu/jmc/recursive/recursive.html">лиспа как концепции теории вычислений</a>,
+и первыми двумя классическими дизайнами лиспа: Common Lisp и Scheme;
+сама концепция лиспа так же стара для него, как он сам по отношению к
+современному Common Lisp'у, а современный Common Lisp в свою
+очередь &#x2014; по отношению к современной Clojure. Эмакс лисп старомоден,
+его выразительные средства скудны, тем не менее, это полноценный лисп
+и он может с легкостью дополнить свои возможности основными языковыми
+средствами Common Lisp, просто выполнив относительно небольшую
+встроенную в эмакс лисп-программу
+<a href="http://www.gnu.org/software/emacs/manual/html_mono/cl.html">GNU Emacs Common Lisp Emulation</a>
+[<a href="cl#Top">инфо</a>]. Стоит отметить, что сообщество
+<a href="http://xahlee.blogspot.ru/2012/06/controversy-of-common-lisp-package-in.html">очень неоднозначно</a>
+относится к этой лисп-программе; например, Столлман выступает
+<a href="http://lists.gnu.org/archive/html/emacs-devel/2012-06/msg00056.html">против</a>
+ее включения в эмакс.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="requirements">(<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">cl-lib</span>)
+</pre>
+</div>
+
+<p>
+В 24-й версии эмакса в эмакс-лиспе появилась поддержка
+<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html#Using-Lexical-Binding">лексической области видимости и замыканий</a>
+(<a href="http://library.readscheme.org/page1.html">как в Scheme образца 1975 года</a>).
+Лексическая область видимости делает программу инициализации более
+изящной, быстрой и надежной. Первая строка в файле инициализации
+устанавливает
+<a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html#Specifying-File-Variables">локальную переменную буфера</a>
+и активирует соответствующую семантику языка
+программирования.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp"><span style="color: #b22222;">;;; </span><span style="color: #b22222;">Automatically generated by &#8220;Well Tuned Emacs&#8221; -*- lexical-binding: t -*-</span>
+</pre>
+</div>
+
+<p>
+Во время запуска эмакс выполняет
+<a href="(describe-function 'command-line)">одну из девяти возможных программ инициализации</a>
+[см. <a href="https://github.com/emacs-mirror/emacs/blob/master/lisp/startup.el#L1158">исходник на github</a>,
+<a href="https://github.com/emacs-mirror/emacs/blob/master/src/lread.c#L4556">user-init-file и load в C-коде</a>]
+(на самом деле их больше, но другие варианты не кроссплатформенны).
+Нам нужно определить какую именно исходную лисп-программу
+инициализации мы возьмем за основу, в порядке приоритета: <code>~/_emacs</code>
+(<i>устаревший &#x2014; для MS-DOS</i>), <code>~/.emacs</code>, <code>~/.emacs.el</code>,
+<code>~/.emacs.d/init.el</code>.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">user-init-file while init</th>
+<th scope="col" class="left">user-init-file after init</th>
+<th scope="col" class="left">actual-user-init-file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><code>nil</code> emacs -q/-​-no-init-file</td>
+<td class="left"><code>nil</code></td>
+<td class="left">prefer <code>~/.emacs.d/init.el</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/.emacs</code> relative by default</td>
+<td class="left"><code>~/.emacs</code> relative by default</td>
+<td class="left"><code>~/.emacs</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/_emacs</code></td>
+<td class="left"><code>~/_emacs</code></td>
+<td class="left"><code>~/_emacs</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/_emacs.el</code></td>
+<td class="left"><code>~/_emacs.el</code></td>
+<td class="left"><code>~/_emacs.el</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/_emacs.elc</code></td>
+<td class="left"><code>~/_emacs.el</code> or <code>~/_emacs</code> or <code>~/_emacs.elc</code></td>
+<td class="left"><code>~/_emacs.el</code> or <code>~/_emacs</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/.emacs</code></td>
+<td class="left"><code>~/.emacs</code></td>
+<td class="left"><code>~/.emacs</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/.emacs.el</code></td>
+<td class="left"><code>~/.emacs.el</code></td>
+<td class="left"><code>~/.emacs.el</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/.emacs.elc</code></td>
+<td class="left"><code>~/.emacs.el</code> or <code>~/.emacs</code> or <code>~/.emacs.elc</code></td>
+<td class="left"><code>~/.emacs.el</code> or <code>~/.emacs</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/.emacs.d/init.el</code></td>
+<td class="left"><code>~/.emacs.d/init.el</code></td>
+<td class="left"><code>~/.emacs.d/init.el</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/.emacs.d/init.elc</code></td>
+<td class="left"><code>~/.emacs.d/init.el</code> or <code>~/.emacs.d/init.elc</code></td>
+<td class="left"><code>~/.emacs.d/init.el</code></td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="user-init-file-names">(default <span style="color: #8b2252;">"~/.emacs"</span>)
+(~/_emacs (file-truename <span style="color: #8b2252;">"~/_emacs"</span>))
+(~/_emacs.el (file-truename <span style="color: #8b2252;">"~/_emacs.el"</span>))
+(~/_emacs.elc (file-truename <span style="color: #8b2252;">"~/_emacs.elc"</span>))
+(~/.emacs (file-truename <span style="color: #8b2252;">"~/.emacs"</span>))
+(~/.emacs.el (file-truename <span style="color: #8b2252;">"~/.emacs.el"</span>))
+(~/.emacs.elc (file-truename <span style="color: #8b2252;">"~/.emacs.elc"</span>))
+(~/.emacs.d/init.el (file-truename <span style="color: #8b2252;">"~/.emacs.d/init.el"</span>))
+(~/.emacs.d/init.elc (file-truename <span style="color: #8b2252;">"~/.emacs.d/init.elc"</span>))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defvar</span> <span style="color: #a0522d;">actual-user-init-file</span>
+  (<span style="color: #a020f0;">let</span> (
+        &lt;&lt;user-init-file-names&gt;&gt;
+        )
+    (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">when</span> (equal user-init-file nil)
+          (<span style="color: #a020f0;">or</span> (cl-find-if #'file-exists-p 
+                  (list ~/.emacs.d/init.el ~/_emacs ~/_emacs.el ~/.emacs ~/.emacs.el))
+              ~/.emacs.d/init.el))
+        (<span style="color: #a020f0;">when</span> (equal user-init-file default)
+          ~/.emacs)
+        (<span style="color: #a020f0;">when</span> (file-equal-p user-init-file ~/_emacs)
+          ~/_emacs)
+        (<span style="color: #a020f0;">when</span> (file-equal-p user-init-file ~/_emacs.el)
+          ~/_emacs.el)
+        (<span style="color: #a020f0;">when</span> (file-equal-p user-init-file ~/_emacs.elc)
+          (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">when</span> (file-exists-p ~/_emacs.el)
+               ~/_emacs.el)
+              ~/_emacs))
+        (<span style="color: #a020f0;">when</span> (file-equal-p user-init-file ~/.emacs)
+          ~/.emacs)
+        (<span style="color: #a020f0;">when</span> (file-equal-p user-init-file ~/.emacs.el)
+          ~/.emacs.el)
+        (<span style="color: #a020f0;">when</span> (file-equal-p user-init-file ~/.emacs.elc)
+          (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">when</span> (file-exists-p ~/.emacs.el)
+               ~/.emacs.el)
+              ~/.emacs))
+        (<span style="color: #a020f0;">when</span> (<span style="color: #a020f0;">or</span> (file-equal-p user-init-file ~/.emacs.d/init.el)
+                  (file-equal-p user-init-file ~/.emacs.d/init.elc))
+          ~/.emacs.d/init.el))))
+</pre>
+</div>
+
+<p>
+Исходный код лисп-программы инициализации в файле
+<a href="(find-file actual-user-init-file)">actual-user-init-file</a>
+вторичен по отношению к этому руководству, это не более чем
+автоматически сгенерированная из него программа. Но что если
+руководства не окажется в директории с настройками эмакса, и
+лисп-программа инициализации не сможет регенерировать себя? В таком
+случае программа инициализации должна попытаться скачать руководство
+из интернета.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="try-to-download-this-reference-when-it-is-missing">(<span style="color: #a020f0;">unless</span> (file-exists-p well-tuned-emacs-reference-file)
+  (<span style="color: #a020f0;">condition-case</span> error-signal
+      (<span style="color: #a020f0;">with-temp-file</span> well-tuned-emacs-reference-file
+        (url-insert-file-contents well-tuned-emacs-reference-url))
+    (<span style="color: #ff0000; font-weight: bold;">error</span>
+     (cl-destructuring-bind (error-symbol . error-data) error-signal
+       (message <span style="color: #8b2252;">"Failed to download %s and save it as %s: %s - %s."</span>
+                 well-tuned-emacs-reference-url
+                 well-tuned-emacs-reference-file
+                 error-symbol error-data))
+     (when (file-exists-p well-tuned-emacs-reference-file)
+       (delete-file well-tuned-emacs-reference-file <span style="color: #483d8b;">:move-to-trash</span>)))))
+</pre>
+</div>
+
+<p>
+Прежде мы должны условиться, что это руководство будет храниться в
+определенном месте, по умолчанию &#x2014; в той же директории, что и
+актуальная лисп-программа инициализации эмакса; под определенным
+именем, по-умолчанию &#x2014;
+<a href="(find-file (concat (file-name-directory user-init-file) "README.org"))">README.org</a>.
+Так же нам должен быть известен адрес свежей версии этого руководства
+в интернете. Встроенное в эмакс средство
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Customization.html#Customization">Customize</a>
+позволит сделать настройки расположения файлов руководства полностью
+независимыми от прописанных в этом руководстве значений
+по-умолчанию. Потом эти настройки можно будет изменить в самом эмаксе
+и сохранить их значения на будущее, не меняя ни фрагменты кода в этом
+руководстве, ни код в сгенерированной лисп-программе
+инициализации. Для этого создадим в группе кастомизации
+<a href="(customize-group-other-window 'initialization)">Initialization</a>
+подгруппу
+<a href="(customize-group-other-window 'well-tuned-emacs)">Well Tuned Emacs</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defgroup</span> <span style="color: #228b22;">well-tuned-emacs</span> nil
+  <span style="color: #8b2252;">"Well Tuned Emacs initialization and customization settings."</span>
+  <span style="color: #483d8b;">:link</span> '(url-link <span style="color: #8b2252;">"https://gitlab.com/zahardzhan/well-tuned-emacs"</span>)
+  <span style="color: #483d8b;">:version</span> <span style="color: #8b2252;">"25.0.50.1"</span>
+  <span style="color: #483d8b;">:group</span> 'initialization)
+</pre>
+</div>
+
+<p>
+Добавим в эту группу две пользовательские настройки.
+</p>
+
+<p>
+<a href="(customize-group-other-window 'emacs)">Emacs</a>⊲
+<a href="(customize-group-other-window 'environment)">Environment</a>⊲
+<a href="(customize-group-other-window 'initialization)">Initialization</a>⊲
+<a href="(customize-group-other-window 'well-tuned-emacs)">Well Tuned Emacs</a>⊲
+<a href="(customize-variable-other-window 'well-tuned-emacs-reference-file)">Well Tuned Emacs Reference File</a>
+← файл <a href="(find-file (concat (file-name-directory user-init-file) "README.org"))">README.org</a>
+в <a href="(dired (file-name-directory actual-user-init-file))">директории с актуальной лисп-программой инициализации эмакса</a>.
+Расположение файла этого руководства. Для обеспечения переносимости
+путей файлов между разными средами исполнения эмакс-лисп кода их
+следует указывать в формате
+<a href="https://en.wikipedia.org/wiki/Path_(computing)">POSIX</a>, это
+позволит использовать один-и-тот-же файл одновременно с двух
+запущенных в разных средах экземпляров эмакса (например
+Windows/Cygwin/VMware).
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">actual-user-init-file</th>
+<th scope="col" class="left">well-tuned-emacs-reference-file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><code>~/.emacs</code> or <code>~/.emacs.el</code> or <code>~/_emacs</code> or <code>~/_emacs.el</code></td>
+<td class="left"><code>~/README.org</code> or <code>~/.emacs.d/README.org</code></td>
+</tr>
+
+<tr>
+<td class="left"><code>~/.emacs.d/init.el</code></td>
+<td class="left">prefer <code>~/.emacs.d/README.org</code> to <code>~/README.org</code></td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defcustom</span> <span style="color: #a0522d;">well-tuned-emacs-reference-file</span>
+  (<span style="color: #a020f0;">let*</span> (
+         &lt;&lt;user-init-file-names&gt;&gt;
+         (~/readme (file-truename (concat (file-name-as-directory <span style="color: #8b2252;">"~"</span>) <span style="color: #8b2252;">"README.org"</span>)))
+         (~/.emacs.d/readme (file-truename (concat user-emacs-directory <span style="color: #8b2252;">"README.org"</span>))))
+    (ignore default ~/_emacs.elc  ~/.emacs.elc ~/.emacs.d/init.elc)
+    (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">when</span> (cl-find actual-user-init-file (list ~/.emacs ~/.emacs.el ~/_emacs ~/_emacs.el) <span style="color: #483d8b;">:test</span> #'equal)
+          (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">when</span> (file-exists-p ~/readme)
+               ~/readme)
+              ~/.emacs.d/readme))
+        (<span style="color: #a020f0;">when</span> (equal actual-user-init-file ~/.emacs.d/init.el)
+          (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">when</span> (file-exists-p ~/.emacs.d/readme)
+               ~/.emacs.d/readme)
+              (<span style="color: #a020f0;">when</span> (file-exists-p ~/readme)
+               ~/readme)
+              ~/.emacs.d/readme))))
+  <span style="color: #8b2252;">"The Well Tuned Emacs Reference file."</span>
+  <span style="color: #483d8b;">:type</span> 'file
+  <span style="color: #483d8b;">:version</span> <span style="color: #8b2252;">"25.0.50.1"</span>
+  <span style="color: #483d8b;">:group</span> 'well-tuned-emacs)
+</pre>
+</div>
+
+<p>
+<a href="(customize-group-other-window 'emacs)">Emacs</a>⊲
+<a href="(customize-group-other-window 'environment)">Environment</a>⊲
+<a href="(customize-group-other-window 'initialization)">Initialization</a>⊲
+<a href="(customize-group-other-window 'well-tuned-emacs)">Well Tuned Emacs</a>⊲
+<a href="(customize-variable-other-window 'well-tuned-emacs-reference-url)">Well Tuned Emacs Reference URL</a>
+← <a href="https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org">https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org</a>.
+Адрес свежей версии этого руководства в интернете.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defcustom</span> <span style="color: #a0522d;">well-tuned-emacs-reference-url</span>
+  <span style="color: #8b2252;">"https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org"</span>
+  <span style="color: #8b2252;">"The Well Tuned Emacs Reference File on the internet."</span>
+  <span style="color: #483d8b;">:type</span> 'string
+  <span style="color: #483d8b;">:version</span> <span style="color: #8b2252;">"25.0.50.1"</span>
+  <span style="color: #483d8b;">:group</span> 'well-tuned-emacs)
+</pre>
+</div>
+
+<p>
+Лисп-программа
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Customization.html#Customization">Customize</a>
+[<a href="customize">открыть её графический интерфейс в эмаксе</a> &#x2014; <a href="customize">M-x customize</a>],
+ставшая частью эмакса в середине девяностых &#x2014; это краеугольный
+камень всей системы пользовательских настроек. Парадоксально, но
+подавляющее большинство фреймворков и личных настроек, доступных в
+сети, всеми силами избегают настройки эмакса с помощью встроенного в
+него интерфейса предназначенного именно для этой цели. Люди
+предпочитают настраивать эмакс написанием своего лисп-кода даже в тех
+случаях, когда этот лисп-код уже предусмотрительно написан, отлажен и
+задокументирован разработчиками лисп-программ, которые пользователь
+пытается настроить. Этот
+<a href="http://c2.com/cgi/wiki?NotInventedHereSyndrome">фатальный недостаток</a>
+распространен повсеместно, но большинство пользователей эмакса считает
+такое положение дел нормальным.
+</p>
+
+<p>
+Истина состоит в том, что GNU Emacs 25 имеет 3440 стандартных
+настройки в конфигурации по-умолчанию. Все они хорошо организованны,
+задокументированны и доступны для поиска и изменения в простом удобном
+и непривычном псевдографическом интерфейсе. Эти настроки сохраняются
+между сессиями эмакса, и многие из них выполнены в виде специфических
+лисп-программ. Подключение дополнительных модулей и пакетов расширений
+эмакса может запросто увеличить количество таких настроек до пяти
+тысяч. К чему приведет попытка изменения нескольких тысяч параметров
+управляемых лисп-кодом, меняющимся от версии-к-версии, написанием
+своего лисп-кода? Она практически неизбежно приведет к
+<a href="http://www.emacswiki.org/emacs/DotEmacsBankruptcy">конфигурационному апокалипсису</a>.
+Поэтому здесь и далее, и везде где только можно, я буду использовать
+систему Customize.
+</p>
+
+<p>
+<a href="(customize-group-other-window 'emacs)">Emacs</a>⊲
+<a href="(customize-group-other-window 'help)">Help</a>⊲
+<a href="(customize-group-other-window 'customize)">Customize</a>⊲
+<a href="(customize-variable-other-window 'custom-file)">Custom File</a>
+← <a href="file://c:/Users/haru/.emacs.d/custom.el">~/.emacs.d/custom.el</a>.
+По-умолчанию Customize хранит свои данные в файле с исходным кодом
+лисп-программы инициализации эмакса; если мы переплетем этот файл &#x2014;
+все наши настройки пропадут. В Customize можно выполнить настройку
+самой Customize, но фактически эта программа не может изменить место
+хранения своих данных, при том что такой параметр в ней есть &#x2014;
+информация о том какой файл будет загружен хранится в самом этом
+файле, таким образом эта информация недоступна извне. Мы будем хранить
+настройки выполненные программой Customize в файле custom.el в
+директории ~/.emacs.d.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-customize-and-apply-customizations">(<span style="color: #a020f0;">let</span> ((~/.emacs.d/custom.el (concat user-emacs-directory <span style="color: #8b2252;">"custom.el"</span>)))
+  (<span style="color: #a020f0;">setq</span> custom-file ~/.emacs.d/custom.el)
+  (<span style="color: #a020f0;">when</span> (file-exists-p custom-file)
+    (load custom-file))
+  (<span style="color: #a020f0;">unless</span> (equal ~/.emacs.d/custom.el (car (get 'custom-file 'saved-value)))
+    (add-hook 'after-init-hook
+      (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">save-custom-file-location-in-custom-file</span> ()
+        (customize-save-variable 'custom-file ~/.emacs.d/custom.el)))))
+</pre>
+</div>
+
+<p>
+Ниже код вида (add-hook 'after-init-hook (defun &#x2026; () &#x2026; )) появится
+еще несколько раз, поэтому имеет смысл генерировать его с помощью
+макроса.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-customize-and-apply-customizations">(<span style="color: #a020f0;">defmacro</span> <span style="color: #0000ff;">customize-save-variable-after-init</span> (var)
+ `(add-hook 'after-init-hook
+    (<span style="color: #a020f0;">defun</span> ,(make-symbol (concat <span style="color: #8b2252;">"customize-save-variable-"</span> (symbol-name var))) ()
+      (customize-save-variable ',var ,var))))
+</pre>
+</div>
+
+<p>
+Многие режимы не активируются сами по себе при запуске эмакса, даже
+при том что в сохраненных настройках явно указано, что они должны быть
+активны. Поэтому после загрузки режимов приходится напоминать им об
+актививации.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-customize-and-apply-customizations">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">reinstate-mode</span> (mode)
+  (<span style="color: #a020f0;">when</span> (car (get mode 'saved-value))
+    (funcall mode 1)))
+</pre>
+</div>
+
+<p>
+Чтобы не <i>переплетать</i> программу инициализации эмакса вручную после
+каждого редактирования этого руководства, сделаем так, что программа
+будет переплетать сама себя прямо во время запуска эмакса, если
+руководство было изменено после изменения программы.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="this-reference-is-in-its-place-and-is-newer-than-user-init-file">(<span style="color: #a020f0;">when</span> (file-exists-p well-tuned-emacs-reference-file)
+  (<span style="color: #a020f0;">or</span> (not (file-exists-p actual-user-init-file))
+      (file-newer-than-file-p well-tuned-emacs-reference-file actual-user-init-file)))
+</pre>
+</div>
+
+<p>
+По всей видимости нет никакого тривиального способа заставить
+лисп-программу org-babel-tangle должным образом обрабатывать свойство
+заголовка блоков кода :tangle и связанный с ним аргумент target-file,
+указывающий в какой именно файл нужно сохранить сплетенную программу.
+Применим небольшой хак с перекрытием значения глобальной переменной
+user-init-file в динамической области видимости &#x2014; таким образом мы
+укажем всем сторонним лисп-программам имя файла нашей новой программы
+инициализации на время сплетения и выполнения этой программы.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="tangle-this-reference-into-user-init-file-and-then-load-it-again">(<span style="color: #a020f0;">progn</span>
+  (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">ob-tangle</span>)
+  (message <span style="color: #8b2252;">"Tangling %s &#8594; %s."</span> well-tuned-emacs-reference-file actual-user-init-file)
+  (<span style="color: #a020f0;">let</span> ((user-init-file actual-user-init-file))
+    (<span style="color: #a020f0;">org-babel-with-temp-filebuffer</span> well-tuned-emacs-reference-file
+      (org-babel-tangle))
+    (load-file user-init-file)))
+</pre>
+</div>
+
+<p>
+Как вариант, во время загрузки лисп-программы инициализации мы можем
+ее скомпилировать. Для этого нам понадобится лисп-программа
+байт-компиляции лисп-программ bytecomp. Следующая строка кода это
+своего рода шутка (нет) &#x2014; она загружает лисп-программу байт-компиляции
+лисп-программ во время байт-компиляции нашей лисп-программы
+лисп-программой байт-компиляции лисп-программ.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="requirements">(<span style="color: #a020f0;">cl-eval-when</span> (compile) (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">bytecomp</span>))
+</pre>
+</div>
+
+<p>
+При интерпретации лисп-программы инициализации эмакса программа для
+сплетения этого руководства ob-tangle загружается непосредственно
+перед её использованием, и это не создает никаких проблем. Однако
+программа компиляции по возможности должна знать обо всех сторонних
+лисп-программах, которые могут быть загружены во время выполнения
+скомпилированной программы инициализации эмакса.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="requirements">(<span style="color: #a020f0;">cl-eval-when</span> (compile) (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">ob-tangle</span>))
+</pre>
+</div>
+
+<p>
+Определим переменную-условие компиляции программы инициализации эмакса
+well-tuned-emacs-compile-user-init-file как опцию в группе настроек
+этого руководства.
+</p>
+
+<p>
+<a href="(customize-group-other-window 'emacs)">Emacs</a>⊲
+<a href="(customize-group-other-window 'environment)">Environment</a>⊲
+<a href="(customize-group-other-window 'initialization)">Initialization</a>⊲
+<a href="(customize-group-other-window 'well-tuned-emacs)">Well Tuned Emacs</a>⊲
+<a href="(customize-variable-other-window 'well-tuned-emacs-compile-user-init-file)">Well Tuned Emacs Compile User Init File</a>
+←
+<a href="(customize-save-variable 'well-tuned-emacs-compile-user-init-file t)">компилировать</a> или
+<a href="(customize-save-variable 'well-tuned-emacs-compile-user-init-file nil)">не компилировать</a>
+лисп-программу инициализации эмакса. При автоматической установке
+сохраненного значения этой опции системой Customize, а также при
+ручном включении/отключении этой опции в через интерфейс Customize,
+эмакс должен соответственно скомпилировать, или удалить
+скомпилированную программу инициализации. Для этого нам нужно написать
+функцию которая позаботится обо всем при изменении значения этой опции.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defcustom</span> <span style="color: #a0522d;">well-tuned-emacs-compile-user-init-file</span> nil
+  <span style="color: #8b2252;">"Compile or don't compile well-tuned Emacs user init file."</span>
+  <span style="color: #483d8b;">:type</span> 'boolean
+  <span style="color: #483d8b;">:set</span>
+  &lt;&lt;set-well-tuned-emacs-compile-user-init-file&gt;&gt;
+  <span style="color: #483d8b;">:version</span> <span style="color: #8b2252;">"25.0.50.1"</span>
+  <span style="color: #483d8b;">:group</span> 'well-tuned-emacs)
+</pre>
+</div>
+
+<p>
+Загрузка эмакса становится довольно запутанной если добавить в нее
+возможность компиляции файла инициализации. С учетом описания того как
+происходит
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Byte-Compilation.html#Byte-Compilation">компиляция лисп-программ эмакса</a>,
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Startup-Summary.html">запуск эмакса</a>,
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/How-Programs-Do-Loading.html#How-Programs-Do-Loading">загрузка лисп-программ эмакса</a>,
+и того что происходит в нашей программе инициализации, мы должны
+учесть шесть возможных последовательностей выполнения лисп-программ
+при запуске эмакса:
+</p>
+
+<ol class="org-ol">
+<li>el→emacs [safe]
+</li>
+<li>el→tangle→el→emacs [safe]
+</li>
+<li>el→tangle→compile→elc→emacs [safe]
+</li>
+<li>elc→emacs [safe]
+</li>
+<li>elc→tangle→el↛emacs [unsafe (package-initialize)⇝user-init-file⇎load-file-name]
+</li>
+<li>elc→tangle→compile↛elc→emacs [unsafe (byte-compile elc)⇝cannot rename elc↦elc]
+</li>
+</ol>
+
+<p>
+Компилировать или удалять программу инициализации прямо во время ее
+выполнения рискованно, поэтому шесть возможных вариантов развития
+событий в итоге сводятся к четырем.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="left">compile</th>
+<th scope="col" class="left">delete</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left"><b>while init</b></td>
+<td class="left">compile after init</td>
+<td class="left">delete after init</td>
+</tr>
+
+<tr>
+<td class="left"><b>after init</b></td>
+<td class="left">compile <code>el</code> when there is no <code>elc</code> or <code>elc</code> older than <code>el</code></td>
+<td class="left">delete <code>elc</code> if there is <code>el</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Таким образом, когда мы устанавливаем значение этой опции во время
+инициализации эмакса, выполнение соответствующих действий
+откладывается на потом.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="set-well-tuned-emacs-compile-user-init-file">(<span style="color: #a020f0;">progn</span> 
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">well-tuned-emacs-compile-user-init-file</span> ()
+    (<span style="color: #a020f0;">let</span> ((while-init-time (not after-init-time)))
+      (<span style="color: #a020f0;">cond</span> (while-init-time
+             (add-hook 'after-init-hook #'well-tuned-emacs-compile-user-init-file))
+            (after-init-time
+             (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">bytecomp</span>)
+             (<span style="color: #a020f0;">if</span> well-tuned-emacs-compile-user-init-file
+                 &lt;&lt;compile-el-when-there-is-no-elc-or-elc-older-than-el&gt;&gt;
+               &lt;&lt;delete-elc-if-there-is-el&gt;&gt;
+               )))))
+  (<span style="color: #a020f0;">lambda</span> (symbol value)
+    (set symbol value)
+    (well-tuned-emacs-compile-user-init-file)))
+</pre>
+</div>
+
+<p>
+Компилируем лисп-программу инициализации только если скомпилированная
+программа старее, или её вовсе нет.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="compile-el-when-there-is-no-elc-or-elc-older-than-el">(<span style="color: #a020f0;">when</span> (file-exists-p actual-user-init-file)
+  (byte-recompile-file actual-user-init-file nil 0))
+</pre>
+</div>
+
+<p>
+Просто удаляем скомпилированную программу инициализации, если у нас
+есть исходная программа инициализации.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="delete-elc-if-there-is-el">(<span style="color: #a020f0;">when</span> (<span style="color: #a020f0;">and</span> (file-exists-p actual-user-init-file)
+           (file-exists-p (byte-compile-dest-file actual-user-init-file)))
+  (delete-file (byte-compile-dest-file actual-user-init-file)))
+</pre>
+</div>
+
+<p>
+Осталось нанести последний штрих и общая программа инициализации
+эмакса будет готова. Система пакетов вошла в состав эмакса несколько
+лет назад, но все еще активно развивается и в некоторых местах требует
+ручного вмешательства. Если мы ею воспользуемся, система пакетов
+добавит код своей инициализации в сгенерированную программу
+инициализации эмакса. Чтобы этого избежать, достаточно добавить этот
+код самим, и сразу после этого мы можем
+<a href="list-packages">выбрать и установить свои любимые пакеты</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="initialize-package-system-and-install-user-selected-packages">&lt;&lt;initialize-package-system&gt;&gt;
+&lt;&lt;package-system-backports&gt;&gt;
+&lt;&lt;make-sure-melpa-is-used-as-one-of-community-package-archives&gt;&gt;
+&lt;&lt;make-sure-use-package-package-will-be-present&gt;&gt;
+(<span style="color: #a020f0;">unless</span> (cl-every #'package-installed-p package-selected-packages)
+  (package-refresh-contents)
+  (package-install-selected-packages))
+(<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">use-package</span>)
+&lt;&lt;setup-use-package&gt;&gt;
+</pre>
+</div>
+
+<p>
+В обычных условиях для инициализации системы пакетов было бы
+достаточно одного единственного вызова функции (package-initialize),
+но особенности работы провайдера «Ростелеком» иногда приводят к
+повреждению кеша архивов. Поэтому при возникновении ошибки
+определенного типа кеш нужно очистить и затем попытаться провести
+повторную инициализацию системы пакетов.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="initialize-package-system">(<span style="color: #a020f0;">condition-case</span> nil
+    (package-initialize)
+  (wrong-type-argument
+     (cl-loop for (archive . _location) in package-archives
+              with rel-path = <span style="color: #8b2252;">"archives/%s/archive-contents"</span>
+              for archive-contents = (expand-file-name (format rel-path archive) package-user-dir)
+              when (file-exists-p archive-contents) do (delete-file archive-contents))
+     (package-initialize)))
+</pre>
+</div>
+
+<p>
+Конечно, перед автоматической установкой пакетов эмакс должен знать
+какие именно пакеты устанавливать и откуда их брать.
+</p>
+
+<p>
+<a href="(customize-group-other-window 'emacs)">Emacs</a>⊲
+<a href="(customize-group-other-window 'applications)">Applications</a>⊲
+<a href="(customize-group-other-window 'package)">Package</a>⊲
+<a href="(customize-variable-other-window 'package-archives)">Package Archives</a>
+← адреса архивов. По-умолчанию эмакс устанавливает пакеты из
+официального архива <a href="http://elpa.gnu.org/">GNU ELPA</a>. В этом архиве
+мало пакетов, но они надежные и доверенные. В неофициальных архивах
+<a href="https://melpa.org">MELPA</a>[<a href="(progn (unless (featurep 'cl-lib) (require 'cl-lib))(unless (featurep 'package) (require 'package))(customize-save-variable 'package-archives (cl-pushnew (cons "melpa" "http://melpa.milkbox.net/packages/") package-archives :test #'equal)))">добавить</a>] и
+<a href="https://marmalade-repo.org/">Marmalade</a>[<a href="(progn (unless (featurep 'cl-lib) (require 'cl-lib)) (unless (featurep 'package) (require 'package))(customize-save-variable 'package-archives (cl-pushnew (cons "marmalade" "http://marmalade-repo.org/packages/") package-archives :test #'equal)))">добавить</a>]
+пакетов гораздо больше, но они менее качественные в плане лицензионной
+чистоты и гарантий безопасности.
+<a href="http://emacs.stackexchange.com/questions/268/what-are-the-practical-differences-between-the-various-emacs-package-repositorie">Различия между этими архивами несущественны</a>,
+но лично я предпочитаю MELPA, потому что он <a href="https://github.com/milkypostman/melpa">хостится на гитхабе</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="make-sure-melpa-is-used-as-one-of-community-package-archives">(<span style="color: #a020f0;">let</span> ((melpa-location <span style="color: #8b2252;">"http://melpa.milkbox.net/packages/"</span>))
+  (<span style="color: #a020f0;">when</span> (<span style="color: #a020f0;">cl-loop</span> for (_archive . location) in package-archives never (equal location melpa-location))
+    (<span style="color: #a020f0;">cl-pushnew</span>  (cons <span style="color: #8b2252;">"melpa"</span> melpa-location) package-archives <span style="color: #483d8b;">:test</span> #'equal)
+    (<span style="color: #a020f0;">customize-save-variable-after-init</span> package-archives)))
+</pre>
+</div>
+
+<p>
+<a href="(customize-group-other-window 'emacs)">Emacs</a>⊲
+<a href="(customize-group-other-window 'applications)">Applications</a>⊲
+<a href="(customize-group-other-window 'package)">Package</a>⊲
+<a href="(customize-variable-other-window 'package-selected-packages)">Package Selected Packages</a>
+← имена вручную установленных пакетов. Каждый раз когда пользователь
+эмакса лично выбирает и устанавливает нужный ему пакет, эмакс
+сохраняет имя этого пакета в списке-значении переменной-опции
+package-selected-packages. Сама эта настройка
+<a href="http://endlessparentheses.com/new-in-package-el-in-emacs-25-1-user-selected-packages.html">появились только в GNU Emacs 25</a>.
+В GNU Emacs 24 и более ранних версиях эмакса этой настройки нет;
+придется добавить ее самим.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="package-system-backports">(<span style="color: #a020f0;">unless</span> (boundp 'package-selected-packages)
+  (<span style="color: #a020f0;">defcustom</span> <span style="color: #a0522d;">package-selected-packages</span> (list)
+    <span style="color: #8b2252;">"Store here packages installed explicitly by user."</span>
+    <span style="color: #483d8b;">:type</span> '(repeat symbol)
+    <span style="color: #483d8b;">:group</span> 'package))
+</pre>
+</div>
+
+<p>
+В новых версиях эмакса с опцией package-selected-packages связано
+гораздо больше функциональности, чем имело бы смысл портировать в
+старые версии эмакса. Но функция package-install-selected-packages
+того стоит &#x2014; она автоматически устанавливает ваши любимые пакеты, по
+списку.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="package-system-backports">(<span style="color: #a020f0;">unless</span> (fboundp #'package-install-selected-packages)
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">package-install-selected-packages</span> ()
+    <span style="color: #8b2252;">"Ensure packages in `</span><span style="color: #008b8b;">package-selected-packages</span><span style="color: #8b2252;">' are installed."</span>
+    (<span style="color: #a020f0;">interactive</span>)
+    (<span style="color: #a020f0;">let</span> ((packages-to-be-installed (cl-remove-if #'package-installed-p package-selected-packages)))
+      (<span style="color: #a020f0;">when</span> packages-to-be-installed
+        (<span style="color: #a020f0;">when</span> (<span style="color: #a020f0;">or</span> noninteractive
+                 (y-or-n-p (format <span style="color: #8b2252;">"%s packages will be installed:\n%s, proceed?"</span>
+                             (length packages-to-be-installed)
+                             (mapconcat #'symbol-name packages-to-be-installed <span style="color: #8b2252;">", "</span>))))
+          (mapc #'package-install packages-to-be-installed))))))
+</pre>
+</div>
+
+<p>
+Кроме ручной установки пакетов из графического интерфейса, нам
+понадобится средство для автоматической установки и грамотной загрузки
+установленных пакетов.
+В настоящее время для этой цели сообщество использует лисп-программу
+<a href="https://github.com/jwiegley/use-package">use-package</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="make-sure-use-package-package-will-be-present">(<span style="color: #a020f0;">unless</span> (cl-find 'use-package package-selected-packages)
+  (<span style="color: #a020f0;">cl-pushnew</span> 'use-package package-selected-packages)
+  (<span style="color: #a020f0;">customize-save-variable-after-init</span> package-selected-packages))
+</pre>
+</div>
+
+<p>
+<a href="(customize-group-other-window 'use-package)">Use Package</a>⊲
+<a href="(customize-variable-other-window 'use-package-always-ensure)">Use Package Always Ensure</a>
+← <a href="(customize-save-variable 'use-package-always-ensure t)">устанавливать пакеты лисп-программой use-package</a>
+без необходимости использования ключа :ensure в коде вызова.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="setup-use-package">(<span style="color: #a020f0;">unless</span> use-package-always-ensure
+  (<span style="color: #a020f0;">setq</span> use-package-always-ensure t)
+  (<span style="color: #a020f0;">customize-save-variable-after-init</span> use-package-always-ensure))
+</pre>
+</div>
+
+<p>
+На этом описание основной части программы инициализации
+завершено. Дальнейший текст рассказывает о важных стандартных
+настройках, нестандартных сочетаниях клавиш и конфигурации
+установленных пакетов.
+</p>
+
+<hr  />
+
+<p>
+Идейный преемник проекта
+<a href="https://github.com/technomancy/emacs-starter-kit">Emacs Starter Kit</a> &#x2014;
+проект <a href="https://github.com/technomancy/better-defaults">Better Defaults</a>,
+выполнен <a href="http://technomancy.us/">Филом Хагельбергом</a>
+[<a href="http://sachachua.com/blog/2014/05/emacs-chat-phil-hagelberg/">интервью</a>]
+в виде пакета с небольшой лисп-программой. Эта лисп-программа, каждая
+строка которой тщательно отобрана сообществом, устанавливает значения
+пары десятков стандартных параметров в обход стандартной системы
+управления этими параметрами. Трудно найти более противоречивый
+проект. В некотором смысле это образцово-показательный забег по
+граблям. На мой взгляд, если современный Starter Kit стал гайдом, то
+логично было бы сделать гайдом и Better Defaults. Ниже я привожу
+ссылки на настройки некоторых ключевых параметров эмакса с
+пояснением причин по которым их стоит сделать. Списки сделанных
+настроек показывают лисп-программы
+<a href="customize-saved">M-x customize-saved</a> и
+<a href="customize-unsaved">M-x customize-unsaved</a>. Конечно, система
+кастомизации не всемогуща и для некоторых настроек (например,
+нестандартные сочетания клавиш) придется написать несколько строк на
+лиспе. В общем виде весь последующий код выглядит так:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="load-packages-and-apply-advanced-customizations">&lt;&lt;definitions&gt;&gt;
+&lt;&lt;customizations&gt;&gt;
+&lt;&lt;keybindings&gt;&gt;
+</pre>
+</div>
+
+<p>
+Начнем кастомизацию эмакса сверху и продолжим последовательно
+углубляться во всё более тонкие аспекты его работы. Но прежде &#x2014; для
+удобства и быстроты настройки &#x2014; лучше
+<a href="(customize-variable-other-window 'org-confirm-elisp-link-function)">Org Confirm Elisp Link Function</a>
+← <a href="(customize-save-variable 'org-confirm-elisp-link-function nil)">не подтверждать выполнение лисп-кода при переходе по ссылкам в этом руководстве</a> и
+<a href="(customize-variable-other-window 'org-return-follows-link)">Org Return Follows Link</a>
+← <a href="(customize-save-variable 'org-return-follows-link t)">переходить по ссылкам нажатием на Enter</a>.
+</p>
+
+<p>
+<a href="(describe-variable 'frame-title-format)">Frame Title Format</a>
+← имя буфера или полное имя файла/директории предваренное именем
+пользователя и машины при удаленном подключении. Как ни странно,
+заголовок фрейма (окна в оконном менеджере операционной системы) не
+кастомизируется стандартными средствами. Если открыто несколько
+фреймов, заголовок по-умолчанию совершенно бесполезен, поэтому
+используем наипростейший формат, позволяющий отличить один фрейм от
+другого.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(<span style="color: #a020f0;">setq-default</span> frame-title-format
+ '(<span style="color: #483d8b;">:eval</span> (concat (<span style="color: #a020f0;">when</span> (file-remote-p default-directory)
+                   (<span style="color: #a020f0;">let</span> ((user (file-remote-p default-directory 'user))
+                         (host (file-remote-p default-directory 'host)))
+                     (format <span style="color: #8b2252;">"%s@%s:"</span> user host)))
+                 (<span style="color: #a020f0;">or</span> buffer-file-truename dired-directory (buffer-name)))))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'menu-bar-mode)">Menu Bar Mode</a>
+← <a href="(customize-save-variable 'menu-bar-mode nil)">главное меню спрятано</a>.
+80% опций в главном меню эмакса никогда не используются, остальные 20%
+продублированы в меню моделайна (<i>mode-line </i>&#x2014; <i>строка режимов</i> под
+окном буфера). Меню буферов вызывается сочетаниями C-F10 и
+C-Left-Click в любом месте буфера, глобальное меню &#x2014; по
+C-Right-Click, само главное меню &#x2014; клавишей F10. Разумнее всего
+спрятать главное меню и показывать его при необходимости сочетанием
+C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-x &lt;f10&gt;"</span>) #'toggle-menu-bar-mode-from-frame)
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'tool-bar-mode)">Tool Bar Mode</a>
+← <a href="(customize-save-variable 'tool-bar-mode nil)">панель инструментов отключена</a>.
+Панель инструментов в эмаксе абсолютно бесполезна.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'scroll-bar-mode)">Scroll Bar Mode</a>
+← <a href="(customize-save-variable 'scroll-bar-mode 'right)">полоса прокрутки справа</a>.
+Многие <a href="(customize-save-variable 'scroll-bar-mode nil)">отключают полосу прокрутки</a>
+по трем причинам: она не является частью стандартного интерфейса
+эмакса, она плохо реализована и эстетически убога. Но в то же время,
+нельзя отрицать ее очевидную пользу в графических средах даже в таком
+неполноценном виде.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'window-divider-mode)">Window Divider Mode</a>
+← <a href="(customize-save-variable 'window-divider-mode nil)">широкая вертикальная разделительная черта между окнами отключена</a>.
+<a href="(customize-save-variable 'window-divider-mode t)">Разделение окон по горизонтали широкой вертикальной чертой</a>
+позволяет легко менять размеры окон мышкой при включенных полосах
+прокрутки. Выглядит старомодно, но в группе
+<a href="(customize-group-other-window 'window-divider)">Window Divider</a>
+есть настройки стиля.
+</p>
+
+<p>
+<a href="(customize-face-other-window 'fringe)">Fringe face</a>
+← <a href="(let ((bg `(:background ,(face-attribute 'default :background))))(face-spec-set 'fringe `((t ,bg)))(put 'fringe 'theme-face `((user ,bg)))(put 'fringe 'saved-face `((t ,bg)))(custom-save-all))">прозрачные поля</a>.
+Во всех текстовых редакторах начиная с Блокнота принято иметь
+небольшие поля по краям области редактирования текста. Поля
+обязательно должны быть цвета фона чтобы не акцентировать внимание на
+артефактах рендеринга полосы прокрутки.
+<a href="(customize-themes)">Цветовые темы</a> эмакса меняют цвета фона и
+полей, поэтому каждый раз при изменении темы нам нужно чтобы цвет
+полей соответствовал цвету фона. Для этого используем средство
+<a href="https://en.wikipedia.org/wiki/Aspect-oriented_programming">аспектно-ориентированного программирования</a>
+<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Advising-Functions.html#Advising-Functions">Advice</a>,
+которое изменяет поведение функций сторонних лисп-программ без
+изменения их оригинальной реализации. Функции-аспекты должны иметь как
+минимум такой же список аргументов, что и оригинальные функции, но
+байт-компилятор будет ругаться, если эти аргументы не будут
+использоваться, поэтому
+<a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html">имена неиспользуемых аргументов должны начинаться с подчеркивания</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(<span style="color: #a020f0;">let</span> ((set-transparent-fringe
+       (<span style="color: #a020f0;">lambda</span> (<span style="color: #228b22;">&amp;rest</span> _)
+        (set-face-background 'fringe (face-attribute 'default <span style="color: #483d8b;">:background</span>)))))
+  (advice-add #'load-theme <span style="color: #483d8b;">:after</span> set-transparent-fringe)
+  (advice-add #'disable-theme <span style="color: #483d8b;">:after</span> set-transparent-fringe))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'indicate-empty-lines)">Indicate Empty Lines</a>
+← <a href="(customize-save-variable 'indicate-empty-lines nil)">нет штриховки на полях</a>.
+<a href="(customize-save-variable 'indicate-empty-lines t)">Штриховка на полях</a>
+изящно выделяет пустую область за гранью буфера, но иногда отвлекает.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'uniquify-buffer-name-style)">Uniquify Buffer Name Style</a>
+← <a href="(customize-save-variable 'uniquify-buffer-name-style 'post-forward)">за именами одинаковых буферов следует часть файлового пути</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'uniquify-separator)">Uniquify Separator</a>
+← <a href="(customize-save-variable 'uniquify-separator "\\")">имена одинаковых буферов отделены обратным слешем \ от файлового пути</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'size-indication-mode)">Size Indication Mode</a>
+← <a href="(customize-save-variable 'size-indication-mode t)">в моделайне отображается размер буфера</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'line-number-mode)">Line Number Mode</a>
+← <a href="(customize-save-variable 'line-number-mode t)">в моделайне отображается номер строки</a> на которой находится курсор.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'column-number-mode)">Column Number Mode</a>
+← <a href="(customize-save-variable 'column-number-mode t)">в моделайне отображается номер столбца</a> на котором находится курсор.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'initial-buffer-choice)">Initial Buffer Choice</a>
+← <a href="(customize-save-variable 'initial-buffer-choice 'remember-notes)">после запуска эмакс открывает файл с заметками</a>
+вместо стартового экрана, или как вариант &#x2014;
+<a href="(customize-save-variable 'initial-buffer-choice t)">после запуска эмакс открывает <code>*scratch*</code>-буфер</a>.
+По желанию эмакс может открыть любой файл, директорию, сайт, программу
+для чтения почты, новостей, чат, командную оболочку операционной
+системы, музыкальный проигрыватель или новый закон природы.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'remember-notes-initial-major-mode)">Remember Notes Initial Major Mode</a>
+← <a href="(customize-save-variable 'remember-notes-initial-major-mode 'nil)">эмакс открывает файл с заметками в режиме по-умолчанию</a>,
+<a href="(customize-save-variable 'remember-notes-initial-major-mode 'text-mode)">в режиме text-mode</a>
+или <a href="(customize-save-variable 'remember-notes-initial-major-mode 'org-mode)">в режиме org-mode</a>.
+По умолчанию <a href="(customize-variable-other-window 'initial-major-mode)">режим по-умолчанию</a> &#x2014;
+lisp-interaction-mode; поэтому предполагается, что это будут заметки с
+лисп-кодом для эмакса. В группе кастомизации
+<a href="(customize-group 'remember 'other-window)">Remember</a> можно указать
+<a href="(customize-variable-other-window 'remember-data-file)">расположение файла с заметками</a>
+и много других вещей.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'initial-scratch-message)">Initial Scratch Message</a>
+← что угодно или <a href="(customize-save-variable 'initial-scratch-message nil)">ничего</a>. Эмакс
+<a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Startup-Summary.html">всегда</a>
+открывает <code>*scratch*</code>-буфер после запуска.  От него невозможно
+избавиться, но можно сделать
+<a href="http://ergoemacs.org/emacs/modernization_scratch_buffer.html">более полезным</a>,
+если добавить в него несколько ссылок на домашнюю директорию,
+<a href="http://www.juev.org/2009/08/10/emacs-password-manager/">файл с личными паролями зашифрованный эмаксом</a>
+с помощью
+<a href="https://ru.wikipedia.org/wiki/GnuPG">GNU Privacy Guard</a>, активные проекты, сайты и прочее.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(add-hook 'emacs-startup-hook
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">well-tuned-emacs-scratch-buffer-message</span> ()
+    (<span style="color: #a020f0;">with-current-buffer</span> <span style="color: #8b2252;">"*scratch*"</span>
+      (<span style="color: #a020f0;">let</span> ((scratch-buf-last-char (point-max)))
+        (goto-char scratch-buf-last-char)
+        (fancy-splash-insert
+         <span style="color: #483d8b;">:link</span> (list <span style="color: #8b2252;">"File"</span> (<span style="color: #a020f0;">lambda</span> (_button) (call-interactively #'find-file))
+                     <span style="color: #8b2252;">"Specify a new file's name, to edit the file"</span>)
+         <span style="color: #8b2252;">" "</span>
+         <span style="color: #483d8b;">:link</span> (list <span style="color: #8b2252;">"Home"</span> (<span style="color: #a020f0;">lambda</span> (_button) (dired <span style="color: #8b2252;">"~"</span>))
+                     <span style="color: #8b2252;">"Open home directory, to operate on its files"</span>)
+         <span style="color: #8b2252;">" "</span>
+         <span style="color: #483d8b;">:link</span> (list <span style="color: #8b2252;">"Passwords"</span> (<span style="color: #a020f0;">lambda</span> (_button)
+                                   (<span style="color: #a020f0;">let</span> ((passwords <span style="color: #8b2252;">"~/Dropbox/Passwords.org.gpg"</span>))
+                                     (<span style="color: #a020f0;">when</span> (file-exists-p passwords)
+                                       (find-file passwords))))
+                     <span style="color: #8b2252;">"Open encrypted password vault"</span>))
+        (comment-region scratch-buf-last-char (point))
+        (newline)
+        (goto-char (point-max))
+        (set-buffer-modified-p nil)))))
+</pre>
+</div>
+
+<hr  />
+
+<p>
+<a href="(customize-variable-other-window 'cursor-type)">Cursor Type</a>
+← классический <a href="(customize-save-variable 'cursor-type t)">прямоугольный сплошной курсор</a> или
+современная <a href="(customize-save-variable 'cursor-type 'bar)">вертикальная черта между букв</a>.
+<a href="//raskin-interface.narod.ru/interface/chapter5.htm#s5.5">Классический курсор предпочтительнее</a>:
+он заметнее на больших экранах. Однако, при выделении текста такой
+курсор полностью перекрывает выделенную область под собой и из-за
+этого нельзя понять, выделен ли символ под курсором &#x2014; до тех пор
+пока курсор не пропадет. Если курсор не мигает, эта задача и вовсе
+неразрешима. В качестве решения этой проблемы непрозрачный сплошной
+курсор можно сделать прозрачным после активации
+<a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Mark.html">метки</a>
+(inactive→active), а после деактивации метки (active→inactive) сделать
+его обратно сплошным:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">i</th>
+<th scope="col" class="left">→</th>
+<th scope="col" class="left">a</th>
+<th scope="col" class="left">a</th>
+<th scope="col" class="left">→</th>
+<th scope="col" class="left">i</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">■</td>
+<td class="left">→</td>
+<td class="left">□</td>
+<td class="left">□</td>
+<td class="left">→</td>
+<td class="left">■</td>
+</tr>
+
+<tr>
+<td class="left">■</td>
+<td class="left">→</td>
+<td class="left">□</td>
+<td class="left">␣</td>
+<td class="left">&#xa0;</td>
+<td class="left">␣</td>
+</tr>
+
+<tr>
+<td class="left">␣</td>
+<td class="left">&#xa0;</td>
+<td class="left">␣</td>
+<td class="left">□</td>
+<td class="left">&#xa0;</td>
+<td class="left">□</td>
+</tr>
+
+<tr>
+<td class="left">␣</td>
+<td class="left">&#xa0;</td>
+<td class="left">␣</td>
+<td class="left">␣</td>
+<td class="left">&#xa0;</td>
+<td class="left">␣</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Решение интересное, но не обязательное.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #a020f0;">let</span> (inactive-mark-cursor-type)
+  (add-hook 'activate-mark-hook
+    (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">alter-cursor-type-after-activate-mark</span> ()
+      (<span style="color: #a020f0;">pcase</span> (<span style="color: #a020f0;">setq</span> inactive-mark-cursor-type cursor-type)
+        ('box (<span style="color: #a020f0;">unless</span> blink-cursor-mode (<span style="color: #a020f0;">setq</span> cursor-type 'hollow))))))
+  (add-hook 'deactivate-mark-hook
+    (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">alter-cursor-type-after-deactivate-mark</span> ()
+      (<span style="color: #a020f0;">pcase</span> inactive-mark-cursor-type
+        ('box (<span style="color: #a020f0;">pcase</span> cursor-type
+                ('hollow (<span style="color: #a020f0;">setq</span> cursor-type 'box))))))))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'blink-cursor-mode)">Blink Cursor Mode</a>
+← <a href="(customize-save-variable 'blink-cursor-mode t)">курсор мигает</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'make-pointer-invisible)">Make Pointer Invisible</a>
+← <a href="(customize-save-variable 'make-pointer-invisible t)">курсор мыши прячется при вводе текста</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'global-hl-line-mode)">Global Hl Line Mode</a>
+← <a href="(customize-save-variable 'global-hl-line-mode nil)">текущая строка не подсвечивается</a>
+или <a href="(customize-save-variable 'global-hl-line-mode t)">подсвечивается</a> &#x2014;
+когда это действительно необходимо.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'visible-bell)">Visible Bell</a>
+← <a href="(customize-save-variable 'visible-bell t)">в качестве предупреждения эмакс мерцает, а не звенит</a>.
+Без этой настройки попытка сдвинуть курсор в пустом буфере вызовет
+раздражительный громкий звон.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'save-place-mode)">Save Place Mode</a>
+← <a href="(customize-save-variable 'save-place-mode t)">позиция курсора в буфере сохраняется между сессиями</a>.
+После открытия файла редактирование продолжается с того места где было
+закончено.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'save-place-file)">Save Place File</a>
+← <a href="(customize-save-variable 'save-place-file (concat user-emacs-directory "places"))">позиции курсоров сохраняются в файле ~/.emacs.d/places</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'require-final-newline)">Require Final Newline</a>
+← <a href="(customize-save-variable 'require-final-newline t)">в конец сохраняемого файла добавляется пустая строка</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'backup-directory-alist)">Backup Directory Alist</a>
+← <a href="(customize-save-variable 'backup-directory-alist `(("." . ,(concat user-emacs-directory "backup"))))">резервные копии файлов хранятся в директории ~/.emacs.d/backup</a>.
+В противном случае резервные копии будут захламлять директории в
+которых находятся редактируемые файлы.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'global-auto-revert-mode)">Global Auto Revert Mode</a>
+← <a href="(customize-save-variable 'global-auto-revert-mode t)">буфер автоматически перезагружает содержимое файла при его изменении внешними программами</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'delete-by-moving-to-trash)">Delete By Moving To Trash</a>
+← <a href="(customize-save-variable 'delete-by-moving-to-trash t)">удаленные эмаксом файлы отправляются в корзину операционной системы</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'ido-mode)">Ido Mode</a> &amp;
+<a href="(customize-variable-other-window 'ido-everywhere)">Ido Everywhere</a>
+← <a href="(progn (customize-save-variable 'ido-mode 'both) (customize-save-variable 'ido-everywhere t))">интерактивная навигация в минибуфере</a> 
+при работе с файлами и буферами.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'ido-enable-flex-matching)">Ido Enable Flex Matching</a>
+← <a href="(customize-save-variable 'ido-enable-flex-matching t)">более удобный поиск и выбор из множества вариантов</a>
+во время интерактивной навигации в минибуфере.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'ido-save-directory-list-file)">Ido Save Directory List File</a>
+← <a href="(customize-save-variable 'ido-save-directory-list-file (concat user-emacs-directory "ido"))">состояние лисп-программы ido сохраняется в файле ~/.emacs.d/ido</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'ido-ubiquitous-mode)">Ido Ubiquitous Mode</a>
+← <a href="(customize-save-variable 'ido-ubiquitous-mode 1)">интерактивная навигация в минибуфере</a>
+при почти любом автодополнении. У этой лисп-программы есть
+<a href="https://github.com/DarwinAwardWinner/ido-ubiquitous/pull/96">некоторые проблемы</a> 
+(которые были исправлены прямо во время написания этого предложения с
+помощью пул реквеста на гитхабе и вечером того же дня все пользователи
+Emacs получили свои копии этого пакета уже без бага &#x2014; суть философии
+разработки Emacs).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">ido-ubiquitous</span>
+  <span style="color: #483d8b;">:config</span> (reinstate-mode 'ido-ubiquitous-mode))
+</pre>
+</div>
+
+<p>
+<a href="(customize-group 'smex 'other-window)">Smex</a> &#x2014;
+интерактивная навигация в минибуфере при работе с M-x-командами
+эмакса.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">smex</span>
+  <span style="color: #483d8b;">:bind</span> ((<span style="color: #8b2252;">"M-x"</span> . smex)
+         (<span style="color: #8b2252;">"M-X"</span> . smex-major-mode-commands)
+         (<span style="color: #8b2252;">"C-c C-c M-x"</span> . execute-extended-command)))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'smex-save-file)">Smex Save File</a>
+← <a href="(customize-save-variable 'smex-save-file (concat user-emacs-directory "smex"))">состояние лисп-программы smex сохраняется в файле ~/.emacs.d/smex</a>.
+</p>
+
+<p>
+<a href="(customize-group "mule" 'other-window)">MULE Internationalization</a>⊲
+<a href="(customize-variable-other-window 'default-input-method)">Default Input Method</a>
+← <a href="(customize-save-variable 'default-input-method "russian-computer")">русский язык</a>.
+Эмакс использует независимое от операционной системы переключение
+языков и <a href="(call-interactively #'set-input-method)">методов ввода</a>
+для обеспечения своей работы в очень разных средах. Переключение на
+русский язык по C-\ без предварительного указания метода ввода требует
+кастомизации. Кроме национальных методов ввода текста есть
+технические, например TeX (шутка в духе <a href="https://en.wikipedia.org/wiki/Donald_Knuth">профессора</a>),
+в этих режимах введенные спецслова превращаются в спецсимволы,
+например \​'e → é, \​th → þ, \​Mu\​epsilon\​nu → Μεν,
+\existsa\forallb(b\ina) → ∃a∀b(b∈a).
+</p>
+
+<p>
+C-\ не самое удобное сочетание клавиш, как вариант можно использовать
+свободное сочетание Shift-Space.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"S-SPC"</span>) #'toggle-input-method)
+(define-key isearch-mode-map (kbd <span style="color: #8b2252;">"S-SPC"</span>) #'isearch-toggle-input-method)
+</pre>
+</div>
+
+<hr  />
+
+<p>
+Для эмакса написано много лисп-программ делающих работу со скобками
+более удобной и наглядной. Режимы
+<a href="(customize-variable-other-window 'electric-pair-mode)">Electric Pair Mode</a> и
+<a href="(customize-variable-other-window 'show-paren-mode)">Show Paren Mode</a> &#x2014;
+это встроенные лисп-программы, они достаточно хороши, но есть и
+получше, например <a href="https://github.com/Fuco1/smartparens">Smartparens</a> и
+<a href="http://emacswiki.org/emacs/ParEdit">Paredit</a>.
+Однако все эти программы устарели, поэтому не стоит заморачиваться с
+их настройкой. Современные экспериментальные программы вроде
+<a href="http://shaunlebron.github.io/parinfer/">Parinfer</a>
+определяют структуру программы по отступам в коде и расставляют скобки
+автоматически.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">smartparens-config</span> <span style="color: #483d8b;">:ensure</span> smartparens
+  <span style="color: #483d8b;">:diminish</span> smartparens-mode
+  <span style="color: #483d8b;">:config</span>
+    (<span style="color: #a020f0;">progn</span>
+      &lt;&lt;bind-some-keys-for-smartparens-mode&gt;&gt;
+      &lt;&lt;turn-on-smartparens-mode-for-some-modes&gt;&gt;
+      (reinstate-mode 'smartparens-global-mode)
+      (reinstate-mode 'show-smartparens-global-mode)))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'smartparens-global-mode)">Smartparens Global Mode</a>
+← <a href="(customize-save-variable 'smartparens-global-mode nil)">скобки вводятся по-отдельности</a> или <a href="(customize-save-variable 'smartparens-global-mode t)">парами во всех режимах</a>.
+Необязательно включать этот режим везде, по-настоящему он полезен
+только при редактировании структурированного кода.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="turn-on-smartparens-mode-for-some-modes">(add-hook 'prog-mode-hook #'turn-on-smartparens-strict-mode)
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'show-smartparens-global-mode)">Show Smartparens Global Mode</a>
+← <a href="(customize-save-variable 'show-smartparens-global-mode t)">парные скобки подсвечиваются</a>.
+</p>
+
+<p>
+Smartparens включает в себя несколько альтернативных наборов сочетаний
+клавиш для манипуляции
+<a href="https://en.wikipedia.org/wiki/S-expression">символьными выражениями</a>
+(см. <a href="http://danmidwood.com/content/2014/11/21/animated-paredit.html">анимированное руководство</a>).
+У каждого из этих наборов есть некоторые недостатки, поэтому я
+использую традиционный набор, свободный от этих недостатков насколько
+это позволяют незанятые клавиши эмакса и здравый смысл.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="bind-some-keys-for-smartparens-mode">(<span style="color: #a020f0;">bind-keys</span> <span style="color: #483d8b;">:map</span> smartparens-mode-map
+  &lt;&lt;classic-TI-Explorer-Zmacs-keys&gt;&gt;
+  &lt;&lt;arrow-naviagion&gt;&gt;
+  &lt;&lt;slurp/barf&gt;&gt;
+  &lt;&lt;splice/unwrap&gt;&gt;
+  (<span style="color: #8b2252;">"C-k"</span> . sp-kill-hybrid-sexp))
+</pre>
+</div>
+
+<p>
+Текстовый редактор
+<a href="https://en.wikipedia.org/wiki/Zmacs">Zmacs</a> в 80-х использовался как IDE для Common Lisp и
+<a href="https://en.wikipedia.org/wiki/Lisp_Machine_Lisp">ZetaLisp</a> на
+<a href="https://en.wikipedia.org/wiki/Lisp_machine">лисп-машинах</a> 
+<a href="https://en.wikipedia.org/wiki/TI_Explorer">Texas Instruments Explorer</a>
+и имел богатый репертуар команд для работы с символьными выражениями:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="classic-TI-Explorer-Zmacs-keys">(<span style="color: #8b2252;">"C-M-f"</span> . sp-forward-sexp)
+(<span style="color: #8b2252;">"C-M-b"</span> . sp-backward-sexp)
+(<span style="color: #8b2252;">"C-M-n"</span> . sp-next-sexp)
+(<span style="color: #8b2252;">"C-M-p"</span> . sp-previous-sexp)
+(<span style="color: #8b2252;">"C-M-u"</span> . sp-backward-up-sexp)
+(<span style="color: #8b2252;">"C-M-d"</span> . sp-down-sexp)
+(<span style="color: #8b2252;">"C-M-("</span> . sp-beginning-of-sexp)
+(<span style="color: #8b2252;">"C-M-)"</span> . sp-end-of-sexp)
+(<span style="color: #8b2252;">"C-M-t"</span> . sp-transpose-sexp)
+(<span style="color: #8b2252;">"C-M-&lt;backspace&gt;"</span> . sp-backward-kill-sexp)
+(<span style="color: #8b2252;">"C-M-k"</span> . sp-kill-sexp)
+(<span style="color: #8b2252;">"C-M-w"</span> . sp-copy-sexp)
+</pre>
+</div>
+
+<p>
+Консистентная навигация по S-выражениям стрелками.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="arrow-naviagion">(<span style="color: #8b2252;">"C-M-&lt;up&gt;"</span> . sp-backward-up-sexp)
+(<span style="color: #8b2252;">"C-M-&lt;down&gt;"</span> . sp-down-sexp)
+(<span style="color: #8b2252;">"C-M-&lt;left&gt;"</span> . sp-backward-sexp)
+(<span style="color: #8b2252;">"C-M-&lt;right&gt;"</span> . sp-forward-sexp)
+</pre>
+</div>
+
+<p>
+Команды сдвига скобок в соответствующих направлениях продублированы на
+случай если в терминале не работают стрелки.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="slurp/barf">(<span style="color: #8b2252;">"C-&lt;left&gt;"</span> . sp-backward-slurp-sexp)
+(<span style="color: #8b2252;">"C-&lt;right&gt;"</span> . sp-forward-slurp-sexp)
+(<span style="color: #8b2252;">"M-&lt;left&gt;"</span> . sp-forward-barf-sexp)
+(<span style="color: #8b2252;">"M-&lt;right&gt;"</span> . sp-backward-barf-sexp)
+(<span style="color: #8b2252;">"C-,"</span> . sp-backward-slurp-sexp)
+(<span style="color: #8b2252;">"C-."</span> . sp-forward-slurp-sexp)
+(<span style="color: #8b2252;">"C-M-,"</span> . sp-forward-barf-sexp)
+(<span style="color: #8b2252;">"C-M-."</span> . sp-backward-barf-sexp)
+</pre>
+</div>
+
+<p>
+Сплайсы и удаления скобок поднимают S-выражение на уровень выше в
+дереве S-выражений, или делают его структуру более плоской.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="splice/unwrap">(<span style="color: #8b2252;">"C-&lt;up&gt;"</span> . sp-splice-sexp-killing-around)
+(<span style="color: #8b2252;">"C-&lt;down&gt;"</span> . sp-splice-sexp)
+(<span style="color: #8b2252;">"M-["</span> . sp-backward-unwrap-sexp)
+(<span style="color: #8b2252;">"M-]"</span> . sp-unwrap-sexp)
+</pre>
+</div>
+
+<p>
+Пусть удаление слова назад (см. <a href="#backward-kill-word-or-kill-region">C-w &#x2014; backward-kill-word-or-kill-region</a>)
+сохраняет структуру S-выражений.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(advice-add #'backward-kill-word-or-kill-region <span style="color: #483d8b;">:around</span>
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">backward-kill-word-preserve-s-expression-structure</span> (fn <span style="color: #228b22;">&amp;rest</span> args)
+    (<span style="color: #a020f0;">if</span> (<span style="color: #a020f0;">when</span> smartparens-mode (not (region-active-p)))
+        (sp-backward-kill-word (cl-first args))
+      (apply fn args))))
+</pre>
+</div>
+
+<hr  />
+
+<p>
+<a href="(customize-variable-other-window 'indent-tabs-mode)">Indent Tabs Mode</a>
+← <a href="(customize-save-variable 'indent-tabs-mode nil)">отступы пробелами</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'tab-always-indent))">Tab Always Indent</a>
+← <a href="(customize-save-variable 'tab-always-indent 'complete)">после автоматической установки отступов Tab выполняет автодополнение</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'subword-mode)">Subword Mode</a>
+← <a href="(customize-save-variable 'subword-mode t)">составные части слова записанного CamelCase'ом считаются отдельными словами</a>.
+<a href="http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html">Подробнее у Xah Lee</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'superword-mode)">Superword Mode</a>
+← <a href="(customize-save-variable 'superword-mode t)">составные слова набранные в любом стиле считаются одним словом</a>.
+Режимы Subword и Superword взаимно исключают друг
+друга. Одновременно может быть активен только один из режимов.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'delete-selection-mode)">Delete Selection Mode</a>
+← <a href="(customize-save-variable 'delete-selection-mode t)">выделенный текст полностью удаляется или заменяется при удалении, вставке или вводе</a>.
+Стандартное поведение современных текстовых редакторов.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'mouse-yank-at-point)">Mouse Yank At Point</a>
+← <a href="(customize-save-variable 'mouse-yank-at-point t)">мышь вставляет текст на позиции текстового курсора</a>,
+а не на позиции курсора мыши. В традиции
+<a href="https://en.wikipedia.org/wiki/X_Window_System">X Window System</a>
+текст вставляется по щелчку средней кнопки мыши.
+</p>
+
+<p>
+X Window System и Emacs (в любой ОС) поддерживают два буфера обмена:
+<i>primary</i> и <i>clipboard</i>. Мышь работает с primary-буфером, клавиатурные
+команды &#x2014; с clipboard-буфером.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'x-select-enable-clipboard t)">X Select Enable Clipboard</a>
+← <a href="(customize-save-variable 'x-select-enable-clipboard t)">клавиатурные команды копирования и вставки используют системный буфер обмена</a>
+(по-умолчанию).
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'x-select-enable-primary)">X Select Enable Primary</a>
+← <a href="(customize-save-variable 'x-select-enable-primary t)">клавиатурные команды копирования и вставки используют мышиный буфер обмена</a>
+(в дополнение к системному).
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'save-interprogram-paste-before-kill)">Save Interprogram Paste Before Kill</a>
+← <a href="(customize-save-variable 'save-interprogram-paste-before-kill t)">фрагменты текста скопированные в буфер обмена во внешних программах сохраняются в эмаксе</a>
+в буфере скопированных и удаленных фрагментов текста
+<a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Yanking.html">kill ring</a>.
+</p>
+
+<p>
+<a href="(describe-function #'yes-or-no-p)">Yes or No Predicate</a>
+← подтверждение одной клавишей: Y или Пробел &#x2014; да, N или Delete &#x2014;
+нет.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(<span style="color: #a020f0;">defalias</span> (<span style="color: #a020f0;">function</span> yes-or-no-p) (<span style="color: #a020f0;">function</span> y-or-n-p))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'apropos-do-all)">Apropos Do All</a>
+← <a href="(customize-save-variable 'apropos-do-all t)">расширенный поиск команд, функций, переменных и документации командами apropos</a>.
+</p>
+
+<hr  />
+
+<p>
+О настройке режима Org можно написать целую книгу, но есть несколько
+простых опций, которые полезны для работы с этим руководством.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'org-support-shift-select)">Org Support Shift Select</a>
+← <a href="(customize-save-variable 'org-support-shift-select t)">выделение шифтом и стрелками в режиме Org</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'org-src-fontify-natively)">Org Src Fontify Natively</a>
+← <a href="(customize-save-variable 'org-src-fontify-natively t)">код в блоках подсвечивается как обычный текст</a>.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'org-src-window-setup)">Org Src Window Setup</a>
+← по C-c ' <a href="(customize-save-variable 'org-src-window-setup 'current-window)">редактор кода открывается в окне документа</a> или
+<a href="(customize-save-variable 'org-src-window-setup 'reorganize-frame)">в отдельном окне</a> (по-умолчанию).
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'org-confirm-babel-evaluate)">Org Confirm Babel Evaluate</a>
+← <a href="(customize-save-variable 'org-confirm-babel-evaluate nil)">код в блоках выполняется без предварительного подтверждения</a>.
+</p>
+
+<hr  />
+
+<p>
+Настройка шрифтов в эмаксе очень специфична и системно-зависима. С
+учетом всего разнообразия операционных систем и окружений в которых
+может работать эмакс, в нем невозможно настроить шрифты стандартными
+средствами так чтобы они работали везде должным образом. Следующие
+настройки позволят эмаксу использовать шрифт лучше всего подходящий
+его окружению.
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'well-tuned-emacs-fonts)">Well Tuned Emacs Fonts</a>
+← списки предпочитаемых шрифтов в разных системных окружениях. Это
+ассоциативный список в котором множеству системных окружений
+соответствует множество шрифтов в порядке предпочтения.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defcustom</span> <span style="color: #a0522d;">well-tuned-emacs-fonts</span>
+  (<span style="color: #a020f0;">quote</span>
+   (((gnu/linux gnu/kfreebsd darwin windows-nt cygwin)
+     <span style="color: #8b2252;">"Consolas-10"</span> <span style="color: #8b2252;">"Courier New-9"</span> <span style="color: #8b2252;">"Monaco-9"</span> <span style="color: #8b2252;">"Anonymous Pro-11"</span>
+     <span style="color: #8b2252;">"Cambria-11"</span> <span style="color: #8b2252;">"Times New Roman-11"</span> <span style="color: #8b2252;">"Georgia-10"</span> <span style="color: #8b2252;">"DejaVu Serif Condensed-10"</span>
+     <span style="color: #8b2252;">"Arial-10"</span> <span style="color: #8b2252;">"Droid Sans-10"</span> <span style="color: #8b2252;">"Segoe UI Symbol-10"</span> <span style="color: #8b2252;">"Lucida Sans Unicode-10"</span> <span style="color: #8b2252;">"Corbel-11"</span>
+     <span style="color: #8b2252;">"Droid Sans Mono-10"</span> <span style="color: #8b2252;">"Envy Code R-10"</span> <span style="color: #8b2252;">"Menlo-10"</span>)
+    ((gnu/linux gnu/kfreebsd)
+     <span style="color: #8b2252;">"Inconsolata-10"</span> <span style="color: #8b2252;">"DejaVu Sans Mono-10"</span> <span style="color: #8b2252;">"Ubuntu Mono-10"</span>)))
+  <span style="color: #8b2252;">"Preferred fonts for operating system environments."</span>
+  <span style="color: #483d8b;">:type</span> '(alist
+          <span style="color: #483d8b;">:key-type</span>
+          (set <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Type of operating system"</span>
+               (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"A GNU/Linux system&#8212;that is, a variant GNU system, using the Linux kernel."</span> gnu/linux)
+               (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"A GNU (glibc-based) system with a FreeBSD kernel."</span> gnu/kfreebsd)
+               (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"The GNU system (using the GNU kernel, which consists of the HURD and Mach)."</span> gnu)
+               (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Darwin (Mac OS X)."</span> darwin)
+               (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Microsoft Windows NT, 9X and later."</span> windows-nt)
+               (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Cygwin, a Posix layer on top of MS-Windows."</span> cygwin)
+               (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Microsoft&#8217;s DOS."</span> ms-dos))
+          <span style="color: #483d8b;">:value-type</span> (repeat <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Preferred fonts"</span>
+                              (string <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Font"</span>)))
+  <span style="color: #483d8b;">:version</span> <span style="color: #8b2252;">"25.0.50.1"</span>
+  <span style="color: #483d8b;">:group</span> 'well-tuned-emacs)
+</pre>
+</div>
+
+<p>
+Соответствующая функция возвращает список предпочитаемых шрифтов в
+текущем системном окружении.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">well-tuned-emacs-fonts</span> ()
+  (<span style="color: #a020f0;">cl-loop</span> for (systems . fonts) in well-tuned-emacs-fonts
+           when (member system-type systems) append fonts into system-fonts
+           finally return (cl-remove-duplicates system-fonts <span style="color: #483d8b;">:test</span> #'equal <span style="color: #483d8b;">:from-end</span> t)))
+</pre>
+</div>
+
+<p>
+<span class="underline">available-font</span> → полное имя шрифта, если шрифт с указанным кратким
+именем доступен в текущем системном окружении. <span class="underline">Осторожно</span>: применение
+функции find-font в консольном Emacs 24.5.1 под Debian Stretch 64
+приведет к ошибке сегментации и краху программы.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">available-font</span> (font)
+  (<span style="color: #a020f0;">when</span> (stringp font) 
+    (<span style="color: #a020f0;">when</span> window-system (find-font (font-spec <span style="color: #483d8b;">:name</span> font)))))
+</pre>
+</div>
+
+<p>
+<span class="underline">available-well-tuned-emacs-fonts</span> → список предпочитаемых шрифтов
+доступных в текущем системном окружении.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">available-well-tuned-emacs-fonts</span> ()
+  (cl-remove-if-not #'available-font (well-tuned-emacs-fonts)))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'well-tuned-emacs-fonts)">Well Tuned Emacs Font</a>
+← выбранный пользователем шрифт для каждого конкретного системного
+окружения. По-умолчанию выбирается наиболее предпочтительный шрифт из
+доступных в текущем системном окружении.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customize-well-tuned-emacs">(<span style="color: #a020f0;">defcustom</span> <span style="color: #a0522d;">well-tuned-emacs-font</span>
+  (list (cons system-type (cl-first (available-well-tuned-emacs-fonts))))
+  <span style="color: #8b2252;">"Chosen fonts for operating systems."</span>
+  <span style="color: #483d8b;">:type</span> '(alist
+          <span style="color: #483d8b;">:key-type</span>
+          (choice <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Type of operating system"</span>
+                  (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"A GNU/Linux system&#8212;that is, a variant GNU system, using the Linux kernel."</span> gnu/linux)
+                  (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"A GNU (glibc-based) system with a FreeBSD kernel."</span> gnu/kfreebsd)
+                  (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"The GNU system (using the GNU kernel, which consists of the HURD and Mach)."</span> gnu)
+                  (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Darwin (Mac OS X)."</span> darwin)
+                  (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Microsoft Windows NT, 9X and later."</span> windows-nt)
+                  (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Cygwin, a Posix layer on top of MS-Windows."</span> cygwin)
+                  (const <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Microsoft&#8217;s DOS."</span> ms-dos))
+          <span style="color: #483d8b;">:value-type</span> (string <span style="color: #483d8b;">:tag</span> <span style="color: #8b2252;">"Font"</span>))
+  <span style="color: #483d8b;">:set</span> 
+  (<span style="color: #a020f0;">progn</span>
+    &lt;&lt;well-tuned-emacs-font&gt;&gt;
+    (<span style="color: #a020f0;">lambda</span> (symbol value)
+      (<span style="color: #a020f0;">when</span> (listp value)
+        (set symbol value)
+        (well-tuned-emacs-font (well-tuned-emacs-font)))))
+  <span style="color: #483d8b;">:version</span> <span style="color: #8b2252;">"25.0.50.1"</span>
+  <span style="color: #483d8b;">:group</span> 'well-tuned-emacs)
+</pre>
+</div>
+
+<p>
+Соответствующая функция устанавливает или возвращает выбранный
+пользователем шрифт для текущего системного окружения.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="well-tuned-emacs-font">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">well-tuned-emacs-font</span> (<span style="color: #228b22;">&amp;optional</span> font)
+  (<span style="color: #a020f0;">let</span> ((current-font (cdr (assoc system-type well-tuned-emacs-font))))
+    (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">unless</span> font current-font)
+        (<span style="color: #a020f0;">when</span> (stringp font)
+          (<span style="color: #a020f0;">unless</span> (equal font current-font)
+            (<span style="color: #a020f0;">setq</span> well-tuned-emacs-font
+                 (cl-subst (cons system-type font) (cons system-type current-font)
+                            well-tuned-emacs-font <span style="color: #483d8b;">:test</span> #'equal)))
+          (<span style="color: #a020f0;">when</span> (available-font font)
+            (set-frame-font font <span style="color: #483d8b;">:keep-size</span> t))))))
+</pre>
+</div>
+
+<p>
+Быстро выбрать шрифт можно двумя способами: автодополнением по имени
+шрифта через сочетание клавиш C-x M-f [«Meta-Font»]
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-x M-f"</span>)
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">select-font</span> ()
+    (<span style="color: #a020f0;">interactive</span>)
+    (well-tuned-emacs-font
+     (completing-read <span style="color: #8b2252;">"Select font: "</span> (available-well-tuned-emacs-fonts)))))
+</pre>
+</div>
+
+<p>
+или последовательно перебирая доступные шрифты сочетаниями клавиш C-x
+C-[&lt;/&gt;] и далее С-[&lt;/&gt;] или [&lt;/&gt;] до тех пор, пока не будет найден
+нужный шрифт (аналогично выбору размера шрифта программой
+<a href="(describe-function #'text-scale-adjust)">text-scale-adjust</a> по C-x C-[+/−]).
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">adjust-font</span> (inc)
+  (<span style="color: #a020f0;">interactive</span> <span style="color: #8b2252;">"p"</span>)
+  (well-tuned-emacs-font 
+   (<span style="color: #a020f0;">or</span> (cycle-around (well-tuned-emacs-font)
+                     (<span style="color: #a020f0;">pcase</span> (event-basic-type last-command-event)
+                       ((<span style="color: #a020f0;">or</span> ?&lt; ?,) (- inc))
+                       ((<span style="color: #a020f0;">or</span> ?&gt; ?.) inc)
+                       (_ inc))
+                     (available-well-tuned-emacs-fonts))
+       (cl-first (available-well-tuned-emacs-fonts))))
+  (message (format <span style="color: #8b2252;">"%s. Use &lt; and &gt; for further adjustment."</span>
+             (well-tuned-emacs-font)))
+  (set-transient-map
+   (<span style="color: #a020f0;">let</span> ((map (make-sparse-keymap)))
+     (<span style="color: #a020f0;">dolist</span> (mod '(() (control)))
+       (<span style="color: #a020f0;">dolist</span> (key '(?&lt; ?&gt; ?, ?.))
+         (define-key map (vector (append mod (list key)))
+           (<span style="color: #a020f0;">lambda</span> () (<span style="color: #a020f0;">interactive</span>) (adjust-font (abs inc))))))
+     map)))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(<span style="color: #a020f0;">cl-loop</span> for key in '(?&lt; ?&gt; ?, ?.) do
+  (define-key ctl-x-map (vector (list 'control key)) #'adjust-font))
+</pre>
+</div>
+
+<p>
+Цикл по последовательности вокруг элемента заключается в выборе
+<i>другого</i> элемента последовательности отстоящего от указанного на
+некоторое количество позиций. Указанный элемент может быть результатом
+выбора только если последовательность не содержит никаких других
+элементов.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="definitions">(<span style="color: #a020f0;">cl-defun</span> <span style="color: #0000ff;">cycle-around</span> (item times seq <span style="color: #228b22;">&amp;key</span> (test #'equal))
+  (<span style="color: #a020f0;">if</span> (zerop times) item
+    (<span style="color: #a020f0;">let</span> ((times (<span style="color: #a020f0;">if</span> (cl-plusp times) (1- times) times)))
+      (<span style="color: #a020f0;">cl-loop</span> for (i . tail) on seq collect i into head
+               when (funcall test i item) return
+               (<span style="color: #a020f0;">let</span> ((cycle (cl-remove item (append tail head) <span style="color: #483d8b;">:test</span> test)))
+                 (<span style="color: #a020f0;">or</span> (<span style="color: #a020f0;">when</span> cycle (nth (mod times (length cycle)) cycle))
+                     (<span style="color: #a020f0;">unless</span> cycle item)))))))
+</pre>
+</div>
+
+<p>
+Дополнительно можно добавить выбор из всех доступных семейств шрифтов
+по C-x C-M-f
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-x C-M-f"</span>)
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">select-font-family</span> ()
+    (<span style="color: #a020f0;">interactive</span>)
+    (well-tuned-emacs-font
+     (completing-read <span style="color: #8b2252;">"Select font: "</span> (font-families)))))
+</pre>
+</div>
+
+<p>
+и переключение между ними по C-x M-[&lt;/&gt;] и C-x C-M-[&lt;/&gt;].
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">adjust-font-family</span> (inc)
+  (<span style="color: #a020f0;">interactive</span> <span style="color: #8b2252;">"p"</span>)
+  (well-tuned-emacs-font 
+   (<span style="color: #a020f0;">or</span> (cycle-around (font-family (well-tuned-emacs-font))
+                     (<span style="color: #a020f0;">pcase</span> (event-basic-type last-command-event)
+                       ((<span style="color: #a020f0;">or</span> ?&lt; ?,) (- inc))
+                       ((<span style="color: #a020f0;">or</span> ?&gt; ?.) inc)
+                       (_ inc))
+                     (font-families))
+       (cl-first (font-families))))
+  (message (format <span style="color: #8b2252;">"%s. Use &lt; and &gt; for further adjustment."</span>
+             (well-tuned-emacs-font)))
+  (set-transient-map
+   (<span style="color: #a020f0;">let</span> ((map (make-sparse-keymap)))
+     (<span style="color: #a020f0;">dolist</span> (mod '(() (meta) (control meta)))
+       (<span style="color: #a020f0;">dolist</span> (key '(?&lt; ?&gt; ?, ?.))
+         (define-key map (vector (append mod (list key)))
+           (<span style="color: #a020f0;">lambda</span> () (<span style="color: #a020f0;">interactive</span>) (adjust-font-family (abs inc))))))
+     map)))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(<span style="color: #a020f0;">cl-loop</span> for key in '(?&lt; ?&gt; ?, ?.) do
+  (<span style="color: #a020f0;">cl-loop</span> for mod in '((meta) (control meta)) do
+    (define-key ctl-x-map (vector (append mod (list key))) #'adjust-font-family)))
+</pre>
+</div>
+
+<p>
+<span class="underline">font-families</span> → упорядоченный список всех доступных семейств шрифтов.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="definitions">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">font-families</span> ()
+  (funcall 
+   (compose
+    (<span style="color: #a020f0;">lambda</span> (font-families) (sort font-families (<span style="color: #a020f0;">lambda</span> (x y) (string&lt; (upcase x) (upcase y)))))
+    (<span style="color: #a020f0;">lambda</span> (font-families) (cl-remove-duplicates font-families <span style="color: #483d8b;">:test</span> #'string=))
+    (<span style="color: #a020f0;">lambda</span> (font-families) (cl-remove-if-not #'available-font font-families)))
+   (font-family-list)))
+</pre>
+</div>
+
+<p>
+<span class="underline">font-family</span> → семейство к которому принадлежит указанный шрифт.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="definitions">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">font-family</span> (font-name)
+  (<span style="color: #a020f0;">when</span> font-name
+    (funcall 
+     (compose
+      (<span style="color: #a020f0;">function</span> symbol-name)
+      (<span style="color: #a020f0;">lambda</span> (font-spec) (font-get font-spec <span style="color: #483d8b;">:family</span>))
+      (<span style="color: #a020f0;">lambda</span> (font-name) (font-spec <span style="color: #483d8b;">:name</span> font-name)))
+     font-name)))
+</pre>
+</div>
+
+<p>
+<span class="underline">compose</span> → <a href="https://en.wikipedia.org/wiki/Function_composition">композиция функций</a>:
+</p>
+
+<div class="center">
+<p>
+(compose e f … g h) = e ∘ f ∘ … ∘ g ∘ h = λx.e(f(…(g(hx)))
+</p>
+</div>
+
+<p>
+основа кода этой функции взята из книги
+“<a href="https://7chan.org/pr/src/ANSI_Common_Lisp_-_Paul_Graham.pdf">ANSI Common Lisp</a>” (1995), 
+автор &#x2014; <a href="http://www.paulgraham.com/">Paul Graham</a> (см. <a href="http://www.paulgraham.com/acl.html">о книге на сайте автора</a>);
+страница 110. Можно считать это просто рекомендацией
+хорошей книги основателя <a href="http://news.ycombinator.com">news.ycombinator.com</a>.
+Занятно: 20 лет назад, всего через 8 месяцев после выхода Windows 95
+вышла книга в которой автор рассказывает о практическом применении
+выразительных средств которые впоследствии станут мейнстримом только через
+15-20 лет. Еще более занятно то, что все эти средства уже тогда можно
+было использовать в древнем даже по тем временам текстовом редакторе
+двадцатилетней давности.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="definitions">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">compose</span> (<span style="color: #228b22;">&amp;rest</span> functions)
+  (<span style="color: #a020f0;">cl-destructuring-bind</span> (first . rest) (reverse functions)
+    (<span style="color: #a020f0;">lambda</span> (<span style="color: #228b22;">&amp;rest</span> args)
+      (cl-reduce (apply-partially #'flip #'funcall) rest <span style="color: #483d8b;">:initial-value</span> (apply first args)))))
+</pre>
+</div>
+
+<p>
+Фрагмент (lambda (v f) (funcall f v)) в оригинальном коде Пола Грэма
+показался мне недостаточно изящным и быстрый поиск в интернете указал
+на маленькую полезную абстракцию:
+</p>
+
+<p>
+<span class="underline">flip</span> → результат применения функции при перемене мест
+аргументов. Эта функция определена в стандарте
+<a href="https://www.haskell.org/onlinereport/haskell2010/haskellch9.html#x16-1710009">Haskell 2010: Chapter 9. Standart Prelude</a>:
+</p>
+
+<p class="verse">
+&#x2013; flip f  takes its (first) two arguments in the reverse order of f.<br  />
+flip             :: (a → b → c) → b → a → c<br  />
+flip f x y       =  f y x<br  />
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="definitions">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">flip</span> (f x y) (funcall f y x))
+</pre>
+</div>
+
+<hr  />
+
+<p>
+Сочетания клавиш в эмаксе имеют три ярко выраженные особенности: их
+очень много; их трудно запомнить; и они вызывают повреждения рук при
+злоупотреблении. С запоминанием помогут
+<a href="https://www.gnu.org/software/emacs/refcards/index.html">быстрые подсказки в формате PDF</a>:
+«<a href="https://www.gnu.org/software/emacs/refcards/pdf/ru-refcard.pdf">Справочник команд GNU Emacs</a>»,
+«<a href="https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf">Org-Mode Reference Card</a>»,
+«<a href="https://www.gnu.org/software/emacs/refcards/pdf/dired-ref.pdf">Dired Reference Card</a>»;
+и лисп-программа <a href="https://github.com/kai2nenobu/guide-key">Guide Key</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="customizations">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">guide-key</span>
+  <span style="color: #483d8b;">:diminish</span> guide-key-mode
+  <span style="color: #483d8b;">:config</span> (reinstate-mode 'guide-key-mode))
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'guide-key-mode)">Guide Key Mode</a> &amp;
+<a href="(customize-variable-other-window 'guide-key/guide-key-sequence)">Guide Key Sequence</a>
+← <a href="(customize-save-variable 'guide-key-mode t)">автоматически показывать доступные сочетания клавиш</a> 
+для префиксов
+C-x [<a href="(progn (dolist (k '("C-x" "C-x RET" "C-x ." "C-x @" "C-x a" "C-x a i" "C-x M-k" "C-x C-k" "C-x n" "C-x r" "C-x v" "C-x 4" "C-x 5" "C-x 6" "C-x 8" "C-x 8 a" "C-x 8 \"" "C-x 8 '" "C-x 8 *" "C-x 8 ," "C-x 8 /" "C-x 8 1" "C-x 8 2" "C-x 8 3" "C-x 8 N" "C-x 8 ^" "C-x 8 _" "C-x 8 `" "C-x 8 ~")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))">добавить</a>],
+C-c [<a href="(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "C-c" guide-key/guide-key-sequence :test #'equal))">добавить</a>],
+C-h [<a href="(progn (dolist (k '("C-h" "C-h 4")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))">добавить</a>],
+M-s [<a href="(progn (dolist (k '("M-s" "M-s h")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))">добавить</a>],
+M-g [<a href="(customize-save-variable 'guide-key/guide-key-sequence (cl-pushnew "M-g" guide-key/guide-key-sequence :test #'equal))">добавить</a>],
+F** [<a href="(progn (dolist (k (list (string ?< ?f ?1 ?>) (string ?< ?f ?1 ?> ?  ?4) (string ?< ?f ?2 ?>))) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))">добавить</a>],
+ESC [<a href="(progn (dolist (k '("ESC" "M-ESC")) (cl-pushnew k guide-key/guide-key-sequence :test #'equal))(customize-save-variable 'guide-key/guide-key-sequence guide-key/guide-key-sequence))">добавить</a>].
+</p>
+
+<p>
+<a href="(customize-variable-other-window 'guide-key/popup-windows-position)">Guide Key Popup Window Position</a>
+← <a href="(customize-save-variable 'guide-key/popup-windows-position 'bottom)">окно с подсказками сочетаний клавиш появляется снизу</a>
+или <a href="(customize-save-variable 'guide-key/popup-windows-position 'right)">справа</a> (по-умолчанию).
+</p>
+
+<p>
+Для снижения нагрузки на левую руку при вводе команд
+эмакса многие люди советуют
+<a href="http://www.emacswiki.org/emacs/MovingTheCtrlKey">поменять местами клавиши Caps Lock и Control</a>.
+Раньше я тоже так делал, но этого явно недостаточно. На современных
+стандартных клавиатурах кнопку Caps Lock нажимать удобнее, чем
+Control, но это не избавляет от нагрузки на левую руку, а всего лишь
+незначительно снижает ее. Лучше полностью отказаться от клавиш Control
+и Caps Lock и использовать в качестве модификатора «C-» зажатую
+клавишу «пробел». Решение не идеальное, но для здоровья рук оно
+полезнее, чем Caps ⇆ Ctrl.
+</p>
+
+<p>
+<a id="backward-kill-word-or-kill-region" name="backward-kill-word-or-kill-region"></a>
+Сочетание клавиш C-w &#x2014; де-факто стандарт для удаления слова слева от
+курсора.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="definitions">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">backward-kill-word-or-kill-region</span> (arg)
+  (<span style="color: #a020f0;">interactive</span> <span style="color: #8b2252;">"p"</span>)
+  (<span style="color: #a020f0;">if</span> (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (backward-kill-word arg)))
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-w"</span>) #'backward-kill-word-or-kill-region)
+(define-key isearch-mode-map (kbd <span style="color: #8b2252;">"C-w"</span>) #'backward-kill-word-or-kill-region)
+(define-key minibuffer-local-map (kbd <span style="color: #8b2252;">"C-w"</span>) #'backward-kill-word-or-kill-region)
+(add-hook 'ido-setup-hook
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">well-tuned-emacs-bind-ido-mode-delete-backward-word-updir</span> ()
+    (<span style="color: #a020f0;">when</span> (boundp 'ido-completion-map)
+      (<span style="color: #a020f0;">when</span> (fboundp #'ido-delete-backward-word-updir)
+        (define-key ido-completion-map (kbd <span style="color: #8b2252;">"C-w"</span>) #'ido-delete-backward-word-updir)))))
+</pre>
+</div>
+
+<p>
+Поиск по шаблонам регулярных выражений более актуален в качестве поиска по-умолчанию.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-s"</span>) #'isearch-forward-regexp)
+(global-set-key (kbd <span style="color: #8b2252;">"C-r"</span>) #'isearch-backward-regexp)
+(global-set-key (kbd <span style="color: #8b2252;">"C-M-s"</span>) #'isearch-forward)
+(global-set-key (kbd <span style="color: #8b2252;">"C-M-r"</span>) #'isearch-backward)
+</pre>
+</div>
+
+<p>
+Быстрое переключение между режимами Org и Text по M-F1 и M-F2 для удобного
+редактирования этого руководства.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(<span style="color: #a020f0;">with-eval-after-load</span> <span style="color: #8b2252;">"text-mode"</span>
+  (<span style="color: #a020f0;">when</span> (boundp 'text-mode-map)
+    (define-key text-mode-map (kbd <span style="color: #8b2252;">"M-&lt;f2&gt;"</span>) #'org-mode)))
+(<span style="color: #a020f0;">with-eval-after-load</span> 'org
+  (<span style="color: #a020f0;">when</span> (boundp 'org-mode-map)
+    (define-key org-mode-map (kbd <span style="color: #8b2252;">"M-&lt;f1&gt;"</span>) #'text-mode)))
+</pre>
+</div>
+
+<p>
+Логичнее удалять текст <i>до</i> буквы, чем <i>до-с</i> буквой.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(autoload #'zap-up-to-char <span style="color: #8b2252;">"misc"</span>
+  <span style="color: #8b2252;">"Kill up to, but not including ARGth occurrence of CHAR."</span> t)
+(global-set-key (kbd <span style="color: #8b2252;">"M-z"</span>) #'zap-up-to-char)
+</pre>
+</div>
+
+<p>
+Лисп-программа <a href="ibuffer">ibuffer</a> это улучшенная версия программы управления
+буферами <a href="list-buffers">list-buffers</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-x C-b"</span>) #'ibuffer)
+</pre>
+</div>
+
+<p>
+Для быстрого убийства буфера хорошо подходит сочетание C-x
+C-k. По-умолчанию на него назначен очень редко используемый набор
+сочетаний клавиш для отладки макросов, который логично смотрится на
+месте свободного сочетания C-x M-k [«keyboard macro»-команды].
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-x C-k"</span>) #'kill-this-buffer)
+(global-set-key (kbd <span style="color: #8b2252;">"C-x M-k"</span>) #'kmacro-keymap)
+</pre>
+</div>
+
+<p>
+Автодополнение текста выполняется программой hippie-expand, которая
+включает в себя стандартную программу автодополнения dabbrev-expand и
+несколько других программ, выдающих дополнения определенного вида в
+желаемом порядке.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"M-/"</span>) #'hippie-expand)
+</pre>
+</div>
+
+<p>
+<a href="(customize-variable-other-window 'hippie-expand-try-functions-list)">Hippie Expand Try Functions List</a>
+← <a href="(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-all-abbrevs try-complete-file-name-partially try-complete-file-name try-expand-dabbrev try-expand-dabbrev-from-kill try-expand-dabbrev-all-buffers try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))">мощная, но умеренная последовательность вариантов автодополнений Саши</a> или
+<a href="(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))">просто умеренная последовательность автодополнений Божидара</a>.
+Оригинальная последовательность автодополнений иногда выдает варианты
+с небывалым размахом.
+</p>
+
+<p>
+Команда <a href="unfill-paragraph">unfill-paragraph</a>, назначенная на свободное сочетание C-x M-q,
+делает ровно противоположное команде <a href="fill-paragraph">fill-paragraph</a> (M-q) &#x2014; она
+превращает абзац разбитый на несколько коротких строк в одну большую
+строку.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="keybindings">(global-set-key (kbd <span style="color: #8b2252;">"C-x M-q"</span>)
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">unfill-paragraph</span> (<span style="color: #228b22;">&amp;optional</span> region)
+    <span style="color: #8b2252;">"Takes a multi-line paragraph and makes it into a single line of text."</span>
+    (<span style="color: #a020f0;">interactive</span> (<span style="color: #a020f0;">progn</span> (barf-if-buffer-read-only) (list t)))
+    (<span style="color: #a020f0;">let</span> ((fill-column (point-max)))
+      (fill-paragraph nil region))))
+</pre>
+</div>
+
+<hr  />
+
+<p>
+В <a href="http://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html">Windows 7/8/10</a>
+эмакс по-умолчанию считает своей домашней директорией значение
+переменной окружения
+</p>
+
+<div class="center">
+<p>
+{~} → (getenv "AppData") → C:\Users\User\AppData\Roaming
+</p>
+</div>
+
+<p>
+в то время как в UNIX-совместимых ОС подразумевается
+директория
+</p>
+
+<div class="center">
+<p>
+{~} → (getenv "UserProfile") → C:\Users\User
+</p>
+</div>
+
+<p>
+Эмакс будет считать своей домашней директорией путь прописанный в
+переменной окружения Home, если она определена. Её значение можно
+изменить с помощью <a href="http://ss64.com/nt/">команды Windows</a> <a href="http://ss64.com/nt/setx.html">setx</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #a020f0;">when</span> (eq system-type 'windows-nt)
+  (<span style="color: #a020f0;">unless</span> (getenv <span style="color: #8b2252;">"Home"</span>)
+    (shell-command (format <span style="color: #8b2252;">"setx \"%s\" \"%s\""</span> 'Home (getenv <span style="color: #8b2252;">"UserProfile"</span>)))))
+</pre>
+</div>
+
+<p>
+Установка домашней рабочей директории (cd "~") &#x2014; в свойствах ярлыка
+«Рабочая папка».
+</p>
+
+<hr  />
+
+<p>
+Исправления некоторых багов GNU Emacs:
+</p>
+
+<p>
+<a href="http://wenshanren.org/?p=781">Emacs 25 testing: org-html-export returns org-html-fontify-code: Wrong number of arguments…</a>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="fix-some-bugs">(<span style="color: #a020f0;">when</span> (= emacs-major-version 25)
+  (<span style="color: #a020f0;">declare-function</span> font-lock-fontify-buffer <span style="color: #8b2252;">"font-lock"</span> ())
+  (<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">org-font-lock-ensure</span> ()
+    (font-lock-fontify-buffer)))
+</pre>
+</div>
+
+<hr  />
+
+<p>
+Роман Захаров <a href="mailto:zahardzhan@gmail.com">zahardzhan@gmail.com</a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="header"><span style="color: #b22222;">;; </span><span style="color: #b22222;">Copyright &#169; Roman Zaharov <a href="mailto:zahardzhan%40gmail.com">&lt;zahardzhan@gmail.com&gt;</a></span>
+
+<span style="color: #b22222;">;; </span><span style="color: #b22222;">This file is not part of GNU Emacs.</span>
+
+<span style="color: #b22222;">;; </span><span style="color: #b22222;">This program is free software; you can redistribute it and/or modify</span>
+<span style="color: #b22222;">;; </span><span style="color: #b22222;">it under the terms of the GNU General Public License as published by</span>
+<span style="color: #b22222;">;; </span><span style="color: #b22222;">the Free Software Foundation; either version 3, or (at your option)</span>
+<span style="color: #b22222;">;; </span><span style="color: #b22222;">any later version. </span>
+
+<span style="color: #b22222;">;;; </span><span style="color: #b22222;">Code:</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp" id="footer">(<span style="color: #a020f0;">provide</span> '<span style="color: #008b8b;">well-tuned-emacs</span>)
+</pre>
+</div>
+</div>
+</body>
+</html>
