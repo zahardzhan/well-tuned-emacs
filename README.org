@@ -1672,11 +1672,11 @@ C-k. По-умолчанию на него назначен очень редк�
 
 ----------------------------------------------------------------------
 
-Роман Захаров [[mailto:zahardzhan@gmail.com][zahardzhan@gmail.com]] 1 октября 2015.
+Роман Захаров [[mailto:zahardzhan@gmail.com][zahardzhan@gmail.com]].
 
 #+name: header
 #+begin_src elisp
-  ;; Copyright © 2015 Roman Zaharov <zahardzhan@gmail.com>
+  ;; Copyright © Roman Zaharov <zahardzhan@gmail.com>
 
   ;; This file is not part of GNU Emacs.
 
