@@ -411,7 +411,7 @@ Windows/Cygwin/VMware).
 #+name: customize-well-tuned-emacs
 #+begin_src elisp
   (defcustom well-tuned-emacs-reference-url
-    "https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org"
+    "https://raw.githubusercontent.com/zahardzhan/well-tuned-emacs/master/README.org"
     "The Well Tuned Emacs Reference File on the internet."
     :type 'string
     :version "25.0.50.1"
@@ -1126,6 +1126,65 @@ C-\ не самое удобное сочетание клавиш, как ва�
 
 --------------------------------------------------------------------------------
 
+[[elisp:(customize-variable-other-window 'indent-tabs-mode)][Indent Tabs Mode]]
+← [[elisp:(customize-save-variable 'indent-tabs-mode nil)][отступы пробелами]].
+
+[[elisp:(customize-variable-other-window 'tab-always-indent))][Tab Always Indent]]
+← [[elisp:(customize-save-variable 'tab-always-indent 'complete)][после автоматической установки отступов Tab выполняет автодополнение]].
+
+[[elisp:(customize-variable-other-window 'subword-mode)][Subword Mode]]
+← [[elisp:(customize-save-variable 'subword-mode t)][составные части слова записанного CamelCase'ом считаются отдельными словами]].
+[[http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html][Подробнее у Xah Lee]].
+
+[[elisp:(customize-variable-other-window 'superword-mode)][Superword Mode]]
+← [[elisp:(customize-save-variable 'superword-mode t)][составные слова набранные в любом стиле считаются одним словом]].
+Режимы Subword и Superword взаимно исключают друг
+друга. Одновременно может быть активен только один из режимов.
+
+[[elisp:(customize-variable-other-window 'delete-selection-mode)][Delete Selection Mode]]
+← [[elisp:(customize-save-variable 'delete-selection-mode t)][выделенный текст полностью удаляется или заменяется при удалении, вставке или вводе]].
+Стандартное поведение современных текстовых редакторов.
+
+[[elisp:(customize-variable-other-window 'mouse-yank-at-point)][Mouse Yank At Point]]
+← [[elisp:(customize-save-variable 'mouse-yank-at-point t)][мышь вставляет текст на позиции текстового курсора]],
+а не на позиции курсора мыши. В традиции
+[[https://en.wikipedia.org/wiki/X_Window_System][X Window System]]
+текст вставляется по щелчку средней кнопки мыши.
+
+X Window System и Emacs (в любой ОС) поддерживают два буфера обмена:
+/primary/ и /clipboard/. Мышь работает с primary-буфером, клавиатурные
+команды --- с clipboard-буфером.
+
+[[elisp:(customize-variable-other-window 'x-select-enable-clipboard t)][X Select Enable Clipboard]]
+← [[elisp:(customize-save-variable 'x-select-enable-clipboard t)][клавиатурные команды копирования и вставки используют системный буфер обмена]]
+(по-умолчанию).
+
+[[elisp:(customize-variable-other-window 'x-select-enable-primary)][X Select Enable Primary]]
+← [[elisp:(customize-save-variable 'x-select-enable-primary t)][клавиатурные команды копирования и вставки используют мышиный буфер обмена]]
+(в дополнение к системному).
+
+[[elisp:(customize-variable-other-window 'save-interprogram-paste-before-kill)][Save Interprogram Paste Before Kill]]
+← [[elisp:(customize-save-variable 'save-interprogram-paste-before-kill t)][фрагменты текста скопированные в буфер обмена во внешних программах сохраняются в эмаксе]]
+в буфере скопированных и удаленных фрагментов текста
+[[http://www.gnu.org/software/emacs/manual/html_node/emacs/Yanking.html][kill ring]].
+
+[[elisp:(describe-function #'yes-or-no-p)][Yes or No Predicate]]
+← подтверждение одной клавишей: Y или Пробел --- да, N или Delete ---
+нет.
+
+#+name: customizations
+#+begin_src elisp
+  (defalias (function yes-or-no-p) (function y-or-n-p))
+#+end_src
+
+[[elisp:(customize-variable-other-window 'apropos-do-all)][Apropos Do All]]
+← [[elisp:(customize-save-variable 'apropos-do-all t)][расширенный поиск команд, функций, переменных и документации командами apropos]].
+
+# [[elisp:(customize-variable-other-window ')][]]
+# ← [[elisp:(customize-save-variable ')][]]
+
+----------------------------------------------------------------------
+
 Для эмакса написано много лисп-программ делающих работу со скобками
 более удобной и наглядной. Режимы
 [[elisp:(customize-variable-other-window 'electric-pair-mode)][Electric Pair Mode]] и
@@ -1255,65 +1314,6 @@ Smartparens включает в себя несколько альтернати
 
 --------------------------------------------------------------------------------
 
-[[elisp:(customize-variable-other-window 'indent-tabs-mode)][Indent Tabs Mode]]
-← [[elisp:(customize-save-variable 'indent-tabs-mode nil)][отступы пробелами]].
-
-[[elisp:(customize-variable-other-window 'tab-always-indent))][Tab Always Indent]]
-← [[elisp:(customize-save-variable 'tab-always-indent 'complete)][после автоматической установки отступов Tab выполняет автодополнение]].
-
-[[elisp:(customize-variable-other-window 'subword-mode)][Subword Mode]]
-← [[elisp:(customize-save-variable 'subword-mode t)][составные части слова записанного CamelCase'ом считаются отдельными словами]].
-[[http://ergoemacs.org/emacs/emacs_subword-mode_superword-mode.html][Подробнее у Xah Lee]].
-
-[[elisp:(customize-variable-other-window 'superword-mode)][Superword Mode]]
-← [[elisp:(customize-save-variable 'superword-mode t)][составные слова набранные в любом стиле считаются одним словом]].
-Режимы Subword и Superword взаимно исключают друг
-друга. Одновременно может быть активен только один из режимов.
-
-[[elisp:(customize-variable-other-window 'delete-selection-mode)][Delete Selection Mode]]
-← [[elisp:(customize-save-variable 'delete-selection-mode t)][выделенный текст полностью удаляется или заменяется при удалении, вставке или вводе]].
-Стандартное поведение современных текстовых редакторов.
-
-[[elisp:(customize-variable-other-window 'mouse-yank-at-point)][Mouse Yank At Point]]
-← [[elisp:(customize-save-variable 'mouse-yank-at-point t)][мышь вставляет текст на позиции текстового курсора]],
-а не на позиции курсора мыши. В традиции
-[[https://en.wikipedia.org/wiki/X_Window_System][X Window System]]
-текст вставляется по щелчку средней кнопки мыши.
-
-X Window System и Emacs (в любой ОС) поддерживают два буфера обмена:
-/primary/ и /clipboard/. Мышь работает с primary-буфером, клавиатурные
-команды --- с clipboard-буфером.
-
-[[elisp:(customize-variable-other-window 'x-select-enable-clipboard t)][X Select Enable Clipboard]]
-← [[elisp:(customize-save-variable 'x-select-enable-clipboard t)][клавиатурные команды копирования и вставки используют системный буфер обмена]]
-(по-умолчанию).
-
-[[elisp:(customize-variable-other-window 'x-select-enable-primary)][X Select Enable Primary]]
-← [[elisp:(customize-save-variable 'x-select-enable-primary t)][клавиатурные команды копирования и вставки используют мышиный буфер обмена]]
-(в дополнение к системному).
-
-[[elisp:(customize-variable-other-window 'save-interprogram-paste-before-kill)][Save Interprogram Paste Before Kill]]
-← [[elisp:(customize-save-variable 'save-interprogram-paste-before-kill t)][фрагменты текста скопированные в буфер обмена во внешних программах сохраняются в эмаксе]]
-в буфере скопированных и удаленных фрагментов текста
-[[http://www.gnu.org/software/emacs/manual/html_node/emacs/Yanking.html][kill ring]].
-
-[[elisp:(describe-function #'yes-or-no-p)][Yes or No Predicate]]
-← подтверждение одной клавишей: Y или Пробел --- да, N или Delete ---
-нет.
-
-#+name: customizations
-#+begin_src elisp
-  (defalias (function yes-or-no-p) (function y-or-n-p))
-#+end_src
-
-[[elisp:(customize-variable-other-window 'apropos-do-all)][Apropos Do All]]
-← [[elisp:(customize-save-variable 'apropos-do-all t)][расширенный поиск команд, функций, переменных и документации командами apropos]].
-
-# [[elisp:(customize-variable-other-window ')][]]
-# ← [[elisp:(customize-save-variable ')][]]
-
---------------------------------------------------------------------------------
-
 О настройке режима Org можно написать целую книгу, но есть несколько
 простых опций, которые полезны для работы с этим руководством.
 
@@ -1329,6 +1329,41 @@ X Window System и Emacs (в любой ОС) поддерживают два б
 
 [[elisp:(customize-variable-other-window 'org-confirm-babel-evaluate)][Org Confirm Babel Evaluate]]
 ← [[elisp:(customize-save-variable 'org-confirm-babel-evaluate nil)][код в блоках выполняется без предварительного подтверждения]].
+
+[[elisp:(org-publish-project "zahardzhan.github.io")][Подготовка к публикации материалов]] [[http://zahardzhan.github.io][моего блога]].
+
+#+name: customizations
+#+begin_src emacs-lisp
+  (setq org-publish-project-alist
+        '(("zahardzhan.github.com-org"
+           :base-directory "~/Dropbox/Блог/org/"
+           :base-extension "org"
+           :publishing-directory "~/Dropbox/Blog/_posts/"
+           :recursive t
+           :publishing-function org-publish-org-to-html
+           :headline-levels 4
+           :html-extension "html"
+           :body-only t)
+
+          ("zahardzhan.github.com-static"
+           :base-directory "~/Dropbox/Блог/org/"
+           :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
+           :publishing-directory "~/Dropbox/Blog/_posts/"
+           :recursive t
+           :publishing-function org-publish-attachment)
+
+          ("zahardzhan.github.com"
+           :components ("zahardzhan.github.com-org"
+                        "zahardzhan.github.com-static"))))
+#+end_src
+
+--------------------------------------------------------------------------------
+
+Режим company --- автодополнения в духе интеллисенс.
+
+#+begin_src emacs-lisp
+  (use-package company :ensure t :config (ignore (add-hook 'prog-mode-hook 'company-mode)))
+#+end_src
 
 --------------------------------------------------------------------------------
 
@@ -1349,10 +1384,10 @@ X Window System и Emacs (в любой ОС) поддерживают два б
   (defcustom well-tuned-emacs-fonts
     (quote
      (((gnu/linux gnu/kfreebsd darwin windows-nt cygwin)
-       "Consolas-10" "Courier New-9" "Monaco-9" "Anonymous Pro-11"
-       "Cambria-11" "Times New Roman-11" "Georgia-10" "DejaVu Serif Condensed-10"
-       "Arial-10" "Droid Sans-10" "Segoe UI Symbol-10" "Lucida Sans Unicode-10" "Corbel-11"
-       "Droid Sans Mono-10" "Envy Code R-10" "Menlo-10")
+       "Consolas-10" "Source Code Pro-9" "Courier New-9" "Monaco-9"
+       "Cambria-11" "Georgia-10" "Times New Roman-11" "DejaVu Serif Condensed-10"
+       "Arial-10" "Droid Sans-10" "Segoe UI Symbol-10" "Corbel-11" "Lucida Sans Unicode-10"
+       "Droid Sans Mono-10" "Anonymous Pro-11" "Envy Code R-10" "Menlo-10")
       ((gnu/linux gnu/kfreebsd)
        "Inconsolata-10" "DejaVu Sans Mono-10" "Ubuntu Mono-10")))
     "Preferred fonts for operating system environments."
@@ -1404,7 +1439,7 @@ _available-well-tuned-emacs-fonts_ → список предпочитаемых
     (cl-remove-if-not #'available-font (well-tuned-emacs-fonts)))
 #+end_src
 
-[[elisp:(customize-variable-other-window 'well-tuned-emacs-fonts)][Well Tuned Emacs Font]]
+[[elisp:(customize-variable-other-window 'well-tuned-emacs-font)][Well Tuned Emacs Font]]
 ← выбранный пользователем шрифт для каждого конкретного системного
 окружения. По-умолчанию выбирается наиболее предпочтительный шрифт из
 доступных в текущем системном окружении.
@@ -1765,15 +1800,15 @@ C-k. По-умолчанию на него назначен очень редк�
 #+end_src
 
 [[elisp:(customize-variable-other-window 'hippie-expand-try-functions-list)][Hippie Expand Try Functions List]]
-← [[elisp:(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-all-abbrevs try-complete-file-name-partially try-complete-file-name try-expand-dabbrev try-expand-dabbrev-from-kill try-expand-dabbrev-all-buffers try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))][мощная, но умеренная последовательность вариантов автодополнений Саши]] или
-[[elisp:(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))][просто умеренная последовательность автодополнений Божидара]].
+← [[elisp:(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-all-abbrevs try-complete-file-name-partially try-complete-file-name try-expand-dabbrev try-expand-dabbrev-from-kill try-expand-dabbrev-all-buffers try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))][мощная, но умеренная последовательность вариантов автодополнений]] или
+[[elisp:(customize-save-variable 'hippie-expand-try-functions-list '(try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-complete-lisp-symbol-partially try-complete-lisp-symbol))][просто умеренная последовательность автодополнений]].
 Оригинальная последовательность автодополнений иногда выдает варианты
 с небывалым размахом.
 
-Команда [[elisp:unfill-paragraph][unfill-paragraph]], назначенная на свободное сочетание C-x M-q,
-делает ровно противоположное команде [[elisp:fill-paragraph][fill-paragraph]] (M-q) --- она
-превращает абзац разбитый на несколько коротких строк в одну большую
-строку.
+Команда [[elisp:unfill-paragraph][unfill-paragraph]] делает ровно
+противоположное команде [[elisp:fill-paragraph][fill-paragraph]] ---
+она превращает параграф разбитый на несколько коротких строк в одну
+большую строку.
 
 #+name: keybindings
 #+begin_src elisp
@@ -1785,10 +1820,51 @@ C-k. По-умолчанию на него назначен очень редк�
         (fill-paragraph nil region))))
 #+end_src
 
+Стандартное сочетание M-q оформляет смежные строки в параграф
+(по-умолчанию), или превращает уже оформленный параграф в строку
+[статья «[[http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html?source=rss][Fill and unfill paragraphs with a single key]]»].
+
+#+name: keybindings
+#+begin_src elisp
+  (global-set-key [remap fill-paragraph]
+    (defun fill-unfill-paragraph ()
+      "Fill unfilled paragraph or unfill filled paragraph."
+      (interactive)
+      (call-interactively
+       (if (eq last-command 'fill-unfill-paragraph)
+           (progn (setq this-command nil)
+                 #'unfill-paragraph)
+          #'fill-paragraph))))
+#+end_src
+
+Стандартное сочетание C-x C-e вычисляет предыдущее выражение или все
+выражения в выделенном регионе.
+
+#+name: keybindings
+#+begin_src emacs-lisp
+  (bind-key "C-x C-e" 
+    (defun eval-last-sexp-or-region (prefix)
+      "Eval region from BEG to END if active, otherwise the last sexp."
+      (interactive "P")
+      (if (and (mark) (use-region-p))
+          (eval-region (min (point) (mark)) (max (point) (mark)))
+        (pp-eval-last-sexp prefix)))
+    emacs-lisp-mode-map)
+#+end_src
+
+Стандартное сочетание M-SPC вместо сжатия пробела между словами только
+по горизонтали сжимает пробел между словами по горизонтали и по
+вертикали.
+
+#+name: keybindings
+#+BEGIN_SRC emacs-lisp
+  (use-package shrink-whitespace :bind (("M-SPC" . shrink-whitespace)))
+#+END_SRC
+
 ----------------------------------------------------------------------
 
 В [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Windows-HOME.html][Windows 7/8/10]]
-эмакс по-умолчанию считает своей домашней директорией значение
+GNU Emacs по-умолчанию считает своей домашней директорией значение
 переменной окружения
 
 #+begin_center
@@ -1835,14 +1911,7 @@ C-k. По-умолчанию на него назначен очень редк�
 
 #+name: header
 #+begin_src elisp
-  ;; Copyright © Roman Zaharov <zahardzhan@gmail.com>
-
-  ;; This file is not part of GNU Emacs.
-
-  ;; This program is free software; you can redistribute it and/or modify
-  ;; it under the terms of the GNU General Public License as published by
-  ;; the Free Software Foundation; either version 3, or (at your option)
-  ;; any later version. 
+  ;; Roman Zaharov <zahardzhan@gmail.com>
 
   ;;; Code:
 
