@@ -828,6 +828,27 @@ package-selected-packages. Сама эта настройка
 [[elisp:(customize-variable-other-window 'org-return-follows-link)][Org Return Follows Link]]
 ← [[elisp:(customize-save-variable 'org-return-follows-link t)][переходить по ссылкам нажатием на Enter]].
 
+[[elisp:(customize-group "mule" 'other-window)][MULE Internationalization]]⊲
+[[elisp:(customize-variable-other-window 'default-input-method)][Default Input Method]]
+← [[elisp:(customize-save-variable 'default-input-method "russian-computer")][русский язык]].
+Эмакс использует независимое от операционной системы переключение
+языков и [[elisp:(call-interactively #'set-input-method)][методов ввода]]
+для обеспечения своей работы в очень разных средах. Переключение на
+русский язык по C-\ без предварительного указания метода ввода требует
+кастомизации. Кроме национальных методов ввода текста есть
+технические, например TeX, в этих режимах введенные спецслова
+превращаются в спецсимволы, например \​'e → é, \​th → þ, \​Mu\​epsilon\​nu
+→ Μεν, \existsa\forallb(b\ina) → ∃a∀b(b∈a).
+
+C-\ не самое удобное сочетание клавиш, как вариант можно использовать
+свободное сочетание Shift-Space.
+
+#+name: keybindings
+#+begin_src elisp
+  (global-set-key (kbd "S-SPC") #'toggle-input-method)
+  (define-key isearch-mode-map (kbd "S-SPC") #'isearch-toggle-input-method)
+#+end_src
+
 [[elisp:(describe-variable 'frame-title-format)][Frame Title Format]]
 ← имя буфера или полное имя файла/директории предваренное именем
 пользователя и машины при удаленном подключении. Как ни странно,
@@ -984,8 +1005,6 @@ lisp-interaction-mode; поэтому предполагается, что эт�
           (set-buffer-modified-p nil)))))
 #+end_src
 
---------------------------------------------------------------------------------
-
 [[elisp:(customize-variable-other-window 'cursor-type)][Cursor Type]]
 ← классический [[elisp:(customize-save-variable 'cursor-type t)][прямоугольный сплошной курсор]] или
 современная [[elisp:(customize-save-variable 'cursor-type 'bar)][вертикальная черта между букв]].
@@ -1046,86 +1065,6 @@ lisp-interaction-mode; поэтому предполагается, что эт�
 [[elisp:(customize-variable-other-window 'save-place-file)][Save Place File]]
 ← [[elisp:(customize-save-variable 'save-place-file (concat user-emacs-directory "places"))][позиции курсоров сохраняются в файле ~/.emacs.d/places]].
 
-[[elisp:(customize-variable-other-window 'require-final-newline)][Require Final Newline]]
-← [[elisp:(customize-save-variable 'require-final-newline t)][в конец сохраняемого файла добавляется пустая строка]].
-
-[[elisp:(customize-variable-other-window 'backup-directory-alist)][Backup Directory Alist]]
-← [[elisp:(customize-save-variable 'backup-directory-alist `(("." . ,(concat user-emacs-directory "backup"))))][резервные копии файлов хранятся в директории ~/.emacs.d/backup]].
-В противном случае резервные копии будут захламлять директории в
-которых находятся редактируемые файлы.
-
-[[elisp:(customize-variable-other-window 'global-auto-revert-mode)][Global Auto Revert Mode]]
-← [[elisp:(customize-save-variable 'global-auto-revert-mode t)][буфер автоматически перезагружает содержимое файла при его изменении внешними программами]].
-
-[[elisp:(customize-variable-other-window 'delete-by-moving-to-trash)][Delete By Moving To Trash]]
-← [[elisp:(customize-save-variable 'delete-by-moving-to-trash t)][удаленные эмаксом файлы отправляются в корзину операционной системы]].
-
-[[elisp:(customize-variable-other-window 'ido-mode)][Ido Mode]] &
-[[elisp:(customize-variable-other-window 'ido-everywhere)][Ido Everywhere]]
-← [[elisp:(progn (customize-save-variable 'ido-mode 'both) (customize-save-variable 'ido-everywhere t))][интерактивная навигация в минибуфере]] 
-при работе с файлами и буферами.
-
-[[elisp:(customize-variable-other-window 'ido-enable-flex-matching)][Ido Enable Flex Matching]]
-← [[elisp:(customize-save-variable 'ido-enable-flex-matching t)][более удобный поиск и выбор из множества вариантов]]
-во время интерактивной навигации в минибуфере.
-
-[[elisp:(customize-variable-other-window 'ido-save-directory-list-file)][Ido Save Directory List File]]
-← [[elisp:(customize-save-variable 'ido-save-directory-list-file (concat user-emacs-directory "ido"))][состояние лисп-программы ido сохраняется в файле ~/.emacs.d/ido]].
-
-[[elisp:(customize-variable-other-window 'ido-ubiquitous-mode)][Ido Ubiquitous Mode]]
-← [[elisp:(customize-save-variable 'ido-ubiquitous-mode 1)][интерактивная навигация в минибуфере]]
-при почти любом автодополнении. У этой лисп-программы есть
-[[https://github.com/DarwinAwardWinner/ido-ubiquitous/pull/96][некоторые проблемы]] 
-(которые были исправлены прямо во время написания этого предложения с
-помощью пул реквеста на гитхабе и вечером того же дня все пользователи
-Emacs получили свои копии этого пакета уже без бага --- суть философии
-разработки Emacs).
-
-#+name: customizations
-#+begin_src elisp
-  (use-package ido-ubiquitous
-    :config (reinstate-mode 'ido-ubiquitous-mode))
-#+end_src
-
-[[elisp:(customize-group 'smex 'other-window)][Smex]] ---
-интерактивная навигация в минибуфере при работе с M-x-командами
-эмакса.
-
-#+name: customizations
-#+begin_src elisp
-  (use-package smex
-    :bind (("M-x" . smex)
-           ("M-X" . smex-major-mode-commands)
-           ("C-c C-c M-x" . execute-extended-command)))
-#+end_src
-
-[[elisp:(customize-variable-other-window 'smex-save-file)][Smex Save File]]
-← [[elisp:(customize-save-variable 'smex-save-file (concat user-emacs-directory "smex"))][состояние лисп-программы smex сохраняется в файле ~/.emacs.d/smex]].
-
-[[elisp:(customize-group "mule" 'other-window)][MULE Internationalization]]⊲
-[[elisp:(customize-variable-other-window 'default-input-method)][Default Input Method]]
-← [[elisp:(customize-save-variable 'default-input-method "russian-computer")][русский язык]].
-Эмакс использует независимое от операционной системы переключение
-языков и [[elisp:(call-interactively #'set-input-method)][методов ввода]]
-для обеспечения своей работы в очень разных средах. Переключение на
-русский язык по C-\ без предварительного указания метода ввода требует
-кастомизации. Кроме национальных методов ввода текста есть
-технические, например TeX (шутка в духе [[https://en.wikipedia.org/wiki/Donald_Knuth][профессора]]),
-в этих режимах введенные спецслова превращаются в спецсимволы,
-например \​'e → é, \​th → þ, \​Mu\​epsilon\​nu → Μεν,
-\existsa\forallb(b\ina) → ∃a∀b(b∈a).
-
-C-\ не самое удобное сочетание клавиш, как вариант можно использовать
-свободное сочетание Shift-Space.
-
-#+name: keybindings
-#+begin_src elisp
-  (global-set-key (kbd "S-SPC") #'toggle-input-method)
-  (define-key isearch-mode-map (kbd "S-SPC") #'isearch-toggle-input-method)
-#+end_src
-
---------------------------------------------------------------------------------
-
 [[elisp:(customize-variable-other-window 'indent-tabs-mode)][Indent Tabs Mode]]
 ← [[elisp:(customize-save-variable 'indent-tabs-mode nil)][отступы пробелами]].
 
@@ -1180,8 +1119,63 @@ X Window System и Emacs (в любой ОС) поддерживают два б
 [[elisp:(customize-variable-other-window 'apropos-do-all)][Apropos Do All]]
 ← [[elisp:(customize-save-variable 'apropos-do-all t)][расширенный поиск команд, функций, переменных и документации командами apropos]].
 
-# [[elisp:(customize-variable-other-window ')][]]
-# ← [[elisp:(customize-save-variable ')][]]
+[[elisp:(customize-variable-other-window 'require-final-newline)][Require Final Newline]]
+← [[elisp:(customize-save-variable 'require-final-newline t)][в конец сохраняемого файла добавляется пустая строка]].
+
+[[elisp:(customize-variable-other-window 'backup-directory-alist)][Backup Directory Alist]]
+← [[elisp:(customize-save-variable 'backup-directory-alist `(("." . ,(concat user-emacs-directory "backup"))))][резервные копии файлов хранятся в директории ~/.emacs.d/backup]].
+В противном случае резервные копии будут захламлять директории в
+которых находятся редактируемые файлы.
+
+[[elisp:(customize-variable-other-window 'global-auto-revert-mode)][Global Auto Revert Mode]]
+← [[elisp:(customize-save-variable 'global-auto-revert-mode t)][буфер автоматически перезагружает содержимое файла при его изменении внешними программами]].
+
+[[elisp:(customize-variable-other-window 'delete-by-moving-to-trash)][Delete By Moving To Trash]]
+← [[elisp:(customize-save-variable 'delete-by-moving-to-trash t)][удаленные эмаксом файлы отправляются в корзину операционной системы]].
+
+--------------------------------------------------------------------------------
+
+[[elisp:(customize-variable-other-window 'ido-mode)][Ido Mode]] &
+[[elisp:(customize-variable-other-window 'ido-everywhere)][Ido Everywhere]]
+← [[elisp:(progn (customize-save-variable 'ido-mode 'both) (customize-save-variable 'ido-everywhere t))][интерактивная навигация в минибуфере]] 
+при работе с файлами и буферами.
+
+[[elisp:(customize-variable-other-window 'ido-enable-flex-matching)][Ido Enable Flex Matching]]
+← [[elisp:(customize-save-variable 'ido-enable-flex-matching t)][более удобный поиск и выбор из множества вариантов]]
+во время интерактивной навигации в минибуфере.
+
+[[elisp:(customize-variable-other-window 'ido-save-directory-list-file)][Ido Save Directory List File]]
+← [[elisp:(customize-save-variable 'ido-save-directory-list-file (concat user-emacs-directory "ido"))][состояние лисп-программы ido сохраняется в файле ~/.emacs.d/ido]].
+
+[[elisp:(customize-variable-other-window 'ido-ubiquitous-mode)][Ido Ubiquitous Mode]]
+← [[elisp:(customize-save-variable 'ido-ubiquitous-mode 1)][интерактивная навигация в минибуфере]]
+при почти любом автодополнении. У этой лисп-программы есть
+[[https://github.com/DarwinAwardWinner/ido-ubiquitous/pull/96][некоторые проблемы]] 
+(которые были исправлены прямо во время написания этого предложения с
+помощью пул реквеста на гитхабе и вечером того же дня все пользователи
+Emacs получили свои копии этого пакета уже без бага --- суть философии
+разработки Emacs).
+
+#+name: customizations
+#+begin_src elisp
+  (use-package ido-ubiquitous
+    :config (reinstate-mode 'ido-ubiquitous-mode))
+#+end_src
+
+[[elisp:(customize-group 'smex 'other-window)][Smex]] ---
+интерактивная навигация в минибуфере при работе с M-x-командами
+эмакса.
+
+#+name: customizations
+#+begin_src elisp
+  (use-package smex
+    :bind (("M-x" . smex)
+           ("M-X" . smex-major-mode-commands)
+           ("C-c C-c M-x" . execute-extended-command)))
+#+end_src
+
+[[elisp:(customize-variable-other-window 'smex-save-file)][Smex Save File]]
+← [[elisp:(customize-save-variable 'smex-save-file (concat user-emacs-directory "smex"))][состояние лисп-программы smex сохраняется в файле ~/.emacs.d/smex]].
 
 ----------------------------------------------------------------------
 
@@ -1338,32 +1332,35 @@ Smartparens включает в себя несколько альтернати
         '(("zahardzhan.github.com-org"
            :base-directory "~/Dropbox/Блог/org/"
            :base-extension "org"
-           :publishing-directory "~/Dropbox/Blog/_posts/"
+           :publishing-directory "~/Dropbox/Блог/_posts/"
            :recursive t
            :publishing-function org-publish-org-to-html
            :headline-levels 4
            :html-extension "html"
            :body-only t)
-
-          ("zahardzhan.github.com-static"
+          ("zahardzhan.github.com-attachment"
            :base-directory "~/Dropbox/Блог/org/"
            :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|php"
-           :publishing-directory "~/Dropbox/Blog/_posts/"
+           :publishing-directory "~/Dropbox/Блог/_posts/"
            :recursive t
            :publishing-function org-publish-attachment)
-
           ("zahardzhan.github.com"
-           :components ("zahardzhan.github.com-org"
-                        "zahardzhan.github.com-static"))))
+           :components ("zahardzhan.github.com-org" "zahardzhan.github.com-attachment"))))
 #+end_src
 
 --------------------------------------------------------------------------------
 
-Режим company --- автодополнения в духе интеллисенс.
+[[elisp:(customize-variable-other-window 'global-company-mode)][Global Company Mode]]
+← [[elisp:(customize-save-variable 'global-company-mode nil)][автодополнения в духе интеллисенс отключены]].
 
 #+begin_src emacs-lisp
-  (use-package company :ensure t :config (ignore (add-hook 'prog-mode-hook 'company-mode)))
+  (use-package company
+    :ensure t
+    :config (reinstate-mode 'global-company-mode))
 #+end_src
+
+[[elisp:(customize-variable-other-window 'company-global-modes)][Company Global Modes]]
+← [[elisp:(customize-save-variable 'company-global-modes t)][автодополнение включается для всех режимов]] при включении режима автодополнения.
 
 --------------------------------------------------------------------------------
 
@@ -1805,10 +1802,11 @@ C-k. По-умолчанию на него назначен очень редк�
 Оригинальная последовательность автодополнений иногда выдает варианты
 с небывалым размахом.
 
-Команда [[elisp:unfill-paragraph][unfill-paragraph]] делает ровно
-противоположное команде [[elisp:fill-paragraph][fill-paragraph]] ---
-она превращает параграф разбитый на несколько коротких строк в одну
-большую строку.
+На свободное сочетание C-x M-q (в дополнение стандартному M-q)
+назначена команда [[elisp:unfill-paragraph][unfill-paragraph]]; она
+делает ровно противоположное команде
+[[elisp:fill-paragraph][fill-paragraph]] --- превращает параграф
+разбитый на несколько коротких строк в одну большую строку.
 
 #+name: keybindings
 #+begin_src elisp
