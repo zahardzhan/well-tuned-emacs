@@ -703,7 +703,7 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 ← адреса архивов. По-умолчанию эмакс устанавливает пакеты из
 официального архива [[http://elpa.gnu.org/][GNU ELPA]]. В этом архиве
 мало пакетов, но они надежные и доверенные. В неофициальных архивах
-[[https://melpa.org][MELPA]][[[elisp:(progn (unless (featurep 'cl-lib) (require 'cl-lib))(unless (featurep 'package) (require 'package))(customize-save-variable 'package-archives (cl-pushnew (cons "melpa" "http://melpa.milkbox.net/packages/") package-archives :test #'equal)))][добавить]]] и
+[[https://melpa.org][MELPA]][[[elisp:(progn (unless (featurep 'cl-lib) (require 'cl-lib))(unless (featurep 'package) (require 'package))(customize-save-variable 'package-archives (cl-pushnew (cons "melpa" "https://melpa.org/packages/") package-archives :test #'equal)))][добавить]]] и
 [[https://marmalade-repo.org/][Marmalade]][[[elisp:(progn (unless (featurep 'cl-lib) (require 'cl-lib)) (unless (featurep 'package) (require 'package))(customize-save-variable 'package-archives (cl-pushnew (cons "marmalade" "http://marmalade-repo.org/packages/") package-archives :test #'equal)))][добавить]]]
 пакетов гораздо больше, но они менее качественные в плане лицензионной
 чистоты и гарантий безопасности.
@@ -712,7 +712,7 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 
 #+name: make-sure-melpa-is-used-as-one-of-community-package-archives
 #+begin_src elisp
-  (let ((melpa-location "http://melpa.milkbox.net/packages/"))
+  (let ((melpa-location "https://melpa.org/packages/"))
     (when (cl-loop for (_archive . location) in package-archives never (equal location melpa-location))
       (cl-pushnew  (cons "melpa" melpa-location) package-archives :test #'equal)
       (customize-save-variable-after-init package-archives)))
