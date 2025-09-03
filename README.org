@@ -1181,7 +1181,7 @@ Emacs получили свои копии этого пакета уже без
 
 #+name: customizations
 #+begin_src elisp
-  (use-package ido-ubiquitous
+  (use-package ido-completing-read+
     :config (reinstate-mode 'ido-ubiquitous-mode))
 #+end_src
 
