@@ -666,6 +666,7 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
   <<initialize-package-system>>
   <<package-system-backports>>
   <<make-sure-melpa-is-used-as-one-of-community-package-archives>>
+  <<make-sure-gnu-elpa-keyring-is-up-to-date-for-old-emacs>>
   <<make-sure-use-package-package-will-be-present>>
   (unless (cl-every #'package-installed-p package-selected-packages)
     (package-refresh-contents)
@@ -716,6 +717,28 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
     (when (cl-loop for (_archive . location) in package-archives never (equal location melpa-location))
       (cl-pushnew  (cons "melpa" melpa-location) package-archives :test #'equal)
       (customize-save-variable-after-init package-archives)))
+#+end_src
+
+Система пакетов использует ключи GPG для проверки подлинности пакетов
+загружаемых из архива GNU ELPA. Эти ключи имеют ограниченный срок
+действия (например, первый ключ был действителен до сентября 2019
+года). Устаревшие ключи вызывают ошибки проверки подписи пакетов и
+делают архив GNU ELPA недоступным.
+
+Согласно
+[[https://elpa.gnu.org/packages/gnu-elpa-keyring-update.html][официальному рецепту]]
+для обновления ключей на старых версиях эмакса и получения доступа к
+GNU ELPA следует временно отключить проверку подписей пакетов и
+установить пакет gnu-elpa-keyring-update.
+
+#+name: make-sure-gnu-elpa-keyring-is-up-to-date-for-old-emacs
+#+begin_src elisp
+  (when (and (<= emacs-major-version 25)
+             (not (package-installed-p 'gnu-elpa-keyring-update)))
+    (let ((package-archives '(("gnu" . "https://elpa.gnu.org/packages/")))
+          (package-check-signature nil))
+      (package-refresh-contents)
+      (package-install 'gnu-elpa-keyring-update)))
 #+end_src
 
 [[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲
