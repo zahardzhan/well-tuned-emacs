@@ -1903,6 +1903,24 @@ GNU Emacs по-умолчанию считает своей домашней д�
       (font-lock-fontify-buffer)))
 #+end_src
 
+_Emacs 25: Could not create connection to melpa.org:443_
+
+GNU Emacs 25 подключается к архивам пакетов по HTTPS посредством
+библиотеки GnuTLS (The GNU Transport Layer Security Library).
+
+К стандартным сборкам emacs-25.*-i686.zip и emacs-25.*-x86_64.zip с
+[[https://ftp.gnu.org/gnu/emacs/windows/emacs-25/][FTP проекта GNU]]
+не прилагается библиотека libgnutls-30.dll (см. список библиотек в переменной
+[[elisp:(describe-variable 'dynamic-library-alist)][dynamic-library-alist]])
+поэтому при попытке подключиться к архивам по HTTPS возникает
+ошибка. Для её устранения нужно скачать соответствующий архив с
+библиотеками
+
+- https://ftp.gnu.org/gnu/emacs/windows/emacs-25/emacs-25-i686-deps.zip
+- https://ftp.gnu.org/gnu/emacs/windows/emacs-25/emacs-25-x86_64-deps.zip
+
+и распаковать его туда где установлен эмакс.
+
 ----------------------------------------------------------------------
 
 Роман Захаров [[mailto:zahardzhan@gmail.com][zahardzhan@gmail.com]].
