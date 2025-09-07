@@ -1219,6 +1219,8 @@ Emacs получили свои копии этого пакета уже без
 #+begin_src elisp
   (use-package smartparens-config :ensure smartparens
     :diminish smartparens-mode
+    :init
+      <<backport-fixnump-from-emacs-27>>
     :config
       (progn
         <<bind-some-keys-for-smartparens-mode>>
@@ -1943,6 +1945,21 @@ GNU Emacs 25 подключается к архивам пакетов по HTTP
 - https://ftp.gnu.org/gnu/emacs/windows/emacs-25/emacs-25-x86_64-deps.zip
 
 и распаковать его туда где установлен эмакс.
+
+_[[elisp:(describe-function 'sp--syntax-class-to-char)][sp--syntax-class-to-char]]: Symbol’s function definition is void: fixnump_
+
+Smartparens использует функцию [[elisp:(describe-function 'fixnump)][fixnump]]
+[см. [[https://emacsdocs.org/docs/elisp/Predicates-on-Numbers#function-fixnump-object][Emacs Docs]]]
+из Emacs 27 в обход зависимостей из-за чего удаление слов не происходит.
+
+#+name: backport-fixnump-from-emacs-27
+#+begin_src elisp
+  (unless (fboundp 'fixnump)
+    (defun fixnump (object)
+      "Return t if OBJECT is a fixnum."
+      (and (integerp object)
+           (<= most-negative-fixnum object most-positive-fixnum))))
+#+end_src
 
 ----------------------------------------------------------------------
 
