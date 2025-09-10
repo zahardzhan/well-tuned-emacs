@@ -663,6 +663,7 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 
 #+name: initialize-package-system-and-install-user-selected-packages
 #+begin_src elisp
+  <<dont-activate-packages-that-require-newer-emacs>>
   <<initialize-package-system>>
   <<package-system-backports>>
   <<make-sure-melpa-is-used-as-one-of-community-package-archives>>
@@ -692,6 +693,39 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
                 for archive-contents = (expand-file-name (format rel-path archive) package-user-dir)
                 when (file-exists-p archive-contents) do (delete-file archive-contents))
        (package-initialize)))
+#+end_src
+
+После составления списка установленных пакетов
+[[elisp:(describe-function 'package-initialize)][package-initialize]]
+начинает активацию пакетов
+[[elisp:(describe-function 'package-activate)][package-activate]],
+[[elisp:(describe-function 'package-activate-1)][package-activate-1]] ---
+предоставляет пользователю «автозагружаемые» функции определенные в
+этих пакетах, но не загружает файлы в которых функции определены до
+тех пор пока они не будут вызваны (см. автозагрузка:
+[[info:Elisp#Autoload][инфо]],
+[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Autoload.html][мануал]],
+[[https://emacsdocs.org/docs/elisp/Autoload][Emacs Docs]]).
+
+В каждом пакете указано требование к минимальной версии эмакса. Во
+время активации не производится проверка, сможет ли пакет работать на
+текущей версии эмакса, что приводит к сбоям при активации или
+выполнении кода пакета на версиях эмакса более ранних чем необходима.
+
+Совет оборачивает процедуру активации и не активирует пакет если ему
+требуется более новая версия эмакса. Это имеет смысл только если
+установлено несколько версий эмакса которые используются с одним и тем
+же комплектом пакетов и настроек (в основном для тестирования).
+
+#+name: dont-activate-packages-that-require-newer-emacs
+#+begin_src elisp
+  (advice-add #'package-activate :around
+    (cl-function (lambda (fn &rest (&whole args package &optional force))
+      (let* ((pkg-desc (cadr (assq package package-alist)))
+             (version (when pkg-desc (package--incompatible-p pkg-desc :shallow))))
+        (if (and version (not force))
+            (message "Unable to activate package `%s'. Requires Emacs %s" package version)
+          (apply fn args))))))
 #+end_src
 
 Конечно, перед автоматической установкой пакетов эмакс должен знать
