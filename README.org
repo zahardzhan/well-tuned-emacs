@@ -665,13 +665,9 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 #+begin_src elisp
   <<dont-activate-packages-that-require-newer-emacs>>
   <<initialize-package-system>>
-  <<package-system-backports>>
   <<make-sure-melpa-is-used-as-one-of-community-package-archives>>
   <<make-sure-gnu-elpa-keyring-is-up-to-date-for-old-emacs>>
   <<make-sure-use-package-package-will-be-present>>
-  (unless (cl-every #'package-installed-p package-selected-packages)
-    (package-refresh-contents)
-    (package-install-selected-packages))
   (require 'use-package)
   <<setup-use-package>>
 #+end_src
@@ -784,38 +780,6 @@ GNU ELPA следует временно отключить проверку п�
 сохраняет имя этого пакета в списке-значении переменной-опции
 package-selected-packages. Сама эта настройка
 [[http://endlessparentheses.com/new-in-package-el-in-emacs-25-1-user-selected-packages.html][появились только в GNU Emacs 25]].
-В GNU Emacs 24 и более ранних версиях эмакса этой настройки нет;
-придется добавить ее самим.
-
-#+name: package-system-backports
-#+begin_src elisp
-  (unless (boundp 'package-selected-packages)
-    (defcustom package-selected-packages (list)
-      "Store here packages installed explicitly by user."
-      :type '(repeat symbol)
-      :group 'package))
-#+end_src
-
-В новых версиях эмакса с опцией package-selected-packages связано
-гораздо больше функциональности, чем имело бы смысл портировать в
-старые версии эмакса. Но функция package-install-selected-packages
-того стоит --- она автоматически устанавливает ваши любимые пакеты, по
-списку.
-
-#+name: package-system-backports
-#+begin_src elisp
-  (unless (fboundp #'package-install-selected-packages)
-    (defun package-install-selected-packages ()
-      "Ensure packages in `package-selected-packages' are installed."
-      (interactive)
-      (let ((packages-to-be-installed (cl-remove-if #'package-installed-p package-selected-packages)))
-        (when packages-to-be-installed
-          (when (or noninteractive
-                   (y-or-n-p (format "%s packages will be installed:\n%s, proceed?"
-                               (length packages-to-be-installed)
-                               (mapconcat #'symbol-name packages-to-be-installed ", "))))
-            (mapc #'package-install packages-to-be-installed))))))
-#+end_src
 
 Кроме ручной установки пакетов из графического интерфейса, нам
 понадобится средство для автоматической установки и грамотной загрузки
