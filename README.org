@@ -792,7 +792,7 @@ package-selected-packages. Сама эта настройка
   (unless (package-installed-p 'use-package)
     (unless package-archive-contents
       (package-refresh-contents))
-    (package-install 'use-package :dont-select))
+    (package-install 'use-package))
 #+end_src
 
 [[elisp:(customize-group-other-window 'use-package)][Use Package]]⊲
