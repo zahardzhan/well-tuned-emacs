@@ -669,7 +669,6 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
   <<make-sure-gnu-elpa-keyring-is-up-to-date-for-old-emacs>>
   <<make-sure-use-package-package-will-be-present>>
   (require 'use-package)
-  <<setup-use-package>>
 #+end_src
 
 В обычных условиях для инициализации системы пакетов было бы
@@ -793,18 +792,6 @@ package-selected-packages. Сама эта настройка
     (unless package-archive-contents
       (package-refresh-contents))
     (package-install 'use-package))
-#+end_src
-
-[[elisp:(customize-group-other-window 'use-package)][Use Package]]⊲
-[[elisp:(customize-variable-other-window 'use-package-always-ensure)][Use Package Always Ensure]]
-← [[elisp:(customize-save-variable 'use-package-always-ensure t)][устанавливать пакеты лисп-программой use-package]]
-без необходимости использования ключа :ensure в коде вызова.
-
-#+name: setup-use-package
-#+begin_src elisp
-  (unless use-package-always-ensure
-    (setq use-package-always-ensure t)
-    (customize-save-variable-after-init use-package-always-ensure))
 #+end_src
 
 На этом описание основной части программы инициализации
@@ -1181,6 +1168,7 @@ Emacs получили свои копии этого пакета уже без
 #+name: customizations
 #+begin_src elisp
   (use-package ido-completing-read+
+    :ensure t
     :config (reinstate-mode 'ido-ubiquitous-mode))
 #+end_src
 
@@ -1191,6 +1179,7 @@ Emacs получили свои копии этого пакета уже без
 #+name: customizations
 #+begin_src elisp
   (use-package smex
+    :ensure t
     :bind (("M-x" . smex)
            ("M-X" . smex-major-mode-commands)
            ("C-c C-c M-x" . execute-extended-command)))
@@ -1703,6 +1692,7 @@ _flip_ → результат применения функции при пер�
 #+name: customizations
 #+begin_src elisp
   (use-package guide-key
+    :ensure t
     :diminish guide-key-mode
     :config (reinstate-mode 'guide-key-mode))
 #+end_src
@@ -1880,7 +1870,9 @@ C-k. По-умолчанию на него назначен очень редк�
 
 #+name: keybindings
 #+BEGIN_SRC emacs-lisp
-  (use-package shrink-whitespace :bind (("M-SPC" . shrink-whitespace)))
+  (use-package shrink-whitespace
+    :ensure t
+    :bind (("M-SPC" . shrink-whitespace)))
 #+END_SRC
 
 ----------------------------------------------------------------------
