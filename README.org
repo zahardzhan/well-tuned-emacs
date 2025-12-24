@@ -668,7 +668,6 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
   <<make-sure-melpa-is-used-as-one-of-community-package-archives>>
   <<make-sure-gnu-elpa-keyring-is-up-to-date-for-old-emacs>>
   <<make-sure-use-package-package-will-be-present>>
-  (require 'use-package)
 #+end_src
 
 В обычных условиях для инициализации системы пакетов было бы
