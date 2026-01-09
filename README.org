@@ -741,10 +741,11 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 
 #+name: make-sure-melpa-is-used-as-one-of-community-package-archives
 #+begin_src elisp
-  (let ((melpa-location "https://melpa.org/packages/"))
-    (when (cl-loop for (_archive . location) in package-archives never (equal location melpa-location))
-      (cl-pushnew  (cons "melpa" melpa-location) package-archives :test #'equal)
-      (customize-save-variable-after-init package-archives)))
+  (when (cl-loop for (id . location) in package-archives
+                 never (equal "melpa" id)
+                 never (string-match "https?://melpa.org/packages" location))
+    (nconc package-archives '(("melpa" . "https://melpa.org/packages/")))
+    (customize-save-variable-after-init package-archives))
 #+end_src
 
 Система пакетов использует ключи GPG для проверки подлинности пакетов
