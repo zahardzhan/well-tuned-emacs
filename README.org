@@ -382,7 +382,7 @@ Windows/Cygwin/VMware).
     (let* (
            <<user-init-file-names>>
            (~/readme (file-truename (concat (file-name-as-directory "~") "README.org")))
-           (~/.emacs.d/readme (file-truename (concat user-emacs-directory "README.org"))))
+           (~/.emacs.d/readme (file-truename (locate-user-emacs-file "README.org"))))
       (ignore default ~/_emacs.elc  ~/.emacs.elc ~/.emacs.d/init.elc)
       (or (when (cl-find actual-user-init-file (list ~/.emacs ~/.emacs.el ~/_emacs ~/_emacs.el) :test #'equal)
             (or (when (file-exists-p ~/readme)
@@ -465,7 +465,7 @@ Windows/Cygwin/VMware).
 
 #+name: customize-customize-and-apply-customizations
 #+begin_src elisp
-  (let ((~/.emacs.d/custom.el (concat user-emacs-directory "custom.el")))
+  (let ((~/.emacs.d/custom.el (locate-user-emacs-file "custom.el")))
     (setq custom-file ~/.emacs.d/custom.el)
     (when (file-exists-p custom-file)
       (load custom-file))
