@@ -732,19 +732,25 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
 ← адреса архивов. По-умолчанию эмакс устанавливает пакеты из
 официального архива [[http://elpa.gnu.org/][GNU ELPA]]. В этом архиве
 мало пакетов, но они надежные и доверенные. В неофициальных архивах
-[[https://melpa.org][MELPA]][[[elisp:(progn (unless (featurep 'cl-lib) (require 'cl-lib))(unless (featurep 'package) (require 'package))(customize-save-variable 'package-archives (cl-pushnew (cons "melpa" "https://melpa.org/packages/") package-archives :test #'equal)))][добавить]]] и
+[[https://melpa.org][MELPA]][[[elisp:(progn (unless (featurep 'cl-lib) (require 'cl-lib)) (unless (featurep 'package) (require 'package)) (customize-save-variable 'package-archives (let ((melpa (cl-assoc "melpa" package-archives :test #'equal)) (location "https://melpa.org/packages/")) (or (when melpa (setcdr melpa location) package-archives) (nconc package-archives '(("melpa" . location)))))))][добавить или заменить]]] и
 [[https://marmalade-repo.org/][Marmalade]][[[elisp:(progn (unless (featurep 'cl-lib) (require 'cl-lib)) (unless (featurep 'package) (require 'package))(customize-save-variable 'package-archives (cl-pushnew (cons "marmalade" "http://marmalade-repo.org/packages/") package-archives :test #'equal)))][добавить]]]
 пакетов гораздо больше, но они менее качественные в плане лицензионной
 чистоты и гарантий безопасности.
 [[http://emacs.stackexchange.com/questions/268/what-are-the-practical-differences-between-the-various-emacs-package-repositorie][Различия между этими архивами несущественны]],
 но лично я предпочитаю MELPA, потому что он [[https://github.com/milkypostman/melpa][хостится на гитхабе]].
 
+Для максимальной простоты и надежности в условиях нестабильного
+интернета лучше всего выбрать
+[[https://www.mirrorservice.org/sites/melpa.org/packages/][официальное зеркало MELPA]][[[elisp:(progn (unless (featurep 'cl-lib) (require 'cl-lib)) (unless (featurep 'package) (require 'package)) (customize-save-variable 'package-archives (let ((melpa (cl-assoc "melpa" package-archives :test #'equal)) (location "https://www.mirrorservice.org/sites/melpa.org/packages/")) (or (when melpa (setcdr melpa location) package-archives) (nconc package-archives '(("melpa" . location)))))))][добавить или заменить]]]
+([[https://github.com/melpa/melpa#mirrors][о зеркалах MELPA]]).
+
 #+name: make-sure-melpa-is-used-as-one-of-community-package-archives
 #+begin_src elisp
   (when (cl-loop for (id . location) in package-archives
                  never (equal "melpa" id)
-                 never (string-match "https?://melpa.org/packages" location))
-    (nconc package-archives '(("melpa" . "https://melpa.org/packages/")))
+                 never (string-match "https?://melpa.org/packages" location)
+                 never (string-match "https?://www.mirrorservice.org/sites/melpa.org/packages" location))
+    (nconc package-archives '(("melpa" . "https://www.mirrorservice.org/sites/melpa.org/packages/")))
     (customize-save-variable-after-init package-archives))
 #+end_src
 
