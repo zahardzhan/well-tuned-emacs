@@ -246,7 +246,7 @@ Starter Kit пришелся именно на эти годы, то есть п
 | user-init-file while init      | user-init-file after init                     | actual-user-init-file       |
 |--------------------------------+-----------------------------------------------+-----------------------------|
 | =nil= emacs -q/-​-no-init-file  | =nil=                                         | prefer =~/.emacs.d/init.el= |
-| =~/.emacs= relative by default | =~/.emacs= relative by default                | =~/.emacs=                  |
+| =~/.emacs= relative by default | =~/.emacs= relative by default                | =~/.emacs= relative         |
 | =~/_emacs=                     | =~/_emacs=                                    | =~/_emacs=                  |
 | =~/_emacs.el=                  | =~/_emacs.el=                                 | =~/_emacs.el=               |
 | =~/_emacs.elc=                 | =~/_emacs.el= or =~/_emacs= or =~/_emacs.elc= | =~/_emacs.el= or =~/_emacs= |
@@ -280,7 +280,7 @@ Starter Kit пришелся именно на эти годы, то есть п
                        (list ~/.emacs.d/init.el ~/_emacs ~/_emacs.el ~/.emacs ~/.emacs.el))
                    ~/.emacs.d/init.el))
              (when (equal user-init-file default)
-               ~/.emacs)
+               default)
              (when (file-equal-p user-init-file ~/_emacs)
                ~/_emacs)
              (when (file-equal-p user-init-file ~/_emacs.el)
