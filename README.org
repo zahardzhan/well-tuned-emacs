@@ -259,14 +259,14 @@ Starter Kit пришелся именно на эти годы, то есть п
 #+name: user-init-file-names
 #+begin_src elisp
   (default "~/.emacs")
-  (~/_emacs (file-truename "~/_emacs"))
-  (~/_emacs.el (file-truename "~/_emacs.el"))
-  (~/_emacs.elc (file-truename "~/_emacs.elc"))
-  (~/.emacs (file-truename "~/.emacs"))
-  (~/.emacs.el (file-truename "~/.emacs.el"))
-  (~/.emacs.elc (file-truename "~/.emacs.elc"))
-  (~/.emacs.d/init.el (file-truename "~/.emacs.d/init.el"))
-  (~/.emacs.d/init.elc (file-truename "~/.emacs.d/init.elc"))
+  (~/_emacs (expand-file-name "~/_emacs"))
+  (~/_emacs.el (expand-file-name "~/_emacs.el"))
+  (~/_emacs.elc (expand-file-name "~/_emacs.elc"))
+  (~/.emacs (expand-file-name "~/.emacs"))
+  (~/.emacs.el (expand-file-name "~/.emacs.el"))
+  (~/.emacs.elc (expand-file-name "~/.emacs.elc"))
+  (~/.emacs.d/init.el (expand-file-name "~/.emacs.d/init.el"))
+  (~/.emacs.d/init.elc (expand-file-name "~/.emacs.d/init.elc"))
 #+end_src
 
 #+name: customize-well-tuned-emacs
