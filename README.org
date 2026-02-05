@@ -271,7 +271,8 @@ Starter Kit пришелся именно на эти годы, то есть п
 
 #+name: customize-well-tuned-emacs
 #+begin_src elisp
-     (defvar actual-user-init-file
+     (defvar actual-user-init-file)
+     (setq actual-user-init-file
        (let (
              <<user-init-file-names>>
              )
