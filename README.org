@@ -382,8 +382,8 @@ Windows/Cygwin/VMware).
   (defcustom well-tuned-emacs-reference-file
     (let* (
            <<user-init-file-names>>
-           (~/readme (file-truename (concat (file-name-as-directory "~") "README.org")))
-           (~/.emacs.d/readme (file-truename (locate-user-emacs-file "README.org"))))
+           (~/readme "~/README.org")
+           (~/.emacs.d/readme (locate-user-emacs-file "README.org")))
       (ignore default ~/_emacs.elc  ~/.emacs.elc ~/.emacs.d/init.elc)
       (or (when (cl-find actual-user-init-file (list ~/.emacs ~/.emacs.el ~/_emacs ~/_emacs.el) :test #'equal)
             (or (when (file-exists-p ~/readme)
