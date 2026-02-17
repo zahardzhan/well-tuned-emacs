@@ -466,14 +466,12 @@ Windows/Cygwin/VMware).
 
 #+name: customize-customize-and-apply-customizations
 #+begin_src elisp
-  (let ((~/.emacs.d/custom.el (locate-user-emacs-file "custom.el")))
-    (setq custom-file ~/.emacs.d/custom.el)
-    (when (file-exists-p custom-file)
-      (load custom-file))
-    (unless (equal ~/.emacs.d/custom.el (car (get 'custom-file 'saved-value)))
-      (add-hook 'after-init-hook
-        (defun save-custom-file-location-in-custom-file ()
-          (customize-save-variable 'custom-file ~/.emacs.d/custom.el)))))
+  (setq custom-file (locate-user-emacs-file "custom.el"))
+  (load custom-file :noerror :nomessage)
+  (unless (file-equal-p custom-file (car (get 'custom-file 'saved-value)))
+    (add-hook 'after-init-hook
+      (defun save-custom-file-location-in-custom-file ()
+        (customize-save-variable 'custom-file custom-file))))
 #+end_src
 
 Ниже код вида (add-hook 'after-init-hook (defun ... () ... )) появится
