@@ -169,7 +169,7 @@ Starter Kit пришелся именно на эти годы, то есть п
 [[elisp:org-babel-tangle][Превратить это руководство в лисп-программу инициализации эмакса]]
 .emacs или init.el (/сплести/ программу --- /tangle/) очень просто, достаточно
 [[https://gitlab.com/zahardzhan/well-tuned-emacs/raw/master/README.org][скачать свежую версию этого руководства]],
-открыть ее в эмаксе и выполнить команду [[elisp:org-babel-tangle][M-x org-babel-tangle]].
+открыть ее в эмаксе и выполнить команду [[elisp:org-babel-tangle][M-x org-babel-tangle]] ([[elisp:(describe-key (kbd "C-c C-v C-t"))][С-c C-v C-t]]).
 В результате из фрагментов лисп-кода в этом руководстве будет создана
 [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html][лисп-программа инициализации эмакса]]
 [[[info:Emacs#Init File][инфо]], [[http://www.emacswiki.org/emacs/InitFile][вики]]]
