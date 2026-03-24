@@ -1215,10 +1215,6 @@ X Window System и Emacs (в любой ОС) поддерживают два б
 /primary/ и /clipboard/. Мышь работает с primary-буфером, клавиатурные
 команды --- с clipboard-буфером.
 
-[[elisp:(customize-variable-other-window 'x-select-enable-primary)][X Select Enable Primary]]
-← [[elisp:(customize-save-variable 'x-select-enable-primary t)][клавиатурные команды копирования и вставки используют мышиный буфер обмена]]
-(в дополнение к системному).
-
 [[elisp:(describe-function #'yes-or-no-p)][Yes or No Predicate]]
 ← подтверждение одной клавишей: Y или Пробел --- да, N или Delete ---
 нет.
