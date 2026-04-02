@@ -1079,6 +1079,27 @@ M-x C-r C-s ...
   (define-key ctl-x-r-map (kbd "e") #'recentf-open-files)
 #+end_src
 
+[[elisp:(customize-group-other-window 'editing)][Editing]]⊲
+[[elisp:(customize-group-other-window 'fill)][Fill]]⊲
+[[elisp:(customize-variable-other-window 'sentence-end-double-space)][Sentence End Double Space]]
+← [[elisp:(customize-save-variable 'sentence-end-double-space nil)][один пробел между предложениям]].
+В эмаксе и во всей его документации принято
+[[https://en.wikipedia.org/wiki/Sentence_spacing][соглашение эпохи пишущих машинок]]
+что между предложениями должно быть два пробела. В современности такой
+формат не используется нигде кроме как в текстовых файлах с
+«[[https://jesseduffield.com/Hard-Wrap-vs-Soft-Wrap/][семантическими переносами]]»
+(/semantic wrapping/, одно предложение на строку --- в основном для
+того чтобы изменение одного предложения в тексте соответствовало
+изменению одной строки в системе контроля версий).
+
+Из-за этого для обычного текста
+[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Sentences.html][команды для предложений]]
+M-a, M-e, M-k, C-x Backspace [[[info:Emacs#Sentences][инфо]]]
+работают как [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Paragraphs.html][команды для абзацев]]
+M-{, M-}, M-h [[[info:Emacs#Paragraphs][инфо]]],
+что делает их бесполезными. Если отключить двойной пробел команды для
+предложений будут частично работать, что лучше чем ничего.
+
 [[elisp:(customize-variable-other-window 'menu-bar-mode)][Menu Bar Mode]]
 ← [[elisp:(customize-save-variable 'menu-bar-mode nil)][главное меню спрятано]].
 80% опций в главном меню эмакса никогда не используются, остальные 20%
