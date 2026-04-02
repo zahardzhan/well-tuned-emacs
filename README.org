@@ -1054,6 +1054,31 @@ M-x C-r C-s ...
 используемых команд мог сформироваться история минибуфера должна
 сохраняться.
 
+[[elisp:(customize-group-other-window 'files)][Files]]⊲
+[[elisp:(customize-group-other-window 'recentf)][Recentf]]⊲
+Открытие файла с помощью перехода к закладке одновременно хорошо и
+плохо сочетается с режимом Save Place потому что файл открывается на
+указанном в закладке месте, а не на месте сохраненном в Save Place
+(см. [[https://lists.gnu.org/r/emacs-devel/2020-06/msg00770.html][обсуждение в рассылке emacs-devel]]).
+Несложно сделать создание закладок-без-сохранения-места, но есть режим
+сохранения списка недавно открытых файлов, идеально сочетающийся с
+режимом Save Place.
+
+[[elisp:(customize-variable-other-window 'recentf-mode)][Recentf Mode]]
+← [[elisp:(customize-save-variable 'recentf-mode t)][список недавно открытых файлов]].
+Сочетание клавиш на усмотрение пользователя, традиционно C-x C-r
+вместо открытия файла в режиме чтения которое никем не используется
+(см. “[[https://www.masteringemacs.org/article/find-files-faster-recent-files-package][Find files faster with the recent files package]]”
+в блоге [[https://www.masteringemacs.org][Mastering Emacs]])
+или C-c r и C-x r e для единообразия с сочетаниями закладок.
+
+#+header: :noweb-ref keybindings
+#+begin_src elisp
+  (global-set-key (kbd "C-x C-r") #'recentf-open-files)
+  (global-set-key (kbd "C-c r") #'recentf-open-files)
+  (define-key ctl-x-r-map (kbd "e") #'recentf-open-files)
+#+end_src
+
 [[elisp:(customize-variable-other-window 'menu-bar-mode)][Menu Bar Mode]]
 ← [[elisp:(customize-save-variable 'menu-bar-mode nil)][главное меню спрятано]].
 80% опций в главном меню эмакса никогда не используются, остальные 20%
