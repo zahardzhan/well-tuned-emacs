@@ -1126,6 +1126,14 @@ Buffer-menu-\ast{}, Custom-mode-\ast{} и Info-\ast{}, и никто, даже
   (setq completion-ignore-case t)
 #+end_src
 
+[[elisp:(customize-group-other-window 'environment)][Environment]]⊲
+[[elisp:(customize-group-other-window 'minibuffer)][Minibuffer]]⊲
+[[elisp:(customize-variable-other-window 'completions-format)][Completions Format]]
+← [[elisp:(customize-save-variable 'completions-format 'vertical)][подсказки автодополнения упорядочены по столбцам]],
+а не по строкам. В алфавитно-упорядоченном по вертикали тексте легче
+искать, если он умещается на одном экране. Оправдано когда подсказок
+обычно мало. Прокрутка экрана с подсказками ↓ C-M-v C-M-S-v ↑.
+
 [[elisp:(customize-variable-other-window 'menu-bar-mode)][Menu Bar Mode]]
 ← [[elisp:(customize-save-variable 'menu-bar-mode nil)][главное меню спрятано]].
 80% опций в главном меню эмакса никогда не используются, остальные 20%
