@@ -364,7 +364,8 @@ Starter Kit пришелся именно на эти годы, то есть п
 [[elisp:(customize-variable-other-window 'well-tuned-emacs-reference-file)][Well Tuned Emacs Reference File]]
 ← файл [[elisp:(find-file (concat (file-name-directory user-init-file) "README.org"))][README.org]]
 в [[elisp:(dired (file-name-directory actual-user-init-file))][директории с актуальной лисп-программой инициализации эмакса]].
-Расположение файла этого руководства. Для обеспечения переносимости
+Расположение файла этого руководства. Может быть символической ссылкой
+(на файл в системе контроля версий). Для обеспечения переносимости
 путей файлов между разными средами исполнения эмакс-лисп кода их
 следует указывать в формате
 [[https://en.wikipedia.org/wiki/Path_(computing)][POSIX]], это
@@ -379,6 +380,7 @@ Windows/Cygwin/VMware).
 
 #+header: :noweb-ref customize-well-tuned-emacs
 #+begin_src elisp
+  <<define-well-tuned-emacs-reference-file-truename>>
   (defcustom well-tuned-emacs-reference-file
     (let* (
            <<user-init-file-names>>
@@ -397,8 +399,31 @@ Windows/Cygwin/VMware).
                 ~/.emacs.d/readme))))
     "The Well Tuned Emacs Reference file."
     :type 'file
+    :set (lambda (symbol value)
+           (set-default symbol value)
+           <<update-well-tuned-emacs-reference-file-truename>>
+           )
     :version "25.0.50.1"
     :group 'well-tuned-emacs)
+  <<update-well-tuned-emacs-reference-file-truename>>
+#+end_src
+
+Далее нужно будет делать различие между именем руководства как
+возможной символической ссылкой на текстовый файл и реальным именем
+текстового файла в котором хранится руководство. Получение реального
+имени функцией file-truename во многие десятки раз медленнее обычных
+файловых операций типа expand-file-name поэтому ее следует выполнять
+как можно реже при изменении значения well-tuned-emacs-reference-file.
+
+#+name: define-well-tuned-emacs-reference-file-truename
+#+begin_src elisp
+  (defvar well-tuned-emacs-reference-file-truename)
+#+end_src
+
+#+name: update-well-tuned-emacs-reference-file-truename
+#+begin_src elisp
+  (setq well-tuned-emacs-reference-file-truename
+        (file-truename well-tuned-emacs-reference-file))
 #+end_src
 
 [[elisp:(customize-group-other-window 'emacs)][Emacs]]⊲
@@ -505,9 +530,10 @@ Windows/Cygwin/VMware).
 
 #+name: this-reference-is-in-its-place-and-is-newer-than-user-init-file
 #+begin_src elisp
-  (when (file-exists-p well-tuned-emacs-reference-file)
+  (when (file-exists-p well-tuned-emacs-reference-file-truename)
     (or (not (file-exists-p actual-user-init-file))
-        (file-newer-than-file-p well-tuned-emacs-reference-file actual-user-init-file)))
+        (file-newer-than-file-p well-tuned-emacs-reference-file-truename
+                                actual-user-init-file)))
 #+end_src
 
 По всей видимости нет никакого тривиального способа заставить
@@ -525,7 +551,7 @@ user-init-file в динамической области видимости --
     (require 'ob-tangle)
     (message "Tangling %s → %s." well-tuned-emacs-reference-file actual-user-init-file)
     (let ((user-init-file actual-user-init-file))
-      (org-babel-with-temp-filebuffer well-tuned-emacs-reference-file
+      (org-babel-with-temp-filebuffer well-tuned-emacs-reference-file-truename
         (org-babel-tangle))
       (load-file user-init-file)))
 #+end_src
