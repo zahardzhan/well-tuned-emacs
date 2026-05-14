@@ -1161,6 +1161,16 @@ Buffer-menu-\ast{}, Custom-mode-\ast{} и Info-\ast{}, и никто, даже
 искать, если он умещается на одном экране. Оправдано когда подсказок
 обычно мало. Прокрутка экрана с подсказками ↓ C-M-v C-M-S-v ↑.
 
+[[elisp:(customize-group-other-window 'environment)][Environment]]⊲
+[[elisp:(customize-group-other-window 'frames)][Frames]]⊲
+[[elisp:(customize-variable-other-window 'tool-bar-mode)][Tool Bar Mode]]
+← [[elisp:(customize-save-variable 'tool-bar-mode nil)][панель инструментов отключена]].
+Панель инструментов в эмаксе не доведена до ума. Единственная полезная
+кнопка на панели инструментов это удаление буфера. Функции некоторых
+кнопок непонятны даже с текстовыми подсказками. Во многих режимах
+одинаковые иконки обозначают совершенно разные действия, что
+увеличивает когнитивную нагрузку и замедляет реакцию.
+
 [[elisp:(customize-variable-other-window 'menu-bar-mode)][Menu Bar Mode]]
 ← [[elisp:(customize-save-variable 'menu-bar-mode nil)][главное меню спрятано]].
 80% опций в главном меню эмакса никогда не используются, остальные 20%
@@ -1175,10 +1185,6 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
 #+begin_src elisp
   (global-set-key (kbd "C-x <f10>") #'toggle-menu-bar-mode-from-frame)
 #+end_src
-
-[[elisp:(customize-variable-other-window 'tool-bar-mode)][Tool Bar Mode]]
-← [[elisp:(customize-save-variable 'tool-bar-mode nil)][панель инструментов отключена]].
-Панель инструментов в эмаксе абсолютно бесполезна.
 
 [[elisp:(customize-variable-other-window 'scroll-bar-mode)][Scroll Bar Mode]]
 ← [[elisp:(customize-save-variable 'scroll-bar-mode 'right)][полоса прокрутки справа]].
