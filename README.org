@@ -1101,9 +1101,10 @@ M-x C-r C-s ...
 
 #+header: :noweb-ref keybindings
 #+begin_src elisp
-  (global-set-key (kbd "C-x C-r") #'recentf-open-files)
-  (global-set-key (kbd "C-c r") #'recentf-open-files)
-  (define-key ctl-x-r-map (kbd "e") #'recentf-open-files)
+  (with-eval-after-load 'recentf
+    (global-set-key (kbd "C-x C-r") #'recentf-open-files)
+    (global-set-key (kbd "C-c r") #'recentf-open-files)
+    (define-key ctl-x-r-map (kbd "e") #'recentf-open-files))
 #+end_src
 
 [[elisp:(customize-group-other-window 'editing)][Editing]]⊲
