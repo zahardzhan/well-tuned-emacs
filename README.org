@@ -1172,7 +1172,8 @@ Buffer-menu-\ast{}, Custom-mode-\ast{} и Info-\ast{}, и никто, даже
 увеличивает когнитивную нагрузку и замедляет реакцию.
 
 [[elisp:(customize-variable-other-window 'menu-bar-mode)][Menu Bar Mode]]
-← [[elisp:(customize-save-variable 'menu-bar-mode nil)][главное меню спрятано]].
+← [[elisp:(customize-save-variable 'menu-bar-mode nil)][главное меню спрятано]],
+если предполагается использовать эмакс только в терминале.
 80% опций в главном меню эмакса никогда не используются, остальные 20%
 продублированы в меню моделайна (/mode-line /--- /строка режимов/ под
 окном буфера). Меню буферов вызывается сочетаниями C-F10 и
