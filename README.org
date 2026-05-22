@@ -1187,22 +1187,6 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
   (global-set-key (kbd "C-x <f10>") #'toggle-menu-bar-mode-from-frame)
 #+end_src
 
-[[elisp:(customize-variable-other-window 'scroll-bar-mode)][Scroll Bar Mode]]
-← [[elisp:(customize-save-variable 'scroll-bar-mode 'right)][полоса прокрутки справа]].
-Многие [[elisp:(customize-save-variable 'scroll-bar-mode nil)][отключают полосу прокрутки]]
-по трем причинам: она не является частью стандартного интерфейса
-эмакса, она плохо реализована и эстетически убога. Но в то же время,
-нельзя отрицать ее очевидную пользу в графических средах даже в таком
-неполноценном виде.
-
-[[elisp:(customize-variable-other-window 'window-divider-mode)][Window Divider Mode]]
-← [[elisp:(customize-save-variable 'window-divider-mode nil)][широкая вертикальная разделительная черта между окнами отключена]].
-[[elisp:(customize-save-variable 'window-divider-mode t)][Разделение окон по горизонтали широкой вертикальной чертой]]
-позволяет легко менять размеры окон мышкой при включенных полосах
-прокрутки. Выглядит старомодно, но в группе
-[[elisp:(customize-group-other-window 'window-divider)][Window Divider]]
-есть настройки стиля.
-
 [[elisp:(customize-face-other-window 'fringe)][Fringe face]]
 ← [[elisp:(let ((bg `(:background ,(face-attribute 'default :background))))(face-spec-set 'fringe `((t ,bg)))(put 'fringe 'theme-face `((user ,bg)))(put 'fringe 'saved-face `((t ,bg)))(custom-save-all))][прозрачные поля]].
 Во всех текстовых редакторах начиная с Блокнота принято иметь
@@ -1219,7 +1203,7 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
 минимум такой же список аргументов, что и оригинальные функции, но
 байт-компилятор будет ругаться, если эти аргументы не будут
 использоваться, поэтому
-[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Using-Lexical-Binding.html][имена неиспользуемых аргументов должны начинаться с подчеркивания]].
+[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Converting-to-Lexical-Binding.html][имена неиспользуемых аргументов должны начинаться с подчеркивания]].
 
 #+header: :noweb-ref customizations
 #+begin_src elisp
@@ -1229,6 +1213,22 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
     (advice-add #'load-theme :after set-transparent-fringe)
     (advice-add #'disable-theme :after set-transparent-fringe))
 #+end_src
+
+[[elisp:(customize-variable-other-window 'scroll-bar-mode)][Scroll Bar Mode]]
+← [[elisp:(customize-save-variable 'scroll-bar-mode 'right)][полоса прокрутки справа]].
+Многие [[elisp:(customize-save-variable 'scroll-bar-mode nil)][отключают полосу прокрутки]]
+по трем причинам: она не является частью стандартного интерфейса
+эмакса, она плохо реализована и эстетически убога. Но в то же время,
+нельзя отрицать ее очевидную пользу в графических средах даже в таком
+неполноценном виде.
+
+[[elisp:(customize-variable-other-window 'window-divider-mode)][Window Divider Mode]]
+← [[elisp:(customize-save-variable 'window-divider-mode nil)][широкая вертикальная разделительная черта между окнами отключена]].
+[[elisp:(customize-save-variable 'window-divider-mode t)][Разделение окон по горизонтали широкой вертикальной чертой]]
+позволяет легко менять размеры окон мышкой при включенных полосах
+прокрутки. Выглядит старомодно, но в группе
+[[elisp:(customize-group-other-window 'window-divider)][Window Divider]]
+есть настройки стиля.
 
 [[elisp:(customize-variable-other-window 'indicate-empty-lines)][Indicate Empty Lines]]
 ← [[elisp:(customize-save-variable 'indicate-empty-lines nil)][нет штриховки на полях]].
