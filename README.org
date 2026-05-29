@@ -1214,6 +1214,58 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
     (advice-add #'disable-theme :after set-transparent-fringe))
 #+end_src
 
+Полоса прокрутки в минибуфере не выполняет никакую функцию, на одних
+системах нарисована небрежно, на других не нарисована вообще. В Emacs
+25 полоса прокрутки минибуфера наследуется от свойств фрейма и
+периодически восстанавливается после отключения, поэтому скроллбар
+приходится отключать во всех фреймах до и после захода в минибуфер,
+после создания фрейма, выполнения команды и т. д.
+
+#+header: :noweb-ref customize-well-tuned-emacs
+#+begin_src elisp
+  (defun hide-minibuffer-scroll-bar (&rest _)
+    (dolist (frame (frame-list))
+      (when (display-graphic-p frame)
+        (let ((minibuf (minibuffer-window frame)))
+          (when (window-live-p minibuf)
+            (when (nth 2 (window-scroll-bars minibuf))
+              (set-window-scroll-bars minibuf nil nil)))))))
+#+end_src
+
+Полоса прокрутки в минибуфере включается и выключается через отмену
+или установку наследования свойств полосы прокрутки фрейма для всех
+графических фреймов в которых есть живой минибуфер. Вертикальная
+полоса прокрутки указана третьим параметром в списке (width columns
+vertical-type height lines horizontal-type) возвращаемым
+window-scroll-bars.
+
+#+header: :noweb-ref customize-well-tuned-emacs
+#+begin_src elisp
+  (define-minor-mode hide-minibuffer-scroll-bar-mode
+    "Hide the scroll bar in the minibuffer on each frame."
+    :global t
+    :group 'minibuffer
+    :group 'frames
+    (when hide-minibuffer-scroll-bar-mode
+      (hide-minibuffer-scroll-bar)
+      (force-window-update (minibuffer-window)))
+    (let ((add-or-remove (if hide-minibuffer-scroll-bar-mode #'add-hook #'remove-hook)))
+      (dolist (hook '(minibuffer-setup-hook minibuffer-exit-hook post-command-hook
+                      after-make-frame-functions window-configuration-change-hook))
+        (funcall add-or-remove hook #'hide-minibuffer-scroll-bar)))
+    (unless hide-minibuffer-scroll-bar-mode
+      (dolist (frame (frame-list))
+        (let ((minibuf (minibuffer-window frame)))
+          (when (window-live-p minibuf)
+            (set-window-scroll-bars minibuf nil t))))))
+#+end_src
+
+[[https://www.gnu.org/software/emacs/manual/html_node/elisp/Defining-Minor-Modes.html][Объявление глобального режима создает переменную в системе настроек Customize]]
+[[[info:ELisp#Defining Minor Modes][инфо]]]:
+
+[[elisp:(customize-variable-other-window 'hide-minibuffer-scroll-bar-mode)][Hide Minibuffer Scroll Bar Mode]]
+← [[elisp:(customize-save-variable 'hide-minibuffer-scroll-bar-mode t)][полоса прокрутки в минибуфере скрыта]].
+
 [[elisp:(customize-variable-other-window 'scroll-bar-mode)][Scroll Bar Mode]]
 ← [[elisp:(customize-save-variable 'scroll-bar-mode 'right)][полоса прокрутки справа]].
 Многие [[elisp:(customize-save-variable 'scroll-bar-mode nil)][отключают полосу прокрутки]]
