@@ -2066,6 +2066,62 @@ list-buffers, ibuffer и т. д.).
   (global-set-key (kbd "C-x k") #'kill-this-buffer)
 #+end_src
 
+Для перехода по истории страниц в режимах Help и Info вместо f
+(/forward/) и b (/backward/) как во всех обычных режимах
+редактирования, используется l (/left?/, исходно /last/) и r
+(/right?/, /return?/, появилась в Emacs 22) которые не используются ни
+в каких других режимах редактирования. Это интерфейс с большой
+когнитивной нагрузкой. Когда кто-то хочет вернуться назад в истории он
+думает: «Так, мне нужно назад. Назад это как стрелка в браузере.
+Стрелка показывает в какую сторону? Влево или вправо. Лево и право это
+где?» В браузере кнопки ← и → не воспринимаются как кнопки
+пространственного направления влево и вправо, не привязываются к
+словам лево и право. Здесь нужно вспомнить как называется каждое из
+совершенно симметричных направлений для привязки к несимметричным во
+времени операциям. «Лево это там, значит кнопка l». Где на клавиатуре
+кнопка l? Справа от кнопки r.
+
+В [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=dc25712992115aa778954660544e366b6df35f5b][коммите 2005-го года]]
+в Info добавили команду forward, назначив её на r (для несовместимости
+эмакса с собственными конвенциями), и переименовали команду last в
+backward оставив её на l (для обратной совместимости непонятно с чем).
+
+В [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=b216f0a6cf524023eefbedcff3a70c8763e7e3e0][коммите 2013-го года]]
+l и r стали частью Help для совместимости с Info, сочетания клавиш
+которого несовместимы с общим дизайном эмакса ради обратной
+совместимости с режимом на уровне дизайна не предполагавшем наличие
+таких функций.
+
+В [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=924d6997866a444f833ea0a2f0da25058a351564][коммите 2013-го года]]
+в браузер EWW добавили команду back, назначив её на l. (EWW стал
+частью Emacs неделей раньше).
+
+В [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=d3f0f918e9f2f20d27e129107a63e634d4e82814][коммите 2013-го года]]
+в EWW добавили команду forward, назначив её на f.
+
+В [[https://cgit.git.savannah.gnu.org/cgit/emacs.git/commit/?id=7a409b30053cf0c48ff5de7c5d9b408493df1054][коммите 2013-го года]]
+после [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=16178#10][баг-репорта]]
+l и r стали частью EWW для совместимости с Info. Через пол года после
+предыдущего коммита.
+
+Это показательный пример ползучего «эволюционного дизайна» который
+приводит к рассогласованию и усложнению интерфейса без причины.
+
+#+header: :noweb-ref keybindings
+#+begin_src elisp
+  (with-eval-after-load 'help-mode
+    (define-key help-mode-map (kbd "f") #'help-go-forward)
+    (define-key help-mode-map (kbd "b") #'help-go-back))
+  (with-eval-after-load 'info
+    (define-key Info-mode-map (kbd "f") #'Info-history-forward)
+    (define-key Info-mode-map (kbd "b") #'Info-history-back)
+    (define-key Info-mode-map (kbd "r") #'Info-follow-reference))
+  (with-eval-after-load 'eww
+    (define-key eww-mode-map (kbd "f") #'eww-forward-url)
+    (define-key eww-mode-map (kbd "b") #'eww-back-url)
+    (define-key eww-mode-map (kbd "m") #'eww-add-bookmark))
+#+end_src
+
 Поиск по шаблонам регулярных выражений более актуален в качестве поиска по-умолчанию.
 
 #+header: :noweb-ref keybindings
