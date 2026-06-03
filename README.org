@@ -2055,6 +2055,17 @@ Control, но это не избавляет от нагрузки на леву
           (define-key ido-completion-map (kbd "C-w") #'ido-delete-backward-word-updir)))))
 #+end_src
 
+Удаление буфера очень частая операция, но подтверждение сильно
+замедляет и отвлекает внимание ради возможности удаления /другого/
+буфера, чего не происходит практически никогда (на замену удаленному
+видимому придет произвольный буфер, а невидимые удаляются из
+list-buffers, ibuffer и т. д.).
+
+#+header: :noweb-ref keybindings
+#+begin_src elisp
+  (global-set-key (kbd "C-x k") #'kill-this-buffer)
+#+end_src
+
 Поиск по шаблонам регулярных выражений более актуален в качестве поиска по-умолчанию.
 
 #+header: :noweb-ref keybindings
@@ -2093,17 +2104,6 @@ Control, но это не избавляет от нагрузки на леву
 #+header: :noweb-ref keybindings
 #+begin_src elisp
   (global-set-key (kbd "C-x C-b") #'ibuffer)
-#+end_src
-
-Для быстрого убийства буфера хорошо подходит сочетание C-x
-C-k. По-умолчанию на него назначен очень редко используемый набор
-сочетаний клавиш для отладки макросов, который логично смотрится на
-месте свободного сочетания C-x M-k [«keyboard macro»-команды].
-
-#+header: :noweb-ref keybindings
-#+begin_src elisp
-  (global-set-key (kbd "C-x C-k") #'kill-this-buffer)
-  (global-set-key (kbd "C-x M-k") #'kmacro-keymap)
 #+end_src
 
 Автодополнение текста выполняется программой hippie-expand, которая
