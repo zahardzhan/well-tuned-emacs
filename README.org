@@ -1285,6 +1285,14 @@ window-scroll-bars.
 Стандартные угловые скобки вокруг файлового пути создают визуальный шум,
 делают элементы менее отчетливыми.
 
+[[elisp:(customize-variable-other-window 'initial-buffer-choice)][Initial Buffer Choice]]
+← [[elisp:(customize-save-variable 'initial-buffer-choice 'remember-notes)][после запуска эмакс открывает файл с заметками]]
+вместо стартового экрана, или как вариант ---
+[[elisp:(customize-save-variable 'initial-buffer-choice t)][после запуска эмакс открывает =*scratch*=-буфер]].
+По желанию эмакс может открыть любой файл, директорию, сайт, программу
+для чтения почты, новостей, чат, командную оболочку операционной
+системы, музыкальный проигрыватель или новый закон природы.
+
 [[elisp:(customize-variable-other-window 'window-divider-mode)][Window Divider Mode]]
 ← [[elisp:(customize-save-variable 'window-divider-mode nil)][широкая вертикальная разделительная черта между окнами отключена]].
 [[elisp:(customize-save-variable 'window-divider-mode t)][Разделение окон по горизонтали широкой вертикальной чертой]]
@@ -1309,14 +1317,6 @@ window-scroll-bars.
 
 [[elisp:(customize-variable-other-window 'column-number-mode)][Column Number Mode]]
 ← [[elisp:(customize-save-variable 'column-number-mode t)][в моделайне отображается номер столбца]] на котором находится курсор.
-
-[[elisp:(customize-variable-other-window 'initial-buffer-choice)][Initial Buffer Choice]]
-← [[elisp:(customize-save-variable 'initial-buffer-choice 'remember-notes)][после запуска эмакс открывает файл с заметками]]
-вместо стартового экрана, или как вариант ---
-[[elisp:(customize-save-variable 'initial-buffer-choice t)][после запуска эмакс открывает =*scratch*=-буфер]].
-По желанию эмакс может открыть любой файл, директорию, сайт, программу
-для чтения почты, новостей, чат, командную оболочку операционной
-системы, музыкальный проигрыватель или новый закон природы.
 
 [[elisp:(customize-variable-other-window 'remember-notes-initial-major-mode)][Remember Notes Initial Major Mode]]
 ← [[elisp:(customize-save-variable 'remember-notes-initial-major-mode 'nil)][эмакс открывает файл с заметками в режиме по-умолчанию]],
