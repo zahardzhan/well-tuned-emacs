@@ -6,6 +6,7 @@
 #+Options: ToC:nil # Оглавления нет.
 #+Options: org-display-internal-link-with-indirect-buffer:t # Внутренние ссылки открываются в другом буфере.
 #+Options: ^:t # Индексы TeX ^:{} и a_{b}.
+#+Property: header-args+ :noweb no-export
 
 Emacs [“Editor MACroS”, /​/ˈeditər ˈmakrōs/​/ → /​/ˈemaks/​/, далее ---
 «эмакс»] был создан давным давно в Лаборатории искусственного
