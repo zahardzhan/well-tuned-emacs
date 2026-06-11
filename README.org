@@ -745,7 +745,8 @@ well-tuned-emacs-compile-user-init-file как опцию в группе нас
              (version (when pkg-desc (package--incompatible-p pkg-desc :shallow))))
         (if (and version (not force))
             (message "Unable to activate package `%s'. Requires Emacs %s" package version)
-          (apply fn args))))))
+          (apply fn args)))))
+    '((name . dont-activate-packages-that-require-newer-emacs)))
 #+end_src
 
 Конечно, перед автоматической установкой пакетов эмакс должен знать
@@ -1211,8 +1212,8 @@ C-x F10 (вариант C-M-F10 не подходит для Cygwin и Linux).
   (let ((set-transparent-fringe
          (lambda (&rest _)
           (set-face-background 'fringe (face-attribute 'default :background)))))
-    (advice-add #'load-theme :after set-transparent-fringe)
-    (advice-add #'disable-theme :after set-transparent-fringe))
+    (advice-add #'load-theme :after set-transparent-fringe '((name . set-transparent-fringe)))
+    (advice-add #'disable-theme :after set-transparent-fringe '((name . set-transparent-fringe))))
 #+end_src
 
 Полоса прокрутки в минибуфере не выполняет никакую функцию, на одних
@@ -1626,10 +1627,11 @@ Smartparens включает в себя несколько альтернати
 #+header: :noweb-ref customizations
 #+begin_src elisp
   (advice-add #'backward-kill-word-or-kill-region :around
-    (defun backward-kill-word-preserve-s-expression-structure (fn &rest args)
+    (lambda (fn &rest args)
       (if (when smartparens-mode (not (region-active-p)))
           (sp-backward-kill-word (cl-first args))
-        (apply fn args))))
+        (apply fn args)))
+    '((name . backward-kill-word-preserve-s-expression-structure)))
 #+end_src
 
 --------------------------------------------------------------------------------
