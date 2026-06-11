@@ -1274,8 +1274,14 @@ window-scroll-bars.
 нельзя отрицать ее очевидную пользу в графических средах даже в таком
 неполноценном виде.
 
+[[elisp:(customize-group-other-window 'files)][Files]]⊲
+[[elisp:(customize-group-other-window 'uniquify)][Uniquify]]⊲
 [[elisp:(customize-variable-other-window 'uniquify-buffer-name-style)][Uniquify Buffer Name Style]]
-← [[elisp:(customize-save-variable 'uniquify-buffer-name-style 'post-forward)][за именами одинаковых буферов следует часть файлового пути]].
+← [[elisp:(customize-save-variable 'uniquify-buffer-name-style 'post-forward)][за именами одинаковых буферов следует часть файлового пути]],
+без угловых скобок
+(см. [[elisp:(describe-variable 'uniquify-buffer-name-style)][Uniquify Buffer Name Style]], [[info:Emacs#Uniquify][инфо]]).
+Стандартные угловые скобки вокруг файлового пути создают визуальный шум,
+делают элементы менее отчетливыми.
 
 [[elisp:(customize-variable-other-window 'window-divider-mode)][Window Divider Mode]]
 ← [[elisp:(customize-save-variable 'window-divider-mode nil)][широкая вертикальная разделительная черта между окнами отключена]].
