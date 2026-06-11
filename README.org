@@ -2320,6 +2320,19 @@ Smartparens использует функцию [[elisp:(describe-function 'fixn
            (<= most-negative-fixnum object most-positive-fixnum))))
 #+end_src
 
+_Emacs 25: фризы при движении курсора в окне с Unicode-символами в Windows_
+
+Очень сильные фризы или даже зависание при движении курсора в окне с
+символами для показа которых Emacs переключается на другие шрифты
+(иероглифы, эмодзи, математические символы, индексы) из-за
+[[https://lists.gnu.org/archive/html/bug-gnu-emacs/2016-11/msg00469.html][неправильного управления кешем шрифтов]],
+см. [[elisp:(describe-variable 'inhibit-compacting-font-caches)][inhibit-compacting-font-caches]].
+
+#+header: :noweb-ref requirements
+#+begin_src elisp
+  (setq inhibit-compacting-font-caches t)
+#+end_src
+
 ----------------------------------------------------------------------
 
 Роман Захаров [[mailto:zahardzhan@gmail.com][zahardzhan@gmail.com]].
