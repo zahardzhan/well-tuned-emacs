@@ -1306,31 +1306,6 @@ window-scroll-bars.
 с помощью
 [[https://ru.wikipedia.org/wiki/GnuPG][GNU Privacy Guard]], активные проекты, сайты и прочее.
 
-#+header: :noweb-ref customizations
-#+begin_src elisp
-  (add-hook 'emacs-startup-hook
-    (defun well-tuned-emacs-scratch-buffer-message ()
-      (with-current-buffer "*scratch*"
-        (let ((scratch-buf-last-char (point-max)))
-          (goto-char scratch-buf-last-char)
-          (fancy-splash-insert
-           :link (list "File" (lambda (_button) (call-interactively #'find-file))
-                       "Specify a new file's name, to edit the file")
-           " "
-           :link (list "Home" (lambda (_button) (dired "~"))
-                       "Open home directory, to operate on its files")
-           " "
-           :link (list "Passwords" (lambda (_button)
-                                     (let ((passwords "~/Dropbox/Passwords.org.gpg"))
-                                       (when (file-exists-p passwords)
-                                         (find-file passwords))))
-                       "Open encrypted password vault"))
-          (comment-region scratch-buf-last-char (point))
-          (newline)
-          (goto-char (point-max))
-          (set-buffer-modified-p nil)))))
-#+end_src
-
 [[elisp:(customize-variable-other-window 'window-divider-mode)][Window Divider Mode]]
 ← [[elisp:(customize-save-variable 'window-divider-mode nil)][широкая вертикальная разделительная черта между окнами отключена]].
 [[elisp:(customize-save-variable 'window-divider-mode t)][Разделение окон по горизонтали широкой вертикальной чертой]]
