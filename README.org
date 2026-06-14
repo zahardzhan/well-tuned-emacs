@@ -1616,6 +1616,16 @@ Smartparens включает в себя несколько альтернати
 О настройке режима Org можно написать целую книгу, но есть несколько
 простых опций, которые полезны для работы с этим руководством.
 
+Для проверки «исходников» текста есть режим [[elisp:(describe-function 'visible-mode)][visible-mode]]
+который делает невидимый текст видимым, без отключения основного
+режима. Очень удобно для редактирования этого руководства.
+
+#+header: :noweb-ref keybindings
+#+begin_src elisp
+  (with-eval-after-load 'org
+    (define-key org-mode-map [f2] #'visible-mode))
+#+end_src
+
 [[elisp:(customize-variable-other-window 'org-support-shift-select)][Org Support Shift Select]]
 ← [[elisp:(customize-save-variable 'org-support-shift-select t)][выделение шифтом и стрелками в режиме Org]].
 
